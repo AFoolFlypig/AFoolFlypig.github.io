@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="头像问题  在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。  avatar: /images/avatar.jpg  这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg，将其放入next文件夹下的source/images/">
+<meta name="description" content="头像问题 在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。  avatar: /images/avatar.jpg   这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg， 将其放入next文件夹下的source/images">
 <meta name="keywords" content="hexo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hexo的一些注意事项">
 <meta property="og:url" content="AFoolFlypig.github.io/2018/01/29/hexo的一些注意事项/index.html">
 <meta property="og:site_name" content="李澳的博客">
-<meta property="og:description" content="头像问题  在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。  avatar: /images/avatar.jpg  这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg，将其放入next文件夹下的source/images/">
+<meta property="og:description" content="头像问题 在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。  avatar: /images/avatar.jpg   这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg， 将其放入next文件夹下的source/images">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-29T12:44:19.026Z">
+<meta property="og:updated_time" content="2018-01-29T13:11:28.785Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hexo的一些注意事项">
-<meta name="twitter:description" content="头像问题  在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。  avatar: /images/avatar.jpg  这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg，将其放入next文件夹下的source/images/">
+<meta name="twitter:description" content="头像问题 在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。  avatar: /images/avatar.jpg   这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg， 将其放入next文件夹下的source/images">
 
 
 
@@ -353,35 +353,31 @@
 
       
         <ol>
-<li><h2 id="头像问题"><a href="#头像问题" class="headerlink" title="头像问题"></a>头像问题</h2></li>
-</ol>
-<p>在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。</p>
+<li><h2 id="头像问题"><a href="#头像问题" class="headerlink" title="头像问题"></a>头像问题</h2><p> 在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。</p>
 <blockquote>
 <pre><code>avatar: /images/avatar.jpg
 </code></pre></blockquote>
-<p>这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg，<br>将其放入next文件夹下的source/images/中就可以了。</p>
-<ol>
-<li><h2 id="插入图片问题"><a href="#插入图片问题" class="headerlink" title="插入图片问题"></a>插入图片问题</h2></li>
-</ol>
-<p>在写文章插入本地图片的时候，预览的时候没问题，但是部署到网站上之后，并不显示图片。具体原因我也不太清楚，反正markdown的语法并没有起作用。解决方法如下：</p>
-<p>这一次进入blog目录（就是你安装hexo的目录），打开_config.yml文件，改动如下的代码</p>
+<p> 这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg，<br> 将其放入next文件夹下的source/images/中就可以了。</p>
+</li>
+<li><h2 id="插入图片问题"><a href="#插入图片问题" class="headerlink" title="插入图片问题"></a>插入图片问题</h2><p> 在写文章插入本地图片的时候，预览的时候没问题，但是部署到网站上之后，并不显示图片。具体原因我也不太清楚，反正markdown的语法并没有起作用。解决方法如下：<br> 这一次进入blog目录（就是你安装hexo的目录），打开_config.yml文件，改动如下的代码</p>
 <blockquote>
 <pre><code>post_asset_folder: true
 </code></pre></blockquote>
-<p>然后在blog目录下运行如下命令安装插件</p>
+<p> 然后在blog目录下运行如下命令安装插件</p>
 <blockquote>
 <pre><code>npm install hexo-asset-image --save
 </code></pre></blockquote>
-<p>安装完这个插件，在你用hexo new 命令创建一篇文章之后，会在~/blog/source/_posts下生成一个跟文章同名的文件夹（也就是和文章在同一文件夹）。你只需要将图片放入该文件夹中，然后用如下的插件标签在文章中插入图片即可。</p>
+<p> 安装完这个插件，在你用hexo new 命令创建一篇文章之后，会在~/blog/source/_posts下生成一个跟文章同名的文件夹（也就是和文章在同一文件夹）。你只需要将图片放入该文件夹中，然后用如下的插件标签在文章中插入图片即可。</p>
 <blockquote>
 <pre><code>{% asset_img 图片名.后缀名 %}
 </code></pre></blockquote>
-<ol>
-<li><h2 id="代码块高亮问题"><a href="#代码块高亮问题" class="headerlink" title="代码块高亮问题"></a>代码块高亮问题</h2>引用代码块无法高亮的，应该以如下格式</li>
-</ol>
+</li>
+<li><h2 id="代码块高亮问题"><a href="#代码块高亮问题" class="headerlink" title="代码块高亮问题"></a>代码块高亮问题</h2><p> 引用代码块无法高亮的，应该以如下格式</p>
 <blockquote>
 <pre><code><figure class="highlight plain"><figcaption><span>//三个Tab键下面的符号	语言名后要有两个回车，即这一行隔一行再写代码</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">代码块	//	代码块前加制表符或四个空格</span><br></pre></td></tr></table></figure>
 </code></pre></blockquote>
+</li>
+</ol>
 
       
     </div>
