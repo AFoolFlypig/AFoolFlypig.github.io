@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="移动城堡">
 <meta property="og:description" content="头像问题 在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。  avatar: /images/avatar.jpg   这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg， 将其放入next文件夹下的source/images">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-29T14:54:22.180Z">
+<meta property="og:updated_time" content="2018-01-30T12:22:27.555Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hexo的一些注意事项">
 <meta name="twitter:description" content="头像问题 在hexo的next主题中，想要修改头像，应该先找到你安装next的文件夹，比如我的是~/blog/themes/next。在该文件夹中找到_config.yml文件，改动下面这行代码。  avatar: /images/avatar.jpg   这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg， 将其放入next文件夹下的source/images">
@@ -358,6 +358,7 @@
 <pre><code>avatar: /images/avatar.jpg
 </code></pre></blockquote>
 <p> 这是我改完之后的代码，然后就可以将你想要设定为头像的图片重命名为avatar.jpg，<br> 将其放入next文件夹下的source/images/中就可以了。</p>
+<a id="more"></a>
 </li>
 <li><h2 id="插入图片问题"><a href="#插入图片问题" class="headerlink" title="插入图片问题"></a>插入图片问题</h2><p> 在写文章插入本地图片的时候，预览的时候没问题，但是部署到网站上之后，并不显示图片。具体原因我也不太清楚，反正markdown的语法并没有起作用。解决方法如下：<br> 这一次进入blog目录（就是你安装hexo的目录），打开_config.yml文件，改动如下的代码</p>
 <blockquote>
@@ -372,10 +373,11 @@
 <pre><code>{% asset_img 图片名.后缀名 %}
 </code></pre></blockquote>
 </li>
-<li><h2 id="代码块高亮问题"><a href="#代码块高亮问题" class="headerlink" title="代码块高亮问题"></a>代码块高亮问题</h2><p> 引用代码块无法高亮的，可以用“ 三个反引号”后面加上语言，如cpp，然后下一行贴代码块，<strong>代码块前记得加制表符或空格</strong>，代码块结束后，在下一行加上“ 三个反引号 ”，<strong>注意：此处为反引号，Tab键上面的那个</strong>。</p>
+<li><h2 id="代码块高亮问题"><a href="#代码块高亮问题" class="headerlink" title="代码块高亮问题"></a>代码块高亮问题</h2><p> 引用代码块无法高亮的，可以用“ ```”后面加上语言，如cpp，然后下一行贴代码块，<strong>代码块前记得加制表符或空格</strong>，代码块结束后，在下一行加上“ ``` ”，<strong>注意：此处为反引号，Tab键上面的那个</strong>。</p>
 </li>
 </ol>
-<h3 id="这转义我实在是搞不了了，爱咋咋地吧，不管了"><a href="#这转义我实在是搞不了了，爱咋咋地吧，不管了" class="headerlink" title="这转义我实在是搞不了了，爱咋咋地吧，不管了"></a><strong>这转义我实在是搞不了了，爱咋咋地吧，不管了</strong></h3>
+<p><strong>markdown中转义使用反斜线\，而不是斜线/</strong></p>
+
       
     </div>
     
@@ -553,7 +555,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#头像问题"><span class="nav-number">1.</span> <span class="nav-text">头像问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入图片问题"><span class="nav-number">2.</span> <span class="nav-text">插入图片问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码块高亮问题"><span class="nav-number">3.</span> <span class="nav-text">代码块高亮问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#这转义我实在是搞不了了，爱咋咋地吧，不管了"><span class="nav-number">3.1.</span> <span class="nav-text">这转义我实在是搞不了了，爱咋咋地吧，不管了</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#头像问题"><span class="nav-number">1.</span> <span class="nav-text">头像问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入图片问题"><span class="nav-number">2.</span> <span class="nav-text">插入图片问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码块高亮问题"><span class="nav-number">3.</span> <span class="nav-text">代码块高亮问题</span></a></li></ol></div>
             
 
           </div>
