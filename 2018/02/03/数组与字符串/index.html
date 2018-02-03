@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="数组与字符串我最近在学习刘汝佳的算法竞赛入门经典（第二版），但是感觉只是看的话很容易忘，因此我决定写一个解题报告，记录一下我这段时间的学习成果。 1. 得分（Score,uva1585）题目描述：给出一个由O和X组成的串（长度为1～80），统计得分。每个O的得分为目前连续出现的O的个数，X的得分为0。例如，OOXXOXXOOO的得分为1+2+0+1+0+0+1+2+3。 解题思路：这个题没啥思路，">
+<meta name="description" content="数组与字符串我最近在学习刘汝佳的算法竞赛入门经典（第二版），但是感觉只是看的话很容易忘，因此我决定写一个解题报告，记录一下我这段时间的学习成果。">
 <meta name="keywords" content="c&#x2F;c++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数组与字符串">
 <meta property="og:url" content="AFoolFlypig.github.io/2018/02/03/数组与字符串/index.html">
 <meta property="og:site_name" content="移动城堡">
-<meta property="og:description" content="数组与字符串我最近在学习刘汝佳的算法竞赛入门经典（第二版），但是感觉只是看的话很容易忘，因此我决定写一个解题报告，记录一下我这段时间的学习成果。 1. 得分（Score,uva1585）题目描述：给出一个由O和X组成的串（长度为1～80），统计得分。每个O的得分为目前连续出现的O的个数，X的得分为0。例如，OOXXOXXOOO的得分为1+2+0+1+0+0+1+2+3。 解题思路：这个题没啥思路，">
+<meta property="og:description" content="数组与字符串我最近在学习刘汝佳的算法竞赛入门经典（第二版），但是感觉只是看的话很容易忘，因此我决定写一个解题报告，记录一下我这段时间的学习成果。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-03T02:06:31.923Z">
+<meta property="og:updated_time" content="2018-02-03T02:09:19.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数组与字符串">
-<meta name="twitter:description" content="数组与字符串我最近在学习刘汝佳的算法竞赛入门经典（第二版），但是感觉只是看的话很容易忘，因此我决定写一个解题报告，记录一下我这段时间的学习成果。 1. 得分（Score,uva1585）题目描述：给出一个由O和X组成的串（长度为1～80），统计得分。每个O的得分为目前连续出现的O的个数，X的得分为0。例如，OOXXOXXOOO的得分为1+2+0+1+0+0+1+2+3。 解题思路：这个题没啥思路，">
+<meta name="twitter:description" content="数组与字符串我最近在学习刘汝佳的算法竞赛入门经典（第二版），但是感觉只是看的话很容易忘，因此我决定写一个解题报告，记录一下我这段时间的学习成果。">
 
 
 
@@ -352,7 +352,7 @@
       
 
       
-        <h1 id="数组与字符串"><a href="#数组与字符串" class="headerlink" title="数组与字符串"></a>数组与字符串</h1><p>我最近在学习刘汝佳的算法竞赛入门经典（第二版），但是感觉只是看的话很容易忘，因此我决定写一个解题报告，记录一下我这段时间的学习成果。</p>
+        <h1 id="数组与字符串"><a href="#数组与字符串" class="headerlink" title="数组与字符串"></a>数组与字符串</h1><p>我最近在学习刘汝佳的算法竞赛入门经典（第二版），但是感觉只是看的话很容易忘，因此我决定写一个解题报告，记录一下我这段时间的学习成果。<br><a id="more"></a></p>
 <h2 id="1-得分（Score-uva1585）"><a href="#1-得分（Score-uva1585）" class="headerlink" title="1. 得分（Score,uva1585）"></a>1. 得分（Score,uva1585）</h2><p>题目描述：给出一个由O和X组成的串（长度为1～80），统计得分。每个O的得分为目前连续出现的O的个数，X的得分为0。例如，OOXXOXXOOO的得分为1+2+0+1+0+0+1+2+3。</p>
 <p>解题思路：这个题没啥思路，就按题目上说的做就行。<strong>不过注意题目中的X和O都是大写的（我觉得除了我也没谁犯这错误……)</strong>。下面是代码。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX 85</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> T;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;T);</span><br><span class="line">    <span class="keyword">while</span>(T--)</span><br><span class="line">    &#123;</span><br><span class="line">	<span class="keyword">char</span> s[MAX];</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%s"</span>,s);</span><br><span class="line">	<span class="keyword">int</span> sum = <span class="number">0</span>,a = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="built_in">strlen</span>(s);i++)</span><br><span class="line">	&#123;</span><br><span class="line">	    <span class="keyword">if</span>(s[i] == <span class="string">'O'</span>)</span><br><span class="line">	        sum += ++a;</span><br><span class="line">	    <span class="keyword">else</span></span><br><span class="line">	        a = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%d\n"</span>,sum);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
