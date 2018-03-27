@@ -354,17 +354,15 @@
 
       
         
-          
-            <h1 id="1-01背包"><a href="#1-01背包" class="headerlink" title="1. 01背包"></a>1. 01背包</h1><blockquote>
-<p>问题描述<br>　　给定N个物品,每个物品有一个重量W和一个价值V.你有一个能装M重量的背包.问怎么装使得所装价值最大.每个物品只有一个.<br>输入格式<br>　　输入的第一行包含两个整数n, m，分别表示物品的个数和背包能装重量。<br>　　以后N行每行两个数Wi和Vi,表示物品的重量和价值<br>输出格式<br>　　输出1行，包含一个整数，表示最大价值。<br>样例输入<br>3 5<br>2 3<br>3 5<br>4 7<br>样例输出<br>8<br>数据规模和约定<br>　　1&lt;=N&lt;=200,M&lt;=5000.　　</p>
-</blockquote>
-<p>解题思路:动态规划,面对当前商品有两种可能性：</p>
-<p>第一，包的容量比该商品体积小，装不下，此时的价值与前i-1个的价值是一样的，即f(i,j)=f(i-1,j)；<br>　　　　<br>第二，还有足够的容量可以装该商品，但装了也不一定达到当前最优价值，所以在装与不装之间选择最优的一个，即f(i,j)=max｛ f(i-1,j)，f(i-1,j-w(i))+v(i) ｝<br>　　　　<br>其中V(i-1,j)表示不装，V(i-1,j-w(i))+v(i) 表示装了第i个商品，背包容量减少w(i)但价值增加了v(i)；<br>　　　　　　　<br>由此可以得出递推关系式：</p>
-<p>　　　　1) j&lt;w(i)      V(i,j)=V(i-1,j)</p>
-<p>　　　　2) j&gt;=w(i)     V(i,j)=max｛ V(i-1,j)，V(i-1,j-w(i))+v(i) ｝</p>
-<p>另外,由于f[0][j]为0,则当i为1时,f[i-1][j]为0,这就是代码17行的意义,而且这样不用初始化f[0][j]为0,提高了效率.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">200</span> + <span class="number">10</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxm = <span class="number">5000</span> + <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> f[maxn][maxm];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,m;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;m);</span><br><span class="line">    <span class="keyword">int</span> w,v;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= n;i++)&#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;w,&amp;v);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>;j &lt;= m;j++)&#123;</span><br><span class="line">            f[i][j] = (i == <span class="number">1</span> ? <span class="number">0</span> : f[i - <span class="number">1</span>][j]);</span><br><span class="line">            <span class="keyword">if</span>(j &gt;= w) f[i][j] = max(f[i][j],f[i - <span class="number">1</span>][j - w] + v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,f[n][m]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
+          <h1 id="1-01背包"><a href="#1-01背包" class="headerlink" title="1. 01背包"></a>1. 01背包</h1><blockquote>
+<p>问题描述<br>　　给定N个物品,每个物品有一个重量W和一个价值V.你有一个能装M重量的背包.问怎么装使得所装价值最大.每个物品只有一个.<br></p></blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/23/动态规划/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
