@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="移动城堡">
 <meta property="og:description" content="配环境给我配的真的是要死要活的,win10很轻松,很顺利的就配好了,Ubuntu折腾了老半天,现在我把我配置的过程记录下来,省得以后再配置的时候不好弄. 1. 官网下载jdk下载网址:http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html,我下载的是jdk-8u171-linux-x64">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-20T15:39:13.991Z">
+<meta property="og:updated_time" content="2018-06-21T04:55:30.807Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubuntu16.04配置Java环境">
 <meta name="twitter:description" content="配环境给我配的真的是要死要活的,win10很轻松,很顺利的就配好了,Ubuntu折腾了老半天,现在我把我配置的过程记录下来,省得以后再配置的时候不好弄. 1. 官网下载jdk下载网址:http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html,我下载的是jdk-8u171-linux-x64">
@@ -378,6 +378,7 @@ export JAVA_HOME=/usr/lib/Java/jdk1.8.0_171
 </code></pre><p>其实就是在path路径下添加:$JAVA_HOME/bin(添加在双引号内),在后两行再添加上面所示的内容,然后执行以下命令使配置立即生效</p>
 <pre><code>source /etc/environment
 </code></pre><p>话虽然是这么说,但是我其实是在重启机器后才生效的.</p>
+<p>另外,用vim写java的时候,先进去你存放java文件的文件夹,然后再打开或新建java文件.主要原因是因为java命令后不能加路径,只能直接在当前文件夹下用java命令来运行class文件.</p>
 <p>好了.这样我们的配置就大功告成了,这下就可以舒舒服服的学Java了.</p>
 
       
