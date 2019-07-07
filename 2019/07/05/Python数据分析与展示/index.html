@@ -93,7 +93,11 @@
 <meta property="og:image" content="/2019/07/05/Python数据分析与展示/高维数据示例.png">
 <meta property="og:image" content="/2019/07/05/Python数据分析与展示/数据维度的python表示1.png">
 <meta property="og:image" content="/2019/07/05/Python数据分析与展示/数据维度的python表示2.png">
-<meta property="og:updated_time" content="2019-07-07T12:24:39.669Z">
+<meta property="og:image" content="/2019/07/05/Python数据分析与展示/列表数组对比.png">
+<meta property="og:image" content="/2019/07/05/Python数据分析与展示/ndarray实例.png">
+<meta property="og:image" content="/2019/07/05/Python数据分析与展示/ndarray对象的属性.png">
+<meta property="og:image" content="/2019/07/05/Python数据分析与展示/ndarray属性示例.png">
+<meta property="og:updated_time" content="2019-07-07T13:39:40.669Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python数据分析与展示">
 <meta name="twitter:description" content="数据分析之前奏">
@@ -362,12 +366,32 @@
         <h1 id="数据分析之前奏"><a href="#数据分析之前奏" class="headerlink" title="数据分析之前奏"></a>数据分析之前奏</h1><a id="more"></a>
 <h2 id="Anaconda-IDE的使用方法"><a href="#Anaconda-IDE的使用方法" class="headerlink" title="Anaconda IDE的使用方法"></a>Anaconda IDE的使用方法</h2><p>Anaconda的安装见下面的博客<br><a href="https://blog.csdn.net/lwplwf/article/details/79162470" target="_blank" rel="noopener">https://blog.csdn.net/lwplwf/article/details/79162470</a><br>安装好Anaconda后并没有Anaconda-navigator,按下面的教程进行操作后,就可以使用Anaconda-navigator了.<br><a href="https://www.jianshu.com/p/9343ff5de364" target="_blank" rel="noopener">https://www.jianshu.com/p/9343ff5de364</a> </p>
 <p>下面介绍一些Ipython的使用方法<br><img src="/2019/07/05/Python数据分析与展示/IPython的?.png"><br><img src="/2019/07/05/Python数据分析与展示/IPython的run命令.png"><br>上图中的注意有点不不明白说的啥.<br>IPython有如下常用命令:<br><img src="/2019/07/05/Python数据分析与展示/IPython命令.png"></p>
-<h1 id="数据分析之表示"><a href="#数据分析之表示" class="headerlink" title="数据分析之表示"></a>数据分析之表示</h1><h2 id="Numpy库入门"><a href="#Numpy库入门" class="headerlink" title="Numpy库入门"></a>Numpy库入门</h2><p>###数据的维度<br>维度:一组数据的组织形式.</p>
+<h1 id="数据分析之表示"><a href="#数据分析之表示" class="headerlink" title="数据分析之表示"></a>数据分析之表示</h1><h2 id="Numpy库入门"><a href="#Numpy库入门" class="headerlink" title="Numpy库入门"></a>Numpy库入门</h2><h3 id="数据的维度"><a href="#数据的维度" class="headerlink" title="数据的维度"></a>数据的维度</h3><p>维度:一组数据的组织形式.</p>
 <p>一维数据:一维数据由对等关系的有序或无序数据构成,采用线性方式组织.对应于列表、数组和集合等概念.<br>列表和数组区别:<br>列表数据类型<strong>可以不同</strong>.<br>数组数据类型<strong>相同</strong>.</p>
 <p>二维数据:二维数据由多个一维数据构成,是一维数据的组合形式.表格是典型的二维数据.</p>
 <p>多维数据:多维数据由一维或二维数据在新维度上扩展形成.</p>
 <p>高维数据:高维数据仅利用最基本的二元关系展示数据间的复杂结构.<br>如:<br><img src="/2019/07/05/Python数据分析与展示/高维数据示例.png"></p>
 <p>数据维度的Python表示:<br><img src="/2019/07/05/Python数据分析与展示/数据维度的python表示1.png"><br><img src="/2019/07/05/Python数据分析与展示/数据维度的python表示2.png"></p>
+<h3 id="NumPy的数组对象ndarray"><a href="#NumPy的数组对象ndarray" class="headerlink" title="NumPy的数组对象ndarray"></a>NumPy的数组对象ndarray</h3><p>NumPy是一个开源的Python科学计算基础库,同时是Scipy、Pandas等数据处理或科学计算库的基础,包含:</p>
+<ol>
+<li>一个强大的N维数组对象 ndarray</li>
+<li>广播功能函数</li>
+<li>整合C/C++/Fortran代码的工具</li>
+<li>线性代数、傅里叶变换、随机数生成等功能</li>
+</ol>
+<p>NumPy的引用方法如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np	<span class="comment">#引入模块的别名,约定上使用np</span></span><br></pre></td></tr></table></figure></p>
+<p>Python已有列表类型,为什么还需要一个数组对象(类型)呢?<br>看下面的示例:<br><img src="/2019/07/05/Python数据分析与展示/列表数组对比.png"><br>相较于列表,数组有如下优点:</p>
+<ol>
+<li>数组对象可以去掉元素间运算所需的循环,使一维向量更像单个数据</li>
+<li>设置专门的数组对象,经过优化,可以提升这类应用的运算速度<br>观察:科学计算中,一个维度所有数据的类型往往相同</li>
+<li>数组对象采用相同的数据类型,有助于节省运算和存储空间</li>
+</ol>
+<p>下面是一个ndarry的实例:<br><img src="/2019/07/05/Python数据分析与展示/ndarray实例.png"><br>这里有两个重要的概念.</p>
+<blockquote>
+<p>轴(axis):保存数据的维度.从<strong>0轴</strong>开始.如0轴代表第一维度,1轴代表第二维度.<br>秩(rank):轴的数量,即维度.如上例中的数组秩为2,二维数组.</p>
+</blockquote>
+<p>关于轴的理解可以看看下面的这篇文章<br><a href="https://blog.csdn.net/qq_42383041/article/details/86157702" target="_blank" rel="noopener">https://blog.csdn.net/qq_42383041/article/details/86157702</a> </p>
+<p>ndarray对象有如下常用属性:<br><img src="/2019/07/05/Python数据分析与展示/ndarray对象的属性.png"><br>属性示例如下:<br><img src="/2019/07/05/Python数据分析与展示/ndarray属性示例.png"></p>
 
       
     </div>
@@ -544,7 +568,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据分析之前奏"><span class="nav-text">数据分析之前奏</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Anaconda-IDE的使用方法"><span class="nav-text">Anaconda IDE的使用方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据分析之表示"><span class="nav-text">数据分析之表示</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Numpy库入门"><span class="nav-text">Numpy库入门</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据分析之前奏"><span class="nav-text">数据分析之前奏</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Anaconda-IDE的使用方法"><span class="nav-text">Anaconda IDE的使用方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据分析之表示"><span class="nav-text">数据分析之表示</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Numpy库入门"><span class="nav-text">Numpy库入门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据的维度"><span class="nav-text">数据的维度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NumPy的数组对象ndarray"><span class="nav-text">NumPy的数组对象ndarray</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
