@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="笔记," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="我最近在跟着慕课学习数电,把平时所学的一些东西和自己的一些理解整理到这里">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字电路与逻辑设计学习笔记">
+<meta property="og:url" content="AFoolFlypig.github.io/2020/01/03/数字电路与逻辑设计学习笔记/index.html">
+<meta property="og:site_name" content="移动城堡">
+<meta property="og:description" content="我最近在跟着慕课学习数电,把平时所学的一些东西和自己的一些理解整理到这里">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-1.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-2.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-3.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-4.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-5.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-6.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-7.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-8.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-9.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-10.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-11.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-12.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-13.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-14.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-15.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-16.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-17.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-18.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-19.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-20.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-21.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-22.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-23.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-24.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-25.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-26.png">
+<meta property="og:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-27.png">
+<meta property="og:updated_time" content="2020-01-04T08:53:50.828Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数字电路与逻辑设计学习笔记">
+<meta name="twitter:description" content="我最近在跟着慕课学习数电,把平时所学的一些东西和自己的一些理解整理到这里">
+<meta name="twitter:image" content="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="AFoolFlypig.github.io/2020/01/03/数字电路与逻辑设计学习笔记/"/>
+
+
+
+
+
+  <title>数字电路与逻辑设计学习笔记 | 移动城堡</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">移动城堡</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">欢迎来到我的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="AFoolFlypig.github.io/2020/01/03/数字电路与逻辑设计学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李澳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="移动城堡">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数字电路与逻辑设计学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-03T19:11:32+08:00">
+                2020-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我最近在跟着慕课学习数电,把平时所学的一些东西和自己的一些理解整理到这里<br><a id="more"></a></p>
+<h1 id="第一章-基本知识"><a href="#第一章-基本知识" class="headerlink" title="第一章 基本知识"></a>第一章 基本知识</h1><h2 id="1-1-数字信号与系统"><a href="#1-1-数字信号与系统" class="headerlink" title="1.1 数字信号与系统"></a>1.1 数字信号与系统</h2><p>下面先介绍几个概念.<br><strong>模拟信号</strong>:信号的变化在时间和数值上都是<strong>连续的</strong>.<br><strong>离散信号</strong>:信号的变化在时间和数值上都是<strong>离散的</strong>,或者说断续的.离散信号的变化可以用不同的数字反映,所以又称<strong>数字信号</strong>.<br><strong>数字系统</strong>:数字系统是一个能对数字信号进行加工、传递和存储的实体,它由实现各种功能的数字逻辑电路相互连接而成.<br>由于现实世界中的信号多为模拟信号,而模拟信号并不易于处理,需要将其转换为数字信号进行处理,然后再将其还原为模拟信号.二者之间的相互转换为<strong>A/D-模数转换(Analog-Digital)</strong>,<strong>D/A-数模转换(Digital-Analog)</strong>.模拟信号的主要步骤为<strong>采样(Sampling)、量化(Quantization)与编码(Encoding)</strong>.如下图所示:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-1.png"><br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-2.png"><br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-3.png"><br>数字系统的示例:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-4.png"><br><strong>数字电路</strong>是用来处理数字信号的电子线路.由于数字电路的各种功能是通过逻辑运算和逻辑判断来实现的,所以数字电路又称为数字逻辑电路或者逻辑电路.<br>数字逻辑电路的特点:电路的基本工作信号是二值信号.电路中的半导体器件一般都在开、关状态.<br>数字系统的层次结构如下图:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-5.png"><br>第2级为小规模集成电路,第3级为中、大规模集成电路,第4级为超大规模集成电路.<br>根据一个电路有无记忆功能,可以将数字逻辑电路分为<strong>组合逻辑电路(Combinational Logic Circuit)</strong>(无记忆功能)和<strong>时序逻辑电路(Sequential Logic Circuit)</strong>(有记忆功能).<br><strong>组合逻辑电路</strong>:在任何时刻的稳定输出仅取决于该时刻的输入,而与电路过去的输入无关.<br><strong>时序逻辑电路</strong>按照是否有统一的时钟信号进行同步,可分为<strong>同步时序逻辑电路</strong>和<strong>异步时序逻辑电路</strong>.</p>
+<h2 id="1-2-数制及其转换"><a href="#1-2-数制及其转换" class="headerlink" title="1.2 数制及其转换"></a>1.2 数制及其转换</h2><p>在生活中我们主要使用的是十进制,而在计算机中使用的是二进制,主要是因为二进制有如下特点:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-6.png"><br>下面是二进制与其他进制的转换方法:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-7.png"><br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-8.png"><br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-9.png"><br>其中,二进制转八进制或十六进制时,若不够三位或四位,则补0凑足.</p>
+<h2 id="1-3-带符号二进制数的代码表示"><a href="#1-3-带符号二进制数的代码表示" class="headerlink" title="1.3 带符号二进制数的代码表示"></a>1.3 带符号二进制数的代码表示</h2><p>在机器中带符号的数采取如下的表示方法:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-10.png"><br>常用的机器码有原码、反码和补码,下面一一进行介绍.</p>
+<h3 id="1-3-1-原码"><a href="#1-3-1-原码" class="headerlink" title="1.3.1 原码"></a>1.3.1 原码</h3><p>最左侧的一位为<strong>符号位</strong>,数码0表示正号,数码1表示负号,其余的为<strong>数值位</strong>,为真值的绝对值.简言之,原码即为<strong>符号位+真值绝对值</strong><br>原码的标准化定义如下:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-11.png"><br>其实不用管上面的定义,只需要会原码怎么算就可以了.<br>示例:</p>
+<blockquote>
+<p>x=+1101    [x]<sub>原</sub>=01101<br>x=-1101    [x]<sub>原</sub>=11101<br>x=0.1011    [x]<sub>原</sub>=0.1011<br>x=-0.1011    [x]<sub>原</sub>=1.1011</p>
+</blockquote>
+<p>原码表示法的特点:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-12.png"><br><strong>原码不能直接进行减法运算</strong>.那么有没有一种编码能够使减法变加法,符号位直接参与运算呢?</p>
+<h3 id="1-3-2-反码"><a href="#1-3-2-反码" class="headerlink" title="1.3.2 反码"></a>1.3.2 反码</h3><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-13.png">
+<p>反码的标准化定义如下:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-14.png"><br>示例:</p>
+<blockquote>
+<p>x=+0.1011    [x]<sub>反</sub>=0.1011<br>x=-0.1011    [x]<sub>反</sub>=1.0100<br>[+0]<sub>反</sub> =0.00…0<br>[-0]<sub>反</sub> =1.11…1</p>
+</blockquote>
+<p>但是反码仍然没有解决减法问题和正负0问题,如上例.</p>
+<h3 id="1-3-3-补码"><a href="#1-3-3-补码" class="headerlink" title="1.3.3 补码"></a>1.3.3 补码</h3><p>在介绍补码之前,先要介绍”模”的概念.<br><strong>“模”</strong>是指一个计量系统的计数范围,记做mod或M.如时钟的计量范围是0~11,模=12<br>计算机也可以看成一个计量系统,它也有一个计量范围,即都存在一个”模”.表示n为的计算机的计量范围是0~2<sup>n</sup>-1,模 = 2<sup>n</sup>.<br>“模”实质上是计量系统产生”溢出”的量,它的值在计量系统上表示不出来,计量系统上只能表示出模的余数.<br>任何有模的计量系统,均可化减法为加法运算.<br>例如-8 = 4(mod 12).<br>其含义为:-8与4对模12是互补的,或者说以12为模时-8的补码为4.<br>同理,模为12时,-2的补码是10,-5的补码是7.<br>补码的标准化定义:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-15.png"><br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-16.png"><br><strong>补码中0的形式唯一</strong><br>补码具有如下意义:</p>
+<ul>
+<li>计算机中的数据受字长的限制,数据的运算属于有模运算</li>
+<li>计算结果直接丢掉进位</li>
+<li>可以将减法转化为加法运算</li>
+<li>计算机中可只设置加法器,从而可以简化设计,降低成本.<br>求补码示例:<blockquote>
+<p>x=0.1010    [x]<sub>补</sub>=0.1010<br>x=-0.1010    [x]<sub>补</sub>=1.0110<br>x=1010    [x]<sub>补</sub>=01010<br>x=-1010    [x]<sub>补</sub>=10110</p>
+</blockquote>
+</li>
+</ul>
+<p>补码的运算:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-17.png"><br>补码运算中<strong>符号位进位直接丢弃</strong>.<br>补码的加减法比较方便,得到了广泛的应用,目前计算机中广泛采用补码表示,少数机器采用原码进行存储和传输,计算时用补码表示.<br>机器码的求法对比:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-18.png"><br>当真值为正数时,原码、反码和补码都相同,只有真值为负数时,它们才各不相同.<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-19.png"></p>
+<h2 id="1-4-几种常见的编码"><a href="#1-4-几种常见的编码" class="headerlink" title="1.4 几种常见的编码"></a>1.4 几种常见的编码</h2><p>下面是几种常见的编码:</p>
+<ul>
+<li>十进制数的二进制编码(BCD码) BCD-Binary Coded Decimal</li>
+<li>可靠性编码</li>
+<li>字符编码</li>
+</ul>
+<p>下面一一对其进行介绍.</p>
+<p>BCD码主要有如下三种:<strong>8421码</strong>、<strong>2421码</strong>和<strong>余3码</strong>.<br>8421码与2421码是<strong>有权码</strong>,其各位的权值即为8 4 2 1和2 4 2 1.余3码为<strong>无权码</strong>,其值为在8421码的基础上加3.<br>如下图所示:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-20.png"><br>这几个编码都是<strong>四位二进制数表示一位十进制数</strong>.<br>下图为十进制数串在机器中的表示:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-21.png"></p>
+<p>可靠性编码的目的是减少或者发现代码在形成和传送过程中可能发生的错误.下面介绍两种可靠性编码:<strong>奇偶校验码</strong>和<strong>格雷码</strong><br>奇偶校验如下:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-22.png"><br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-23.png"><br>上图中的圆圈中一个加号为异或的符号.若有偶数个1,则结果为0,否则为1.<br>示例如下:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-24.png"><br>奇偶校验的特点:</p>
+<ul>
+<li>一种常见的简单校验,只需要1位校验码</li>
+<li>只具有发现错误的能力,不具备对错误定位和纠正错误的能力.</li>
+<li>只具有发现一串二进制代码中,同时出现奇数个代码出错的能力.</li>
+<li>如果同时发生偶数个代码出错,奇偶校验失效.</li>
+</ul>
+<p><strong>格雷码</strong>特点:任意两个相邻的数,其格雷码仅有一位不同.<br>二进制数转换为格雷码的方法如下:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-25.png"><br>最左侧的第一位不变,后面各位为二进制码两位依次进行异或运算的结果.<br>示例如下:<br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-26.png"><br><img src="/2020/01/03/数字电路与逻辑设计学习笔记/chapter1/图1-27.png"></p>
+<p>字符编码:ASCII码.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/笔记/" rel="tag"># 笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/05/Python数据分析与展示/" rel="next" title="Python数据分析与展示">
+                <i class="fa fa-chevron-left"></i> Python数据分析与展示
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="李澳" />
+            
+              <p class="site-author-name" itemprop="name">李澳</p>
+              <p class="site-description motion-element" itemprop="description">自娱自乐</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一章-基本知识"><span class="nav-text">第一章 基本知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-数字信号与系统"><span class="nav-text">1.1 数字信号与系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-数制及其转换"><span class="nav-text">1.2 数制及其转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-带符号二进制数的代码表示"><span class="nav-text">1.3 带符号二进制数的代码表示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-1-原码"><span class="nav-text">1.3.1 原码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-2-反码"><span class="nav-text">1.3.2 反码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-3-补码"><span class="nav-text">1.3.3 补码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-几种常见的编码"><span class="nav-text">1.4 几种常见的编码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李澳</span>
+
+  
+</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
