@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="深度学习,tensorflow," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第一章 深度学习简介及开发环境搭建">
+<meta name="keywords" content="深度学习,tensorflow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习应用开发-tensorflow实践">
+<meta property="og:url" content="AFoolFlypig.github.io/2020/01/06/深度学习应用开发-tensorflow实践/index.html">
+<meta property="og:site_name" content="移动城堡">
+<meta property="og:description" content="第一章 深度学习简介及开发环境搭建">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-1.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-2.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-3.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-4.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-5.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-6.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-7.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-8.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-1.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-2.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-3.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-4.png">
+<meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-5.png">
+<meta property="og:updated_time" content="2020-01-09T03:47:02.254Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习应用开发-tensorflow实践">
+<meta name="twitter:description" content="第一章 深度学习简介及开发环境搭建">
+<meta name="twitter:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="AFoolFlypig.github.io/2020/01/06/深度学习应用开发-tensorflow实践/"/>
+
+
+
+
+
+  <title>深度学习应用开发-tensorflow实践 | 移动城堡</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">移动城堡</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">欢迎来到我的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="AFoolFlypig.github.io/2020/01/06/深度学习应用开发-tensorflow实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李澳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="移动城堡">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深度学习应用开发-tensorflow实践</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-06T17:24:52+08:00">
+                2020-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第一章-深度学习简介及开发环境搭建"><a href="#第一章-深度学习简介及开发环境搭建" class="headerlink" title="第一章 深度学习简介及开发环境搭建"></a>第一章 深度学习简介及开发环境搭建</h1><a id="more"></a>
+<h2 id="1-1-人工智能与机器学习"><a href="#1-1-人工智能与机器学习" class="headerlink" title="1.1 人工智能与机器学习"></a>1.1 人工智能与机器学习</h2><p><strong>人工智能</strong>是要让机器的行为看起来像人所表现出的智能行为一样.<br>人工智能包括<strong>计算智能</strong>、<strong>感知智能</strong>和<strong>认知智能</strong>等层次,目前人工智能还介于前两者之间.<br>目前人工智能所处的阶段还在<strong>“弱人工智能”(Narrow AI)</strong>阶段,距离<strong>“强人工智能”(General AI)</strong>还有较长的路要走.</p>
+<p><strong>机器学习</strong>是人工智能的一个分支,它是实现人工智能的一个核心技术,即以机器学习为手段解决人工智能中的问题.<br><strong>机器学习</strong>是通过一些让计算机可以自动”学习”的算法并从数据中分析获得规律,然后利用规律对新样本进行预测.<br><strong>机器学习</strong>的形式化的描述:对于某类任务<strong>T</strong>和性能度量<strong>P</strong>,如果一个计算机程序在<strong>T</strong>上一<strong>P</strong>衡量的性能随着经验<strong>E</strong>而自我完善,那么就称这个计算机程序在从经验<strong>E</strong>学习.<br>其实机器学习的过程与人类学习很相似,如下图:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-1.png"></p>
+<h2 id="1-2-机器学习分类与算法简介"><a href="#1-2-机器学习分类与算法简介" class="headerlink" title="1.2 机器学习分类与算法简介"></a>1.2 机器学习分类与算法简介</h2><p>机器学习可分为如下几类:</p>
+<ul>
+<li>有监督学习</li>
+<li>无监督学习</li>
+<li>半监督学习</li>
+<li>强化学习</li>
+</ul>
+<p>下面对其一一进行介绍:<br><strong>有监督学习(supervised learning)</strong>:指的是事先需要准备好输入与正确的输出(区分方法)相配套的训练数据,让计算机进行学习,以便当它被输入某个数据时能够得到正确的输出(区分方法).</p>
+<p><strong>无监督学习(unsupervised learning)</strong>的目的是让计算机自己去学习怎样去做一些事情,所有数据只有特征而没有标记.<br><strong>无监督学习</strong>被运用于仅提供输入用数据、需要计算机自己找出数据内在结构的场合.其目的是让计算机从数据中抽取其中所包含的模式和规则.</p>
+<p>二者的中间地带是<strong>半监督学习(semi-supervised learning)</strong>.<br>对于半监督学习,其训练数据一部分有标记,另一部分沒有标记,而沒有标记数据的数量常常极大于有标记数据的数量.<br>它的基本规律是:数据的分布必然不是完全随机的,通过结合有标记数据的局部特征,以及大量没标记数据的整体分布,可以得到比较好的分类结果.</p>
+<p><strong>强化学习(reinforcement learning,RL)</strong>,是解决计算机从感知到决策控制的问题,从而实现通用人工智能.<br>强化学习是目标导向的,从白纸一张的状态开始,经由许多个步骤来实现某一维度上的目标最大化。最简单的理解是在训练过程中,不断去尝试,错误就惩罚,正确就奖励,由此训练得到的模型在各个状态环境中都最好.<br>对强化学习来说,它虽然没有标记,但有一个延迟奖励与训练相关,通过学习过程中的某种激励函数获得某种从状态到行动的映射.强化学习强调如何基于环境而行动,以取得最大化的预期利益.<br>强化学习一般应用于游戏、下棋等需要连续决策的领域.<br>无监督学习的典型应用模式有<strong>聚类</strong>.如下图:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-2.png"><br>有监督学习的典型应用模式有<strong>预测(针对连续数据)</strong>和<strong>分类(针对离散数据)</strong>,如下图:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-3.png"><br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-4.png"></p>
+<h2 id="1-3-神经网络与深度学习"><a href="#1-3-神经网络与深度学习" class="headerlink" title="1.3 神经网络与深度学习"></a>1.3 神经网络与深度学习</h2><p>要介绍神经网络,首先要介绍神经元,生物神经元与神经元的数学模型对比如下图:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-5.png"><br>从上图来看,神经元的数学模型算是比较简单的,其有多个带权的输入和一个偏置值,对其进行加权求和后,再进行激活函数的运算,最后输出.<br>神经网络是由多个神经元相互连接而成,由一些神经元的输出作为另一些神经元的输入,如下图:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-6.png"><br>神经网络可分为<strong>输入层</strong>、<strong>隐藏层</strong>和<strong>输出层</strong>,<strong>输入层</strong>是接受输入数据的层,最后输出结果的层叫做<strong>输出层</strong>,中间的神经元组成的中间层叫做<strong>隐藏层</strong>.<br>我们通常所说的几层的神经网络通常是指的<strong>隐藏层</strong>的数目,比如上面的神经网络即为单层神经网络.<br>在大多数情况下,在设计神经网络时,根据具体要解决的问题,<strong>输入层</strong>和<strong>输出层</strong>往往是固定的,中间的<strong>隐藏层</strong>是需要重点设计的.<br>上图所示的神经网络为<strong>全连接网络</strong>,即后面的节点与前面所有节点均相连.<br>上图中神经网络的计算如下:</p>
+<blockquote>
+<p>z<sub>1</sub> = w<sub>11</sub>*x<sub>1</sub> + w<sub>12</sub>*x<sub>2</sub> + w<sub>13</sub>*x<sub>3</sub> + b<sub>1</sub><br>z<sub>2</sub> = w<sub>21</sub>*x<sub>1</sub> + w<sub>22</sub>*x<sub>2</sub> + w<sub>23</sub>*x<sub>3</sub> + b<sub>2</sub><br>z<sub>2</sub> = w<sub>21</sub>*x<sub>1</sub> + w<sub>22</sub>*x<sub>2</sub> + w<sub>33</sub>*x<sub>3</sub> + b<sub>3</sub><br>a<sub>1</sub> = <em>f</em>(z<sub>1</sub>)<br>a<sub>2</sub> = <em>f</em>(z<sub>2</sub>)<br>a<sub>3</sub> = <em>f</em>(z<sub>3</sub>)</p>
+</blockquote>
+<p>上面公式中的b实际上就是偏置项,即图中最下方的标注着+1的节点.函数<em>f</em>(x)为激活函数,是非线性的.<br>下面介绍两种常见的激活函数:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-7.png"><br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter1/图1-8.png"></p>
+<h2 id="1-4-Anaconda和TensorFlow开发环境搭建"><a href="#1-4-Anaconda和TensorFlow开发环境搭建" class="headerlink" title="1.4 Anaconda和TensorFlow开发环境搭建"></a>1.4 Anaconda和TensorFlow开发环境搭建</h2><p>环境的安装选择Anaconda,在这里不多进行介绍.<br>conda命令是Anaconda中管理包与环境的命令,tensorflow采用conda命令来安装,如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install tensorflow</span><br></pre></td></tr></table></figure></p>
+<p>这个命令将默认安装tensorflow2.0,并且将其安装到默认的base环境中.<br>但是tensorflow2.0与tensorflow1.x是不兼容的,而本次学习使用的是tensorflow1.x,所以我又安装了tensorflow1.15.0,不过这个放在了另一个环境中,如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">conda env list	#列出所有环境</span><br><span class="line">conda create -n tensorflow1 python=3.7	#新建一个名为tensorflow1的环境,并且指明python版本为3.7</span><br><span class="line">conda activate tensorflow1	#激活环境</span><br><span class="line">conda search tensorflow	#在该环境下查找并显示所有tensorflow包的信息</span><br><span class="line">conda install tensorflow==1.15.0	#在该环境下安装1.15.0版本的tensorflow</span><br><span class="line">conda deactivate	#退出该环境</span><br></pre></td></tr></table></figure></p>
+<p>下面再列出几个比较有用的conda命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">conda env remove -n env_name	#删除名为env_name的环境</span><br><span class="line">conda list -n env_name	#查看名为env_name的环境中的所有包,也可以直接在该环境中使用conda list命令</span><br><span class="line">conda remove -n env_name package_name	#删除名为env_name的环境中的名为package_name的包,也可以在该环境中直接使用conda remove package_name命令</span><br><span class="line">conda update conda	#更新conda</span><br><span class="line">conda update anaconda	#更新anaconda</span><br><span class="line">conda update package_name	#更新名为package_name的包</span><br><span class="line">conda update --all	#更新所有库</span><br></pre></td></tr></table></figure></p>
+<h1 id="第二章-TensorFlow编程基础"><a href="#第二章-TensorFlow编程基础" class="headerlink" title="第二章 TensorFlow编程基础"></a>第二章 TensorFlow编程基础</h1><p>再次说明,下面所讲的都是基于TensorFlow1.x的,并不是TensorFlow2.0,下面正式开始.<br>先由一个Hello World示例开始:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个常数运算,将作为一个节点加入到默认计算图中</span></span><br><span class="line">hello = tf.constant(<span class="string">"Hello,World"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个TF会话</span></span><br><span class="line">sess = tf.Session()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行并获得结果</span></span><br><span class="line">print(sess.run(hello))</span><br></pre></td></tr></table></figure></p>
+<p>输出为:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">b'Hello,World'</span></span><br></pre></td></tr></table></figure></p>
+<p>输出前面的’b’表示Bytes literals(字节文字)</p>
+<h2 id="2-1-TensorFlow的基本概念"><a href="#2-1-TensorFlow的基本概念" class="headerlink" title="2.1 TensorFlow的基本概念"></a>2.1 TensorFlow的基本概念</h2><h3 id="2-1-1-TensorFlow的计算模型-计算图"><a href="#2-1-1-TensorFlow的计算模型-计算图" class="headerlink" title="2.1.1 TensorFlow的计算模型:计算图"></a>2.1.1 TensorFlow的计算模型:计算图</h3><p>TensorFlow = Tensor + Flow<br>Tensor    张量</p>
+<ul>
+<li>数据结构:多维数组</li>
+</ul>
+<p>Flow    流</p>
+<ul>
+<li>计算模型:张量之间通过计算而转换的过程</li>
+</ul>
+<p>TensorFlow是一个通过<strong>计算图</strong>的形式表述计算的编程系统,每一个计算都是计算图上的一个节点,节点之间的边描述了计算之间的关系.<br><strong>计算图</strong>是一种有向图,由以下内容构成:</p>
+<ul>
+<li>一组节点,每个<strong>节点</strong>都代表一个<strong>操作</strong>,是一种<strong>运算</strong>.</li>
+<li>一组有向边,每条<strong>边</strong>代表节点之间的<strong>关系</strong>(<strong>数据传递</strong>和<strong>数据依赖</strong>.</li>
+</ul>
+<p>TensorFlow有两种边:</p>
+<ul>
+<li><strong>常规边(实线)</strong>:代表数据依赖关系.一个节点的运算输出成另一个节点的输入,两个节点之间有tensor流动<strong>(值传递)</strong></li>
+<li><strong>特殊边(虚线)</strong>:不携带值,表示两个节点之间的<strong>控制</strong>相关性.比如,happens-before关系,源节点必须在目的节点执行完前完成执行</li>
+</ul>
+<p>计算图的一个实例如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#一个简单计算图</span></span><br><span class="line">node1 = tf.constant(<span class="number">3.0</span>,tf.float32,name=<span class="string">"node1"</span>)</span><br><span class="line">node2 = tf.constant(<span class="number">4.0</span>,tf.float32,name=<span class="string">"node2"</span>)</span><br><span class="line">node3 = tf.add(node1,node2);</span><br><span class="line"></span><br><span class="line">print(node3)</span><br></pre></td></tr></table></figure></p>
+<p>输出为:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Tensor(<span class="string">"Add:0"</span>, shape=(), dtype=float32)</span><br></pre></td></tr></table></figure></p>
+<p>输出的结果并不是一个数字,而是一个张量的结构.<br>上述代码的计算图在TensorBoard中的图形如下图:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-1.png"><br>上例中输出node3并没有得到预想中的7.0,而是输出了一个张量的结构,这是因为<strong>创建静态图只是建立静态计算模型,执行会话才能提供数据并获得结果</strong>.如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 建立对话并显示运行结果</span></span><br><span class="line">sess = tf.Session()</span><br><span class="line">print(<span class="string">"运行sess.run(node1)的结果: "</span>,sess.run(node1))</span><br><span class="line">print(<span class="string">"运行sess.run(node3)的结果: "</span>,sess.run(node3))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭会话</span></span><br><span class="line">sess.close()</span><br></pre></td></tr></table></figure></p>
+<p>运行结果为:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">运行sess.run(node1)的结果:  <span class="number">3.0</span></span><br><span class="line">运行sess.run(node3)的结果:  <span class="number">7.0</span></span><br></pre></td></tr></table></figure></p>
+<p>在Python3中print函数是自动换行的,如果想要其不换行,应写成如下形式:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置分隔符参数 end</span></span><br><span class="line">print(i, end = <span class="string">''</span> )</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-1-2-张量"><a href="#2-1-2-张量" class="headerlink" title="2.1.2 张量"></a>2.1.2 张量</h3><p>在TensorFlow中,所有的数据都通过张量的形式来表示.上一节计算图的实例中所输出的就是张量.<br>从功能的角度,张量可以简单理解为多维数组:</p>
+<ul>
+<li><strong>零阶张量</strong>表示<strong>标量(scalar)</strong>,也就是<strong>一个数</strong></li>
+<li><strong>一阶张量</strong>为<strong>向量(vector)</strong>,也就是<strong>一维数组</strong></li>
+<li><strong>n阶张量</strong>可以理解为一个<strong>n维数组</strong></li>
+</ul>
+<p>张量并没有真正保存数字,它<strong>保存的是计算过程</strong>.<br>张量具有如下属性:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-2.png"><br>有三个术语描述张量的维度:<strong>阶</strong>(rank)、<strong>形状</strong>(shape)、<strong>维数</strong>(dimension number).如下:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-3.png"><br>上面的形状属性括号内的D的含义为当前维度的元素个数.<br>下面是张量形状的代码示例:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tens1 = tf.constant([[[<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>],[<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>]],</span><br><span class="line">                    [[<span class="number">3</span>,<span class="number">3</span>,<span class="number">6</span>],[<span class="number">5</span>,<span class="number">4</span>,<span class="number">3</span>]],</span><br><span class="line">                    [[<span class="number">7</span>,<span class="number">0</span>,<span class="number">1</span>],[<span class="number">9</span>,<span class="number">1</span>,<span class="number">9</span>]],</span><br><span class="line">                    [[<span class="number">11</span>,<span class="number">12</span>,<span class="number">7</span>],[<span class="number">1</span>,<span class="number">3</span>,<span class="number">14</span>]]],name=<span class="string">"tens1"</span>)</span><br><span class="line"><span class="comment"># 语句中包含[],&#123;&#125;或()括号中间换行的就不需要使用多行连接符</span></span><br><span class="line"></span><br><span class="line">print(tens1)</span><br></pre></td></tr></table></figure></p>
+<p>输出为:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Tensor(<span class="string">"tens1:0"</span>, shape=(<span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>), dtype=int32)</span><br></pre></td></tr></table></figure></p>
+<p>该张量的形状为(4,2,3),即第一维(即最外层维度)有4个元素,第二维有两个元素,第三维(即最内层的维度)有3个元素.<br>下面是另一段代码:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">scalar = tf.constant(<span class="number">100</span>)</span><br><span class="line">vector = tf.constant([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">matrix = tf.constant([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]])</span><br><span class="line">cube_matrix = tf.constant([[[<span class="number">1</span>],[<span class="number">2</span>],[<span class="number">3</span>]],[[<span class="number">4</span>],[<span class="number">5</span>],[<span class="number">6</span>]],[[<span class="number">7</span>],[<span class="number">8</span>],[<span class="number">9</span>]]])</span><br><span class="line"></span><br><span class="line"><span class="comment">#get_shape()函数,获取张量的形状</span></span><br><span class="line">print(scalar.get_shape())</span><br><span class="line">print(vector.get_shape())</span><br><span class="line">print(matrix.get_shape())</span><br><span class="line">print(cube_matrix.get_shape())</span><br></pre></td></tr></table></figure></p>
+<p>运行结果:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">()</span><br><span class="line">(<span class="number">5</span>,)</span><br><span class="line">(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">(<span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<p>张量元素的获取也是非常简单的,下面对其进行介绍.<br>阶为1的张量等价于向量,通过<strong>t[i]</strong>获取元素.<br>阶为2的张量等价于矩阵,通过<strong>t[i,j]</strong>获取元素.<br>阶为3的张量,通过<strong>t[i,j,k]</strong>获取元素.<br>示例如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tens1 = tf.constant([[[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">2</span>,<span class="number">3</span>]],[[<span class="number">3</span>,<span class="number">4</span>],[<span class="number">5</span>,<span class="number">6</span>]]])</span><br><span class="line"></span><br><span class="line">sess = tf.Session()</span><br><span class="line">print(sess.run(tens1)[<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>])</span><br><span class="line">sess.close()</span><br></pre></td></tr></table></figure></p>
+<p>运行结果为5.<br>需要注意的一点是访问的是张量的值,因此也要先运行.</p>
+<p>TensorFlow支持14种不同的类型(下面只是列出了比较常用的一些,并未全部列出):</p>
+<ul>
+<li>浮点数: tf.float32、tf.float64</li>
+<li>整数: tf.int8、tf.int16、tf.int32、tf.int64、tf.uint8</li>
+<li>布尔: tf.bool</li>
+<li>复数: tf.complex64、tf.complex128</li>
+<li>字符串: tf.string</li>
+</ul>
+<p><strong>默认类型</strong>:不带小数点的数会被默认为int32,带小数点的数会被默认为float32<br><strong>TensorFlow会对参与运算的所有张量进行类型的检查,发现类型不匹配是时会报错</strong>.<br>注意!只要不是一个类型就会报错,哪怕是int32与int64之间进行运算也会报错.</p>
+<h3 id="2-2-3-操作"><a href="#2-2-3-操作" class="headerlink" title="2.2.3 操作"></a>2.2.3 操作</h3><p>计算图中的<strong>节点</strong>就是<strong>操作</strong>(Operation)</p>
+<ul>
+<li>一次加法也是一个操作</li>
+<li>一次乘法也是一个操作</li>
+<li>构建一些变量的初始值也是一个操作</li>
+</ul>
+<p>每个运算操作都有<strong>属性</strong>,它在构建图的时候需要确定下来.<br>操作可以和计算<strong>设备绑定</strong>,指定操作在某个设备上执行.比如让CPU运行某些操作,让GPU运行另一些操作.<br>操作之间存在顺序关系,这些操作之间的的<strong>依赖</strong>就是<strong>“边”</strong>.<br>如果操作A的输入是操作B执行的结果,那么这个操作就依赖于操作B.<br>代码示例如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义变量a</span></span><br><span class="line">a = tf.Variable(<span class="number">1</span>,name=<span class="string">"a"</span>)</span><br><span class="line"><span class="comment"># 定义操作b为a+1</span></span><br><span class="line">b = tf.add(a,<span class="number">1</span>,name=<span class="string">"b"</span>)</span><br><span class="line"><span class="comment">#定义操作c为b*4</span></span><br><span class="line">c = tf.multiply(b,<span class="number">4</span>,name=<span class="string">"c"</span>)</span><br><span class="line"><span class="comment">#定义d为c-b</span></span><br><span class="line">d = tf.subtract(c,b,name=<span class="string">"d"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>其在TensorBoard中的计算图如下:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-4.png"></p>
+<h2 id="2-2-TensorFlow的基本的运算"><a href="#2-2-TensorFlow的基本的运算" class="headerlink" title="2.2 TensorFlow的基本的运算"></a>2.2 TensorFlow的基本的运算</h2><h3 id="2-2-1-会话"><a href="#2-2-1-会话" class="headerlink" title="2.2.1 会话"></a>2.2.1 会话</h3><p><strong>会话</strong>拥有并管理TensorFlow程序运行时的所有<strong>资源</strong>,当所有计算完成之后需要<strong>关闭会话</strong>帮助系统<strong>回收资源</strong>.<br>示例如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义计算图</span></span><br><span class="line">tens1 = tf.constant([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个会话</span></span><br><span class="line">sess = tf.Session()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用这个创建好的会话来得到关心的运算的结果,比如可以调用sess.run(result)</span></span><br><span class="line"><span class="comment"># 来得到张量result的取值</span></span><br><span class="line">print(sess.run(tens1))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭会话使得本次运行中使用到的资源可以被释放</span></span><br><span class="line">sess.close()</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的一点,创建会话的tf.Session()函数第一个S需要大写.<br>需要明确调用 Session.close()函数来关闭会话并释放资源,在上述程序中,当程序因为异常退出时,关闭会话函数可能就不会被执行从而导致资源泄漏.<br>因此可以通过下面两种模式来确保会话的关闭.</p>
+<p>会话的模式1:使用Python中的finally语句.示例代码如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义计算图</span></span><br><span class="line">tens1 = tf.constant([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个会话</span></span><br><span class="line">sess = tf.Session()</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    print(sess.run(tens1))</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    print(<span class="string">"Exception!"</span>)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    <span class="comment">#确保能关闭会话使得本次运行中使用到的资源可以被释放</span></span><br><span class="line">    sess.close()</span><br></pre></td></tr></table></figure></p>
+<p>会话的模式2:使用Python中的with语句.示例代码如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">node1 = tf.constant(<span class="number">3.0</span>,tf.float32,name=<span class="string">"node1"</span>)</span><br><span class="line">node2 = tf.constant(<span class="number">4.0</span>,tf.float32,name=<span class="string">"node2"</span>)</span><br><span class="line">result = tf.add(node1,node2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个会话,并通过Python中的上下文管理器来管理这个会话</span></span><br><span class="line"><span class="keyword">with</span>  tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    <span class="comment"># 使用创建好的会话来计算关系的结果</span></span><br><span class="line">    print(sess.run(result))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不需要再调用Session.close()函数来关闭会话</span></span><br><span class="line"><span class="comment"># 当上下文退出时会话关闭和资源释放也自动完成了</span></span><br></pre></td></tr></table></figure></p>
+<p>TensorFlow不会自动生成默认的会话,需要手动指定.<br>当默认的会话被指定之后就可以通过<strong>tf.Tensor.eval()函数</strong>来计算一个张量的取值.<br>代码示例如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">node1 = tf.constant(<span class="number">3.0</span>,tf.float32,name=<span class="string">"node1"</span>)</span><br><span class="line">node2 = tf.constant(<span class="number">4.0</span>,tf.float32,name=<span class="string">"node2"</span>)</span><br><span class="line">result = tf.add(node1,node2)</span><br><span class="line"></span><br><span class="line">sess = tf.Session()</span><br><span class="line"><span class="keyword">with</span> sess.as_default():</span><br><span class="line">    print(result.eval())</span><br></pre></td></tr></table></figure></p>
+<p>或者用如下方式也是可以的:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">node1 = tf.constant(<span class="number">3.0</span>,tf.float32,name=<span class="string">"node1"</span>)</span><br><span class="line">node2 = tf.constant(<span class="number">4.0</span>,tf.float32,name=<span class="string">"node2"</span>)</span><br><span class="line">result = tf.add(node1,node2)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    print(result.eval(session=sess))</span><br></pre></td></tr></table></figure></p>
+<p>我在这里还发现了一个比较有意思的现象,如果像下面这样写的话,运行会报错:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sess = tf.Session()</span><br><span class="line">sess.as_default()</span><br><span class="line">print(result.eval())</span><br><span class="line">sess.close()</span><br></pre></td></tr></table></figure></p>
+<p>但是改成下面这样就可以正确运行了.<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.as_default()</span><br><span class="line">    print(result.eval())</span><br></pre></td></tr></table></figure></p>
+<p>刚开始的那个写法是不正确的 ,但为什么不正确我也不太清楚.vscode给出的提示如下:Use <code>with sess.as_default()</code> or pass an explicit session to <code>eval(session=sess)</code>.以后还是用这两种形式指定默认会话吧.<br>在交互式环境下,Python脚本或者Jupyter编辑器下,通过设置默认会话来获取张量的取值更加方便.<br><strong>tf.InteractiveSession()</strong>,这个函数会生成一个会话并自动将生成的会话注册为默认会话.<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"></span><br><span class="line">print(result.eval())</span><br><span class="line">sess.close()</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-2-2-常量和变量"><a href="#2-2-2-常量和变量" class="headerlink" title="2.2.2 常量和变量"></a>2.2.2 常量和变量</h3><p><strong>常量(constant)</strong>是在运行过程中不会改变的单元,在TensorFlow中无须进行初始化操作.函数原型如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tf.constant(</span><br><span class="line">    value,</span><br><span class="line">    dtype=<span class="keyword">None</span>,</span><br><span class="line">    shape=<span class="keyword">None</span>,</span><br><span class="line">    name=<span class="string">'Const'</span>,</span><br><span class="line">    verify_shape=<span class="keyword">False</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p><strong>value</strong>:是一个必须的值,可以是一个数值或字符串,也可以是一个列表.可以是一维的,也可以是多维的.<br><strong>dtype</strong>:数据类型.<br><strong>shape</strong>:张量的”形状”,即维数及每一维的大小.<br><strong>name</strong>:张量的名字,字符串类型.<br><strong>verify_shape</strong>:默认为False,如果修改为True的话表示检查value的形状与shape是否相符,如果不符会报错.<br>示例代码如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a = tf.constant(<span class="number">1.0</span>,dtype=tf.float32,name=<span class="string">'a'</span>)</span><br><span class="line">b = tf.constant(<span class="number">2.5</span>,dtype=tf.float32,name=<span class="string">'b'</span>)</span><br><span class="line">c = tf.add(a,b,name=<span class="string">'c'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    c_value = sess.run(c)</span><br><span class="line">    print(c_value)</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为3.5.</p>
+<p><strong>变量(Variable)</strong>是在运行过程中会改变的单元,在TensorFlow中须进行<strong>初始化操作</strong>.<br>变量的定义与常量很相似,虽然函数有很多参数,但最常用的还是初始值,数据类型,名字这三个.函数原型如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># V是大写!</span></span><br><span class="line">tf.Variable(</span><br><span class="line">    initial_value=<span class="keyword">None</span>,</span><br><span class="line">    trainable=<span class="keyword">True</span>,</span><br><span class="line">    collections=<span class="keyword">None</span>,</span><br><span class="line">    validate_shape=<span class="keyword">True</span>,</span><br><span class="line">    caching_device=<span class="keyword">None</span>,</span><br><span class="line">    name=<span class="keyword">None</span>,</span><br><span class="line">    variable_def=<span class="keyword">None</span>,</span><br><span class="line">    dtype=<span class="keyword">None</span>,</span><br><span class="line">    expected_shape=<span class="keyword">None</span>,</span><br><span class="line">    import_scope=<span class="keyword">None</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p><strong>变量</strong>须进行<strong>初始化操作</strong>,进行初始化的语句如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 个别变量初始化,这里的name_variable为你自己定义的变量名</span></span><br><span class="line">init_op = name_variable.initializer()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 所有变量初始化</span></span><br><span class="line">init_op = tf.global_variables_initializer()</span><br></pre></td></tr></table></figure></p>
+<p>示例代码如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">node1 = tf.Variable(<span class="number">3.0</span>,dtype=tf.float32,name=<span class="string">'node1'</span>)</span><br><span class="line">node2 = tf.Variable(<span class="number">4.0</span>,dtype=tf.float32,name=<span class="string">'node2'</span>)</span><br><span class="line">result = tf.add(node1,node2,name=<span class="string">'add'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    <span class="comment">#变量初始化</span></span><br><span class="line">    init = tf.global_variables_initializer()</span><br><span class="line">    sess.run(init)</span><br><span class="line">    </span><br><span class="line">    print(sess.run(result))</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为7.0<br>上面的代码增加了一个init初始化变量,并<strong>调用会话的run命令对参数进行初始化</strong>.这里一定要注意!<br>上述代码中调用tf.global_variables_initializer()函数只是进行了一个定义,并没有对变量进行初始化,必须要使用run命令对参数进行初始化.如果吧上面代码中的sess.run(init)删除后再运行的话,会发生错误.</p>
+<h3 id="2-2-3-变量的赋值"><a href="#2-2-3-变量的赋值" class="headerlink" title="2.2.3 变量的赋值"></a>2.2.3 变量的赋值</h3><p>与传统编程语言不同,TensorFlow中的变量定义后,一般无需人工赋值,系统会根据算法模型,训练优化过程中<strong>自动调整变量对应的数值</strong>.<br>比如权重Weight变量w,经过多次迭代,会自动调整.如果不想让其自动调整,可以在定义变量时将trainable属性置为False.如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">epoch = tf.Variable(<span class="number">0</span>,name=<span class="string">'epoch'</span>,trainable=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure></p>
+<p>特殊情况需要人工更新的,可用tf.assign()进行变量赋值,函数参数如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tf.assign(</span><br><span class="line">    ref,</span><br><span class="line">    value,</span><br><span class="line">    validate_shape=<span class="keyword">None</span>,</span><br><span class="line">    use_locking=<span class="keyword">None</span>,</span><br><span class="line">    name=<span class="keyword">None</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>其中,ref必须是tf.Variable创建的Tensor,我看文档里说value也是Tensor,但是在调用函数时将数值或者列表传递给value时也可以运行,可能是被包装成Tensor了吧.此外,默认情况下ref的shape和value的shape是相同的.<br>代码示例如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">value = tf.Variable(<span class="number">0</span>,name=<span class="string">'value'</span>)</span><br><span class="line">one = tf.constant(<span class="number">1</span>)</span><br><span class="line">new_value = tf.add(value,one)</span><br><span class="line"><span class="comment"># 将new_value的值赋给value</span></span><br><span class="line">update_value = tf.assign(value,new_value)</span><br><span class="line"></span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    	<span class="comment"># 执行赋值操作</span></span><br><span class="line">        sess.run(update_value)</span><br><span class="line">        print(sess.run(value),end=<span class="string">' '</span>)</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span> <span class="number">10</span></span><br></pre></td></tr></table></figure></p>
+<p>同样的,上面的代码调用assign函数只是定义了一个赋值操作,要想执行该操作,必须要再调用run命令.<br>下面再贴一段计算1+2+3+…+10的代码:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sum_value = tf.Variable(<span class="number">0</span>,name=<span class="string">'sum_value'</span>)</span><br><span class="line">number = tf.Variable(<span class="number">1</span>,name=<span class="string">'number'</span>)</span><br><span class="line">one = tf.constant(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">new_sum_value = tf.add(sum_value,number)</span><br><span class="line">new_number = tf.add(number,one)</span><br><span class="line"></span><br><span class="line">update_op1 = tf.assign(sum_value,new_sum_value)</span><br><span class="line">update_op2 = tf.assign(number,new_number)</span><br><span class="line"></span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        sess.run(update_op1)</span><br><span class="line">        sess.run(update_op2)</span><br><span class="line">    print(sess.run(sum_value))</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为55.</p>
+<h3 id="2-2-4-占位符、Feed数据填充和Fetch数据获取"><a href="#2-2-4-占位符、Feed数据填充和Fetch数据获取" class="headerlink" title="2.2.4 占位符、Feed数据填充和Fetch数据获取"></a>2.2.4 占位符、Feed数据填充和Fetch数据获取</h3><p>TensorFlow中的<strong>Variable变量类型</strong>,在定义时需要初始化,但有些变量<strong>定义时并不知道其数值</strong>,只有当真正开始运行程序时,才由外部输入,比如训练数据,这时候需要用到<strong>占位符</strong>.<br>tf.placeholder<strong>占位符</strong>,是TensorFlow中特有的一种数据结构,类似动态变量,函数的参数、或者C语言或者Python语言中格式化输出时的”%”占位符.<br>占位符Placeholder的函数参数如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tf.placeholder(</span><br><span class="line">    dtype,</span><br><span class="line">    shape=<span class="keyword">None</span>,</span><br><span class="line">    name=<span class="keyword">None</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>示例如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此代码生成一个2*3的二维数组,矩阵中每个元素的类型都是tf.float32,</span></span><br><span class="line"><span class="comment"># 内部对应的符号名称是tx</span></span><br><span class="line">x = tf.placeholder(tf.float32,[<span class="number">2</span>,<span class="number">3</span>],name=<span class="string">'tx'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>如果构建了一个包含placeholder操作的计算图,当在session中调用run方法时,placeholder占用的变量必须通过<strong>feed_dict参数</strong>传递进去,否则会报错.<br>传值时须按字典格式,以占位符的变量名为键,以所要传递的数据为值.<br>示例代码如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">a = tf.placeholder(tf.float32,name=<span class="string">'a'</span>)</span><br><span class="line">b = tf.placeholder(tf.float32,name=<span class="string">'b'</span>)</span><br><span class="line">c = tf.multiply(a,b,name=<span class="string">'c'</span>)</span><br><span class="line"></span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)</span><br><span class="line">    <span class="comment"># 通过feed_dict的参数传值,按字典格式</span></span><br><span class="line">    result = sess.run(c,feed_dict=&#123;a:<span class="number">8.0</span>,b:<span class="number">3.5</span>&#125;)</span><br><span class="line">    print(result)</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为28.0</p>
+<p><strong>多次操作可以通过一次Feed完成执行</strong>:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">a = tf.placeholder(tf.float32,name=<span class="string">'a'</span>)</span><br><span class="line">b = tf.placeholder(tf.float32,name=<span class="string">'b'</span>)</span><br><span class="line">c = tf.multiply(a,b,name=<span class="string">'c'</span>)</span><br><span class="line">d = tf.subtract(a,b,name=<span class="string">'d'</span>)</span><br><span class="line"></span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)</span><br><span class="line">    </span><br><span class="line">    result = sess.run([c,d],feed_dict=&#123;a:[<span class="number">8.0</span>,<span class="number">2.0</span>,<span class="number">3.5</span>],b:[<span class="number">1.5</span>,<span class="number">2.0</span>,<span class="number">4.0</span>]&#125;)</span><br><span class="line">    </span><br><span class="line">    print(result)</span><br><span class="line">    <span class="comment"># 取结果中的第一个</span></span><br><span class="line">    print(result[<span class="number">0</span>])</span><br></pre></td></tr></table></figure></p>
+<p>输出为:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[array([<span class="number">12.</span>,  <span class="number">4.</span>, <span class="number">14.</span>], dtype=float32), array([ <span class="number">6.5</span>,  <span class="number">0.</span> , <span class="number">-0.5</span>], dtype=float32)]</span><br><span class="line">[<span class="number">12.</span>  <span class="number">4.</span> <span class="number">14.</span>]</span><br></pre></td></tr></table></figure></p>
+<p>话说这里的输出结果不就是numpy中的数组吗,而且计算也跟numpy中的一样.</p>
+<p>也可以<strong>一次返回多个值分别赋给多个变量</strong>,Python中是支持这种用法的.<br>示例代码如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">a = tf.placeholder(tf.float32,name=<span class="string">'a'</span>)</span><br><span class="line">b = tf.placeholder(tf.float32,name=<span class="string">'b'</span>)</span><br><span class="line">c = tf.multiply(a,b,name=<span class="string">'c'</span>)</span><br><span class="line">d = tf.subtract(a,b,name=<span class="string">'d'</span>)</span><br><span class="line"></span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#返回的两个值分别赋给两个变量</span></span><br><span class="line">    rc,rd = sess.run([c,d],feed_dict=&#123;a:[<span class="number">8.0</span>,<span class="number">2.0</span>,<span class="number">3.5</span>],b:[<span class="number">1.5</span>,<span class="number">2.0</span>,<span class="number">4.0</span>]&#125;)</span><br><span class="line">    </span><br><span class="line">    print(<span class="string">'value of c = '</span>,rc,<span class="string">'value of d = '</span>,rd)</span><br></pre></td></tr></table></figure></p>
+<p>输出为:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">value of c =  [<span class="number">12.</span>  <span class="number">4.</span> <span class="number">14.</span>] value of d =  [ <span class="number">6.5</span>  <span class="number">0.</span>  <span class="number">-0.5</span>]</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-3-TensorBoard可视化初步"><a href="#2-3-TensorBoard可视化初步" class="headerlink" title="2.3 TensorBoard可视化初步"></a>2.3 TensorBoard可视化初步</h2><p>TensorBoard是TensorFlow的可视化工具,通过TensorFlow程序运行过程中输出的日志文件可视化TensorFlow程序的运行状态.<br>TensorBoard和TensorFlow程序跑在不同的进程中.<br>示例代码如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 清除default graph和不断增加的节点</span></span><br><span class="line">tf.reset_default_graph()</span><br><span class="line"></span><br><span class="line"><span class="comment"># logdir改为自己机器上的合适路径,我这里用的是相对路径</span></span><br><span class="line">logdir = <span class="string">'log/'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义一个简单的计算图,实现向量加法的操作</span></span><br><span class="line">input1 = tf.constant([<span class="number">1.0</span>,<span class="number">2.0</span>,<span class="number">3.0</span>],name=<span class="string">'input1'</span>)</span><br><span class="line">input2 = tf.Variable(tf.random_uniform([<span class="number">3</span>]),name=<span class="string">'input2'</span>)</span><br><span class="line">output = tf.add_n([input1,input2],name=<span class="string">'add'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成一个写日志文件的Writer,并将当前的TensorFlow计算图写入日志</span></span><br><span class="line">writer = tf.summary.FileWriter(logdir,tf.get_default_graph())</span><br><span class="line">writer.close()</span><br></pre></td></tr></table></figure></p>
+<p>然后在终端中运行如下命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># /path/log改为你自己机器上日志文件的存放位置</span><br><span class="line">tensorboard --logdir=/path/log</span><br></pre></td></tr></table></figure></p>
+<p>这样就会运行TensorBoard了,启动服务的端口默认为6006,使用–port参数可以改变启动服务的端口.<br>在浏览器访问<a href="http://localhost:6006即可打开TensorBoard" target="_blank" rel="noopener">http://localhost:6006即可打开TensorBoard</a>.<br>下面是TensorBoard中的常用API:<br><img src="/2020/01/06/深度学习应用开发-tensorflow实践/chapter2/图2-5.png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/深度学习/" rel="tag"># 深度学习</a>
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/03/数字电路与逻辑设计学习笔记/" rel="next" title="数字电路与逻辑设计学习笔记">
+                <i class="fa fa-chevron-left"></i> 数字电路与逻辑设计学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="李澳" />
+            
+              <p class="site-author-name" itemprop="name">李澳</p>
+              <p class="site-description motion-element" itemprop="description">自娱自乐</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一章-深度学习简介及开发环境搭建"><span class="nav-text">第一章 深度学习简介及开发环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-人工智能与机器学习"><span class="nav-text">1.1 人工智能与机器学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-机器学习分类与算法简介"><span class="nav-text">1.2 机器学习分类与算法简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-神经网络与深度学习"><span class="nav-text">1.3 神经网络与深度学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-Anaconda和TensorFlow开发环境搭建"><span class="nav-text">1.4 Anaconda和TensorFlow开发环境搭建</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章-TensorFlow编程基础"><span class="nav-text">第二章 TensorFlow编程基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-TensorFlow的基本概念"><span class="nav-text">2.1 TensorFlow的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-TensorFlow的计算模型-计算图"><span class="nav-text">2.1.1 TensorFlow的计算模型:计算图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-2-张量"><span class="nav-text">2.1.2 张量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-3-操作"><span class="nav-text">2.2.3 操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-TensorFlow的基本的运算"><span class="nav-text">2.2 TensorFlow的基本的运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-会话"><span class="nav-text">2.2.1 会话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-常量和变量"><span class="nav-text">2.2.2 常量和变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-3-变量的赋值"><span class="nav-text">2.2.3 变量的赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-4-占位符、Feed数据填充和Fetch数据获取"><span class="nav-text">2.2.4 占位符、Feed数据填充和Fetch数据获取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-TensorBoard可视化初步"><span class="nav-text">2.3 TensorBoard可视化初步</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李澳</span>
+
+  
+</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
