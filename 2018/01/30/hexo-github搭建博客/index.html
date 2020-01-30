@@ -355,53 +355,53 @@
         <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>我在网上看了不少博客，但是没有一个能让我完整搭建起来一个博客的，还是多亏了大佬明的帮助，我才把博客搭建起来。下面写一下我搭建博客的步骤。以下步骤是在默认你安装git下进行的。<br><a id="more"></a></p>
 <h1 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h1><h2 id="1-安装node-js"><a href="#1-安装node-js" class="headerlink" title="1. 安装node js"></a>1. 安装node js</h2><p>hexo基于node js，因此要先安装node js。先进入官网，链接如下：<a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">https://nodejs.org/en/download/</a>  ，下载源码包，即Source Code下的node-v8.9.4.tar.gz文件。<br>将该文件放在~/下(好像说是放在中文文件夹下会安装失败），然后依次运行如下命令</p>
 <blockquote>
-<pre><code>tar zxvf node-v8.9.4.tar.gz    //解压缩
- cd node-v8.9.4/    //进入该文件夹
- ./configure        //执行该文件夹下的可执行文件
- make -j4    //编译
- sudo make install    //安装编译好的源码包
+<pre><code>   tar zxvf node-v8.9.4.tar.gz    //解压缩
+    cd node-v8.9.4/    //进入该文件夹
+    ./configure        //执行该文件夹下的可执行文件
+    make -j4    //编译
+    sudo make install    //安装编译好的源码包
 </code></pre></blockquote>
 <p>至此node js就安装完毕了</p>
 <h2 id="2-安装hexo"><a href="#2-安装hexo" class="headerlink" title="2.  安装hexo"></a>2.  安装hexo</h2><p>运行如下命令</p>
 <blockquote>
-<pre><code>npm install hexo-cli -g    
- hexo init blog    //建立一个名为blog的文件夹并将其初始化
- cd blog
- npm install    
- hexo s    //运行博客
+<pre><code>   npm install hexo-cli -g    
+    hexo init blog    //建立一个名为blog的文件夹并将其初始化
+    cd blog
+    npm install    
+    hexo s    //运行博客
 </code></pre></blockquote>
 <p>当执行完最后一条指令时，如果显示如下语句，</p>
 <blockquote>
-<pre><code>INFO  Hexo is running at http://localhost:4000/. Press Ctrl+C to stop.
+<pre><code>   INFO  Hexo is running at http://localhost:4000/. Press Ctrl+C to stop.
 </code></pre></blockquote>
 <p>说明你成功了，这时候你访问<a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> 网址即可看到你的博客。<strong>注意：hexo命令以及部分npm命令一定要在blog目录下运行（即你安装hexo的那个目录)</strong>。</p>
 <h2 id="3-连接到github"><a href="#3-连接到github" class="headerlink" title="3. 连接到github"></a>3. 连接到github</h2><ul>
 <li><h3 id="创建github仓库并配置git"><a href="#创建github仓库并配置git" class="headerlink" title="创建github仓库并配置git"></a>创建github仓库并配置git</h3>仓库名一定要是<strong>你的注册名.github.io</strong>，建好仓库之后配置git，输入以下命令</li>
 </ul>
 <blockquote>
-<pre><code>git config --global user.name &quot;github注册名&quot;
- git config --global user.eamil &quot;github注册邮箱&quot;
+<pre><code>   git config --global user.name &quot;github注册名&quot;
+    git config --global user.eamil &quot;github注册邮箱&quot;
 </code></pre></blockquote>
 <p>现在git就配置好了    </p>
 <ul>
 <li><h3 id="配SSH"><a href="#配SSH" class="headerlink" title="配SSH"></a>配SSH</h3>先生成SSH密钥，输入以下命令</li>
 </ul>
 <blockquote>
-<pre><code>ssh-keygen -t rsa -C &quot;github注册邮箱&quot;
+<pre><code>   ssh-keygen -t rsa -C &quot;github注册邮箱&quot;
 </code></pre></blockquote>
 <p>复制~/.ssh/idrsa.pub里的内容，进入github，点击setting-&gt;SSH keys添加一个新的SSH密钥，将刚才复制的内容粘贴到里面就可以了。</p>
 <ul>
 <li><h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3>打开~/blog/_config.yml文件，修改其中的内容，下面是我的修改内容</li>
 </ul>
 <blockquote>
-<pre><code>url: AFoolFlypig.github.io    //将这里改为你的仓库名
- root: /
- permalink: :year/:month/:day/:title/        
+<pre><code>   url: AFoolFlypig.github.io    //将这里改为你的仓库名
+    root: /
+    permalink: :year/:month/:day/:title/        
 
-deploy:
-  type: git
-   repository: https://github.com/AFoolFlypig/AFoolFlypig.github.io.git
-   branch: master
+   deploy:
+     type: git
+      repository: https://github.com/AFoolFlypig/AFoolFlypig.github.io.git
+      branch: master
 </code></pre></blockquote>
 <p>  上面这个配置每次部署的时候都要输github帐号密码，下面这个配置就厉害了，不用输帐号密码，直接就能部署。这个跟上面那个比也就仓库那不一样，其他的地方都是一样的。</p>
 <blockquote>
@@ -418,10 +418,10 @@ deploy:
 </code></pre></blockquote>
 <p>然后进入blog目录，执行以下命令</p>
 <blockquote>
-<pre><code>npm install hexo-deployer-git --save 
- hexo g    
- hexo d
- hexo s
+<pre><code>     npm install hexo-deployer-git --save 
+      hexo g    
+      hexo d
+      hexo s
 </code></pre></blockquote>
 <p>  就能访问你的博客了。但是现在只是一个粗坯，还需要进一步的配置。至于如何配置，网上有很多教程，我这里就不说了</p>
 
@@ -547,7 +547,7 @@ deploy:
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -569,7 +569,7 @@ deploy:
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -792,6 +792,28 @@ deploy:
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 

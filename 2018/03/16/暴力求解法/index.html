@@ -87,14 +87,14 @@
 <meta property="og:site_name" content="移动城堡">
 <meta property="og:description" content="到暴力求解法了，慢慢来吧。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="/2018/03/16/暴力求解法/p1.png">
-<meta property="og:image" content="/2018/03/16/暴力求解法/p2.png">
-<meta property="og:image" content="/2018/03/16/暴力求解法/p3.png">
+<meta property="og:image" content="/16/暴力求解法/03/16/暴力求解法/p1.png">
+<meta property="og:image" content="/16/暴力求解法/03/16/暴力求解法/p2.png">
+<meta property="og:image" content="/16/暴力求解法/03/16/暴力求解法/p3.png">
 <meta property="og:updated_time" content="2018-03-27T03:39:46.693Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="暴力求解法">
 <meta name="twitter:description" content="到暴力求解法了，慢慢来吧。">
-<meta name="twitter:image" content="/2018/03/16/暴力求解法/p1.png">
+<meta name="twitter:image" content="/16/暴力求解法/03/16/暴力求解法/p1.png">
 
 
 
@@ -360,9 +360,9 @@
 <h1 id="1-素数环（Prime-Ring-Problem，uva524）"><a href="#1-素数环（Prime-Ring-Problem，uva524）" class="headerlink" title="1. 素数环（Prime Ring Problem，uva524）"></a>1. 素数环（Prime Ring Problem，uva524）</h1><p>解题思路：这个题就是用回溯法。不过要注意测试第一个和最后一个数，判断二者之和是否是素数。<strong>如果在回溯法中使用了辅助全局变量，一定要把它们恢复原状，如本题中的代码第33行</strong>，若函数有多个出口，则需要在每个出口处恢复被修改的值。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">20</span>;</span><br><span class="line"><span class="keyword">int</span> n,vis[maxn],Case = <span class="number">0</span>,num[maxn];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">is_prime</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(a &lt;= <span class="number">1</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">int</span> m = <span class="built_in">floor</span>(<span class="built_in">sqrt</span>(a) + <span class="number">0.5</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">2</span>;i &lt;= m;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(a % i == <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bfs</span><span class="params">(<span class="keyword">int</span> cur)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(cur == n &amp;&amp; is_prime(num[<span class="number">0</span>] + num[n - <span class="number">1</span>]))&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i &gt; <span class="number">0</span>) <span class="built_in">printf</span>(<span class="string">" "</span>);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%d"</span>,num[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">2</span>;i &lt;= n;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vis[i] &amp;&amp; is_prime(i + num[cur - <span class="number">1</span>]))&#123;</span><br><span class="line">                num[cur] = i;</span><br><span class="line">                vis[i] = <span class="number">1</span>;</span><br><span class="line">                bfs(cur + <span class="number">1</span>);</span><br><span class="line">                vis[i] = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n) == <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="built_in">memset</span>(vis,<span class="number">0</span>,<span class="keyword">sizeof</span>(vis));</span><br><span class="line">        num[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        vis[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(++Case &gt; <span class="number">1</span>) <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Case %d:\n"</span>,Case);</span><br><span class="line">        bfs(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h1 id="2-方格分割"><a href="#2-方格分割" class="headerlink" title="2. 方格分割"></a>2. 方格分割</h1><p>6x6的方格，沿着格子的边线剪开成两部分。<br>要求这两部分的形状完全相同。</p>
 <p>如图：p1.png, p2.png, p3.png 就是可行的分割法。</p>
-<img src="/2018/03/16/暴力求解法/p1.png">
-<img src="/2018/03/16/暴力求解法/p2.png">
-<img src="/2018/03/16/暴力求解法/p3.png">
+<img src="/16/暴力求解法/03/16/暴力求解法/p1.png">
+<img src="/16/暴力求解法/03/16/暴力求解法/p2.png">
+<img src="/16/暴力求解法/03/16/暴力求解法/p3.png">
 <p>试计算：<br>包括这3种分法在内，一共有多少种不同的分割方法。<br>注意：旋转对称的属于同一种分割法。</p>
 <p>请提交该整数，不要填写任何多余的内容或说明文字。</p>
 <p>解题思路:这个题挺好的一个题,我刚开始没想到怎么做,题目中说的两部分即是关于(3,3)点中心对称.我们从(3,3)点出发,两人沿着边相向而行,等到达边界即为一种情况,<strong>用回溯法解决即可</strong>,由于旋转对称属于同一种分割法,所以结果要除4.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> dir[<span class="number">4</span>][<span class="number">2</span>] = &#123;&#123;<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">-1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">0</span>,<span class="number">1</span>&#125;,&#123;<span class="number">0</span>,<span class="number">-1</span>&#125;&#125;;</span><br><span class="line"><span class="keyword">int</span> vis[N+<span class="number">1</span>][N+<span class="number">1</span>],ans = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x == <span class="number">0</span> || x == <span class="number">6</span> || y == <span class="number">0</span> || y == <span class="number">6</span>)&#123;</span><br><span class="line">        ans++;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">4</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">int</span> ax = x + dir[i][<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">int</span> ay = y + dir[i][<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">if</span>(vis[ax][ay]) <span class="keyword">continue</span>;</span><br><span class="line">        vis[ax][ay] = <span class="number">1</span>;</span><br><span class="line">        vis[N-ax][N-ay] = <span class="number">1</span>;</span><br><span class="line">        dfs(ax,ay);</span><br><span class="line">        vis[ax][ay] = <span class="number">0</span>;</span><br><span class="line">        vis[N-ax][N-ay] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(vis,<span class="number">0</span>,<span class="keyword">sizeof</span>(vis));</span><br><span class="line">    vis[N/<span class="number">2</span>][N/<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">    dfs(N/<span class="number">2</span>,N/<span class="number">2</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,ans/<span class="number">4</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -491,7 +491,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -513,7 +513,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -736,6 +736,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 
