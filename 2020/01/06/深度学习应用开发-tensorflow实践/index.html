@@ -166,7 +166,7 @@
 <meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter7/图7-15.png">
 <meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter7/图7-16.png">
 <meta property="og:image" content="/2020/01/06/深度学习应用开发-tensorflow实践/chapter7/图7-17.png">
-<meta property="og:updated_time" content="2020-01-23T02:11:50.256Z">
+<meta property="og:updated_time" content="2020-02-20T10:53:44.989Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深度学习应用开发-tensorflow实践">
 <meta name="twitter:description" content="第一章 深度学习简介及开发环境搭建">
@@ -415,6 +415,37 @@
 
           
 
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  30.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  127 分钟
+                </span>
+              
+            </div>
           
 
           
@@ -914,7 +945,7 @@
 <h3 id="7-2-4-TensorFlow中CNN的相关函数"><a href="#7-2-4-TensorFlow中CNN的相关函数" class="headerlink" title="7.2.4 TensorFlow中CNN的相关函数"></a>7.2.4 TensorFlow中CNN的相关函数</h3><p>卷积函数：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.nn.conv2d(input, filter, strides, padding, use_cudnn_on_gpu=<span class="keyword">None</span>,name=<span class="keyword">None</span>)</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>input：需要做卷积的输入数据。注意：这是一个<strong>4维张量</strong>（[batch,in_height,in_width,in_channels]），要求类型为float32或float64其中之一。batch为图片的数量，in_height 为图片高度，in_weight 为图片宽度，in_channel 为图片的通道数，灰度图该值为1，彩色图为3。</li>
-<li>filter：卷积核。[filter_height, filter_width, in_channels, out_channels]，其中filter_height为卷积核高度，filter_weight为卷积核宽度，in_channels是图像通道数 ，和input 的in_channels要保持一致，out_channels是卷积核数量。</li>
+<li>filter：卷积核。[filter_height, filter_width, in_channels, out_channels]，其中filter_height为卷积核高度，filter_width为卷积核宽度，in_channels是图像通道数 ，和input 的in_channels要保持一致，out_channels是卷积核数量。</li>
 <li>strides：图像每一维的步长，是一个一维向量，长度为4。一般为[1,stride,stride,1]，其中第一个1和最后一个1是固定值，需要改变的是中间的两个数，即在x轴和y轴的移动步长。</li>
 <li>padding：定义元素边框与元素内容之间的空间。”SAME”或”VALID”（<strong>注意要大写！</strong>），这个值决定了不同的卷积方式。当为”SAME”时，表示边缘填充，适用于全尺寸操作；当为”VALID”时，表示边缘不填充。使用”SAME”时卷积结果与卷积前图像大小相同，使用”VALID”时卷积结果要小于卷积前图像。<strong>对卷积操作来说，一般是选”SAME”</strong>。</li>
 <li>use_cudnn_on_gpu：bool类型，是否使用cudnn加速，默认为True。</li>
@@ -1105,7 +1136,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1127,7 +1158,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1187,7 +1218,18 @@
   <span class="author" itemprop="copyrightHolder">李澳</span>
 
   
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">总字数&#58;</span>
+    
+    <span title="总字数">88.1k</span>
+  
 </div>
+
+
 
 
 
