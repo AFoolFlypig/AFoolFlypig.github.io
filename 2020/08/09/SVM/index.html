@@ -88,7 +88,7 @@
 <meta property="og:description" content="1. 模型定义">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/2020/08/09/SVM/svm.png">
-<meta property="og:updated_time" content="2020-08-09T13:46:39.973Z">
+<meta property="og:updated_time" content="2020-08-09T14:20:30.206Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SVM">
 <meta name="twitter:description" content="1. 模型定义">
@@ -458,7 +458,7 @@ L(w,b,\lambda) &= \frac{1}{2} w^{T}w + \sum_{i = 1}^{N} \lambda_{i} [1 - y_{i}(w
 <script type="math/tex; mode=display">
 b = y_{k} - \sum_{i = 1}^{N} \lambda_{i} y_{i}x_{i}x_{k} \tag{2.15}</script><p>在实际应用中，我们可以利用全体支持向量求解的平均值来表示$b$。</p>
 <h2 id="3-算法实现"><a href="#3-算法实现" class="headerlink" title="3. 算法实现"></a>3. 算法实现</h2><p>由于我对SVM中理解的不是太深入，对其中的一些数学细节一知半解，因此我暂时写不出SVM的实现代码。SVM算法的推导过程中涉及到许多最优化方面的知识，比如说对偶问题、KKT条件以及凸二次规划问题的求解，其他的机器学习算法中也或多或少的涉及到一些最优化方面的知识。因此我打算先系统的学习一下最优化基础理论，掌握一些数学工具之后，再去学习机器学习算法。</p>
-<p><strong>参考资料</strong>：<br><a href="https://zhuanlan.zhihu.com/p/55279698" target="_blank" rel="noopener">拉格朗日函数为什么要先最大化？</a><br><a href="https://www.bilibili.com/video/BV1aE411o7qd?p=28" target="_blank" rel="noopener">白板推导：支持向量机</a><br><a href="https://zhuanlan.zhihu.com/p/31886934" target="_blank" rel="noopener">支持向量机（SVM）——原理篇</a><br><a href="https://zhuanlan.zhihu.com/p/77750026" target="_blank" rel="noopener">【机器学习】支持向量机 SVM（非常详细）</a><br><a href="https://blog.csdn.net/baidu_36557924/article/details/79517365" target="_blank" rel="noopener">SVM原理介绍</a><br><a href="https://zhuanlan.zhihu.com/p/57648645" target="_blank" rel="noopener">SVM（支持向量机)长文逐步理解</a></p>
+<p><strong>参考资料</strong>：<br><a href="https://zhuanlan.zhihu.com/p/55279698" target="_blank" rel="noopener">拉格朗日函数为什么要先最大化？</a><br><a href="https://www.bilibili.com/video/BV1aE411o7qd?p=28" target="_blank" rel="noopener">白板推导：支持向量机</a><br><a href="https://zhuanlan.zhihu.com/p/31886934" target="_blank" rel="noopener">支持向量机（SVM）——原理篇</a><br><a href="https://zhuanlan.zhihu.com/p/77750026" target="_blank" rel="noopener">【机器学习】支持向量机 SVM（非常详细）</a><br><a href="https://blog.csdn.net/baidu_36557924/article/details/79517365" target="_blank" rel="noopener">SVM原理介绍</a><br><a href="https://zhuanlan.zhihu.com/p/57648645" target="_blank" rel="noopener">SVM（支持向量机)长文逐步理解</a><br>周志华 《机器学习》</p>
 
       
     </div>
