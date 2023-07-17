@@ -719,7 +719,7 @@ public <T> Future<T> submit(Callable<T> task) {
 
 - `execute`方法执行任务没有返回值。
 - `submit`方法执行任务返回`FutureTask`类型的对象，调用者可以调用该对象的`get`方法阻塞获取任务执行的返回值（`submit`中调用了`execute`方法）。
-- `execute`会直接抛出任务执行时的异常，`submit`会吞掉异常，可通过`FutureTask`的`get`方法将任务执行时的异常重新抛出。
+- `execute`与`submit`均会吞掉异常，其中，`execute`方法会打印出异常信息，`submit`则无任何信息打印。另外，在调用`submit`方法之后，可通过`FutureTask`的`get`方法将任务执行时的异常重新抛出。
 
 **参考资料**：
 
