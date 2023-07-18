@@ -82,3 +82,180 @@ Java集合大致可以分为两大体系，一个是`Collection`，另一个`Map
 [【集合系列】- 初探 java 集合框架图](http://www.justdojava.com/2019/09/16/java-collection-1/)
 
 [Java集合框架史上最详解（list set 以及map）](https://chasing987.github.io/2020/12/13/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%20list-set-map%20/)
+
+# 2 Java函数式接口
+
+## 2.1 概述
+
+JDK8之后新增了`java.util.function`包，该包下都是函数式接口，其中最为基础的有四大接口：`Consumer`、`Supplier`、`Predicate`、`Function`。这四大接口的总结如下：
+
+|    **接口**     | **参数** | **返回值** |                           **说明**                           |
+| :-------------: | :------: | :--------: | :----------------------------------------------------------: |
+|  `Consumer<T>`  |   `T`    |     无     |   消费型：用来接收一个泛型`T`对象并执行相关操作，无返回值    |
+|  `Supplier<T>`  |    无    |    `T`     |           供给型：无参，用于生成泛型`T`对象并返回            |
+| `Predicate<T>`  |   `T`    | `boolean`  | 谓词型：用于判断泛型`T`对象是否符合条件，符合返回`ture`，否则返回`false` |
+| `Function<T,R>` |   `T`    |    `R`     |  函数型：接收一个泛型T对象的参数，产生泛型R对象的结果并返回  |
+
+除此之外，`java.util.function`包下还有许多这四种基础接口的变种，不够在理解了这四种接口之后，其他的自然也就理解了。
+
+## 2.2 Consumer接口
+
+`Consumer`接口的源码如下：
+
+```java
+@FunctionalInterface
+public interface Consumer<T> {
+
+    /**
+     * 消费逻辑
+     */
+    void accept(T t);
+
+    /**
+     * 用于组合Consumer，相当于串联，并返回经过组合之后的Consumer
+     */
+    default Consumer<T> andThen(Consumer<? super T> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> { accept(t); after.accept(t); };
+    }
+    
+}
+```
+
+`Iterable`接口中的`forEach`方法就使用到了`Consumer`接口，相关代码如下：
+
+```java
+default void forEach(Consumer<? super T> action) {
+    Objects.requireNonNull(action);
+    for (T t : this) {
+        // 执行消费逻辑
+        action.accept(t);
+    }
+}
+```
+
+因此，我们可以向`forEach`中传入自己的处理逻辑，来对其中的每个元素都进行相应的处理。以遍历打印元素为例：
+
+```
+List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+list.forEach(System.out::println);
+```
+
+注意，方法引用或者lambda表达式都可以看做实现了函数式接口的匿名内部类。
+
+## 2.3 Supplier接口
+
+`Supplier`接口的源码如下：
+
+```java
+@FunctionalInterface
+public interface Supplier<T> {
+
+    /**
+     * 获取泛型T对象
+     */
+    T get();
+}
+```
+
+`Optional`对象中的`orElseGet`方法中就使用到了`Supplier`接口，对应代码如下：
+
+```java
+/**
+ * 如果value值存在，则返回该值，否则返回Supplier生成的结果
+ */
+public T orElseGet(Supplier<? extends T> supplier) {
+    return value != null ? value : supplier.get();
+}
+```
+
+## 2.4 Predicate接口
+
+`Predicate`接口的源码如下：
+
+```java
+@FunctionalInterface
+public interface Predicate<T> {
+
+    /**
+     * 具体判断逻辑，用于判断泛型T对象是否符合要求，可以理解为条件A
+     */
+    boolean test(T t);
+
+    /**
+     * 对当前断言进行“与”操作，如果将other视为条件B，
+     * 则该方法可理解为 条件A && 条件B
+     */
+    default Predicate<T> and(Predicate<? super T> other) {
+        Objects.requireNonNull(other);
+        return (t) -> test(t) && other.test(t);
+    }
+
+    /**
+     * 对当前断言进行“取非”操作，可以理解为 !条件A
+     */
+    default Predicate<T> negate() {
+        return (t) -> !test(t);
+    }
+
+    /**
+     * 对当前断言进行“或”操作，如果将other视为条件B，
+     * 则该方法可理解为 条件A || 条件B
+     */
+    default Predicate<T> or(Predicate<? super T> other) {
+        Objects.requireNonNull(other);
+        return (t) -> test(t) || other.test(t);
+    }
+
+    /**
+     * 对当前断言进行“取等”操作，如果将other视为条件B，
+     * 则该方法可理解为 条件A == 条件B
+     */
+    static <T> Predicate<T> isEqual(Object targetRef) {
+        return (null == targetRef)
+                ? Objects::isNull
+                : object -> targetRef.equals(object);
+    }
+```
+
+`Predicate`接口多用于`filter`方法中，用于筛选符合条件的元素，最为常见的就是Stream流中的`filter`方法。
+
+## 2.5 Function接口
+
+`Function`接口源码如下：
+
+```java
+@FunctionalInterface
+public interface Function<T, R> {
+
+    /**
+     * 转换逻辑
+     */
+    R apply(T t);
+
+    /**
+     * 组合方法，会在调用当前Function之前调用before中的代码逻辑
+     */
+    default <V> Function<V, R> compose(Function<? super V, ? extends T> before) {
+        Objects.requireNonNull(before);
+        return (V v) -> apply(before.apply(v));
+    }
+
+    /**
+     * 组合方法，会在调用当前Function之后调用after中的代码逻辑
+     */
+    default <V> Function<T, V> andThen(Function<? super R, ? extends V> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> after.apply(apply(t));
+    }
+
+    /**
+     * 静态方法，返回输入参数
+     */
+    static <T> Function<T, T> identity() {
+        return t -> t;
+    }
+}
+```
+
+Stream流中的`map`方法就用到了`Function`接口。
