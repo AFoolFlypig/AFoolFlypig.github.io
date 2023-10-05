@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="我最近在跟着慕课学习数电,把平时所学的一些东西和自己的一些理解整理到这里">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字电路与逻辑设计学习笔记">
+<meta property="og:url" content="http://example.com/2020/01/03/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF%E4%B8%8E%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="移动城堡">
+<meta property="og:description" content="我最近在跟着慕课学习数电,把平时所学的一些东西和自己的一些理解整理到这里">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-01-03T11:11:32.000Z">
+<meta property="article:modified_time" content="2023-07-17T01:59:12.530Z">
+<meta property="article:author" content="李澳">
+<meta property="article:tag" content="数电">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/01/03/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF%E4%B8%8E%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数字电路与逻辑设计学习笔记 | 移动城堡</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">移动城堡</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎来到我的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/01/03/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF%E4%B8%8E%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="李澳">
+      <meta itemprop="description" content="自娱自乐">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="移动城堡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数字电路与逻辑设计学习笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-03 19:11:32" itemprop="dateCreated datePublished" datetime="2020-01-03T19:11:32+08:00">2020-01-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-07-17 09:59:12" itemprop="dateModified" datetime="2023-07-17T09:59:12+08:00">2023-07-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF/" itemprop="url" rel="index"><span itemprop="name">数字电路</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>32 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我最近在跟着慕课学习数电,把平时所学的一些东西和自己的一些理解整理到这里</p>
+<span id="more"></span>
+
+<h1 id="第一章-基本知识"><a href="#第一章-基本知识" class="headerlink" title="第一章 基本知识"></a>第一章 基本知识</h1><h2 id="1-1-数字信号与系统"><a href="#1-1-数字信号与系统" class="headerlink" title="1.1 数字信号与系统"></a>1.1 数字信号与系统</h2><p>下面先介绍几个概念.<br><strong>模拟信号</strong>:信号的变化在时间和数值上都是<strong>连续的</strong>.<br><strong>离散信号</strong>:信号的变化在时间和数值上都是<strong>离散的</strong>,或者说断续的.离散信号的变化可以用不同的数字反映,所以又称<strong>数字信号</strong>.<br><strong>数字系统</strong>:数字系统是一个能对数字信号进行加工、传递和存储的实体,它由实现各种功能的数字逻辑电路相互连接而成.<br>由于现实世界中的信号多为模拟信号,而模拟信号并不易于处理,需要将其转换为数字信号进行处理,然后再将其还原为模拟信号.<br>二者之间的相互转换为<strong>A&#x2F;D-模数转换(Analog-Digital)</strong>,<strong>D&#x2F;A-数模转换(Digital-Analog)</strong>.<br>模拟信号数字化的主要步骤为<strong>采样(Sampling)、量化(Quantization)与编码(Encoding)</strong>.如下图所示:</p>
+
+
+
+<p>数字系统的示例:</p>
+
+<p><strong>数字电路</strong>是用来处理数字信号的电子线路.由于数字电路的各种功能是通过逻辑运算和逻辑判断来实现的,所以数字电路又称为<strong>数字逻辑电路</strong>或者<strong>逻辑电路</strong>.<br>数字逻辑电路的特点:</p>
+<ul>
+<li>电路的基本工作信号是二值信号.</li>
+<li>电路中的半导体器件一般都在开、关状态.</li>
+</ul>
+<p>数字系统的层次结构如下图:</p>
+
+<p>第2级为小规模集成电路,第3级为中、大规模集成电路,第4级为超大规模集成电路.<br>根据一个电路有无记忆功能,可以将数字逻辑电路分为<strong>组合逻辑电路(Combinational Logic Circuit)</strong>(无记忆功能)和<strong>时序逻辑电路(Sequential Logic Circuit)</strong>(有记忆功能).<br><strong>组合逻辑电路</strong>:在任何时刻的稳定输出仅取决于该时刻的输入,而与电路过去的输入无关.<br><strong>时序逻辑电路</strong>按照是否有统一的时钟信号进行同步,可分为<strong>同步时序逻辑电路</strong>和<strong>异步时序逻辑电路</strong>.</p>
+<h2 id="1-2-数制及其转换"><a href="#1-2-数制及其转换" class="headerlink" title="1.2 数制及其转换"></a>1.2 数制及其转换</h2><p>在生活中我们主要使用的是十进制,而在计算机中使用的是二进制,主要是因为二进制有如下特点:</p>
+
+<p>下面是二进制与其他进制的转换方法:</p>
+
+
+
+<p>其中,二进制转八进制或十六进制时,若不够三位或四位,则补0凑足.</p>
+<h2 id="1-3-带符号二进制数的代码表示"><a href="#1-3-带符号二进制数的代码表示" class="headerlink" title="1.3 带符号二进制数的代码表示"></a>1.3 带符号二进制数的代码表示</h2><p>在机器中带符号的数采取如下的表示方法:</p>
+
+<p>常用的机器码有原码、反码和补码,下面一一进行介绍.</p>
+<h3 id="1-3-1-原码"><a href="#1-3-1-原码" class="headerlink" title="1.3.1 原码"></a>1.3.1 原码</h3><p>最左侧的一位为<strong>符号位</strong>,数码0表示正号,数码1表示负号,其余的为<strong>数值位</strong>,为真值的绝对值.简言之,原码即为<strong>符号位+真值绝对值</strong><br>原码的标准化定义如下:</p>
+
+<p>其实不用管上面的定义,只需要会原码怎么算就可以了.<br>示例:</p>
+<blockquote>
+<p>x&#x3D;+1101	[x]<sub>原</sub>&#x3D;01101<br>x&#x3D;-1101	[x]<sub>原</sub>&#x3D;11101<br>x&#x3D;0.1011	[x]<sub>原</sub>&#x3D;0.1011<br>x&#x3D;-0.1011	[x]<sub>原</sub>&#x3D;1.1011</p>
+</blockquote>
+<p>原码表示法的特点:</p>
+
+<p><strong>原码不能直接进行减法运算</strong>.那么有没有一种编码能够使减法变加法,符号位直接参与运算呢?</p>
+<h3 id="1-3-2-反码"><a href="#1-3-2-反码" class="headerlink" title="1.3.2 反码"></a>1.3.2 反码</h3>
+<p>反码的标准化定义如下:</p>
+
+<p>示例:</p>
+<blockquote>
+<p>x&#x3D;+0.1011	[x]<sub>反</sub>&#x3D;0.1011<br>x&#x3D;-0.1011	[x]<sub>反</sub>&#x3D;1.0100<br>[+0]<sub>反</sub> &#x3D;0.00…0<br>[-0]<sub>反</sub> &#x3D;1.11…1</p>
+</blockquote>
+<p>但是反码仍然没有解决减法问题和正负0问题,如上例.</p>
+<h3 id="1-3-3-补码"><a href="#1-3-3-补码" class="headerlink" title="1.3.3 补码"></a>1.3.3 补码</h3><p>在介绍补码之前,先要介绍”模”的概念.<br>**”模”**是指一个计量系统的计数范围,记做mod或M.如时钟的计量范围是0<del>11,模&#x3D;12<br>计算机也可以看成一个计量系统,它也有一个计量范围,即都存在一个”模”.表示n为的计算机的计量范围是0</del>2<sup>n</sup>-1,模 &#x3D; 2<sup>n</sup>.<br>“模”实质上是计量系统产生”溢出”的量,它的值在计量系统上表示不出来,计量系统上只能表示出模的余数.<br>任何有模的计量系统,均可化减法为加法运算.<br>例如-8 &#x3D; 4(mod 12).<br>其含义为:-8与4对模12是互补的,或者说以12为模时-8的补码为4.<br>同理,模为12时,-2的补码是10,-5的补码是7.<br>补码的标准化定义:</p>
+
+
+<p><strong>补码中0的形式唯一</strong><br>补码具有如下意义:</p>
+<ul>
+<li>计算机中的数据受字长的限制,数据的运算属于有模运算</li>
+<li>计算结果直接丢掉进位</li>
+<li>可以将减法转化为加法运算</li>
+<li>计算机中可只设置加法器,从而可以简化设计,降低成本.<br>求补码示例:<blockquote>
+<p>x&#x3D;0.1010	[x]<sub>补</sub>&#x3D;0.1010<br>x&#x3D;-0.1010	[x]<sub>补</sub>&#x3D;1.0110<br>x&#x3D;1010	[x]<sub>补</sub>&#x3D;01010<br>x&#x3D;-1010	[x]<sub>补</sub>&#x3D;10110</p>
+</blockquote>
+</li>
+</ul>
+<p>补码的运算:</p>
+
+<p>补码运算中<strong>符号位进位直接丢弃</strong>.<br>补码的加减法比较方便,得到了广泛的应用,目前计算机中广泛采用补码表示,少数机器采用原码进行存储和传输,计算时用补码表示.<br>机器码的求法对比:</p>
+
+<p>当真值为正数时,原码、反码和补码都相同,只有真值为负数时,它们才各不相同.</p>
+
+
+<h2 id="1-4-几种常见的编码"><a href="#1-4-几种常见的编码" class="headerlink" title="1.4 几种常见的编码"></a>1.4 几种常见的编码</h2><p>下面是几种常见的编码:</p>
+<ul>
+<li>十进制数的二进制编码(BCD码) BCD-Binary Coded Decimal</li>
+<li>可靠性编码</li>
+<li>字符编码</li>
+</ul>
+<p>下面一一对其进行介绍.</p>
+<h3 id="1-4-1-BCD码"><a href="#1-4-1-BCD码" class="headerlink" title="1.4.1 BCD码"></a>1.4.1 BCD码</h3><p><strong>BCD码</strong>主要有如下三种:<strong>8421码</strong>、<strong>2421码</strong>和<strong>余3码</strong>.<br>8421码与2421码是<strong>有权码</strong>,其各位的权值即为8 4 2 1和2 4 2 1.余3码为<strong>无权码</strong>,其值为在8421码的基础上加3.<br>如下图所示:</p>
+
+<p>这几个编码都是<strong>四位二进制数表示一位十进制数</strong>.<br>下图为十进制数串在机器中的表示:</p>
+
+
+<h3 id="1-4-2-可靠性编码"><a href="#1-4-2-可靠性编码" class="headerlink" title="1.4.2 可靠性编码"></a>1.4.2 可靠性编码</h3><p><strong>可靠性编码</strong>的目的是减少或者发现代码在形成和传送过程中可能发生的错误.下面介绍两种可靠性编码:<strong>奇偶校验码</strong>和<strong>格雷码</strong><br>奇偶校验如下:</p>
+
+
+<p>上图中的圆圈中一个加号为异或的符号.若有偶数个1,则结果为0,否则为1.<br>示例如下:</p>
+
+<p>奇偶校验的特点:</p>
+<ul>
+<li>一种常见的简单校验,只需要1位校验码</li>
+<li>只具有发现错误的能力,不具备对错误定位和纠正错误的能力.</li>
+<li>只具有发现一串二进制代码中,同时出现奇数个代码出错的能力.</li>
+<li>如果同时发生偶数个代码出错,奇偶校验失效.</li>
+</ul>
+<p><strong>格雷码</strong>特点:任意两个相邻的数,其格雷码仅有一位不同.<br>二进制数转换为格雷码的方法如下:</p>
+
+<p>最左侧的第一位不变,后面各位为二进制码两位依次进行异或运算的结果.<br>示例如下:</p>
+
+
+
+<h3 id="1-4-3-字符编码"><a href="#1-4-3-字符编码" class="headerlink" title="1.4.3 字符编码"></a>1.4.3 字符编码</h3><p><strong>字符编码</strong>:ASCII码.</p>
+<h1 id="第二章-逻辑代数基础"><a href="#第二章-逻辑代数基础" class="headerlink" title="第二章 逻辑代数基础"></a>第二章 逻辑代数基础</h1><h2 id="2-1-逻辑代数的基本概念"><a href="#2-1-逻辑代数的基本概念" class="headerlink" title="2.1 逻辑代数的基本概念"></a>2.1 逻辑代数的基本概念</h2><h3 id="2-1-1-逻辑代数公理"><a href="#2-1-1-逻辑代数公理" class="headerlink" title="2.1.1 逻辑代数公理"></a>2.1.1 逻辑代数公理</h3><p><strong>定义</strong>：逻辑代数L是一个封闭的代数系统，由一个逻辑变量集K，常量0和1,以及“或”、“与”、“非”三种基本运算组成。记为：</p>
+
+
+<p>下面介绍一下逻辑代数的5大公理。<br><strong>公理1</strong>：交换律</p>
+
+
+<p><strong>公理2</strong>：结合律</p>
+
+
+<p><strong>公理3</strong>：分配律</p>
+
+
+<p><strong>公理4</strong>：0-1律</p>
+
+
+<p><strong>公理5</strong>：互补律</p>
+
+
+<h3 id="2-1-2-逻辑变量及基本运算"><a href="#2-1-2-逻辑变量及基本运算" class="headerlink" title="2.1.2 逻辑变量及基本运算"></a>2.1.2 逻辑变量及基本运算</h3><p><strong>逻辑变量</strong>：用字母表示其值可以变化的量。<br>逻辑变量的取值只能为<strong>0</strong>或<strong>1</strong>，逻辑值<strong>0</strong>和<strong>1</strong>无大小、正负之分。</p>
+<p>逻辑代数的基本运算如下：</p>
+<ul>
+<li><strong>或</strong>运算</li>
+<li><strong>与</strong>运算</li>
+<li><strong>非</strong>运算</li>
+</ul>
+<p>下面对其一一进行介绍。<br><strong>“或”逻辑</strong>：决定某一事件是否发生的多个条件中，只要有<strong>一个或一个以上条件</strong>成立，事件便可发生。</p>
+
+<p>逻辑代数中，<strong>“或”逻辑</strong>用<strong>“或”运算</strong>描述。</p>
+
+<p>实现“或”运算关系的逻辑电路称为“<strong>或”门</strong>。</p>
+
+
+<p><strong>“与”逻辑</strong>：决定某一事件是否发生的多个条件必须<strong>同时具备</strong>，事件才能发生。</p>
+
+<p>逻辑代数中，<strong>“与”逻辑</strong>用<strong>“与”运算</strong>描述。</p>
+
+<p>实现“与”运算关系的逻辑电路称为“<strong>与”门</strong>。</p>
+
+
+<p><strong>“非”逻辑</strong>：某一事件的发生取决于<strong>条件的否定</strong>，即事件与事件发生的条件之间构成矛盾。</p>
+
+<p>逻辑代数中，<strong>“非”逻辑</strong>用<strong>“非”运算</strong>描述。</p>
+
+<p>实现“非”运算关系的逻辑电路称为“<strong>非”门</strong>。</p>
+
+
+<h3 id="2-1-3-逻辑函数"><a href="#2-1-3-逻辑函数" class="headerlink" title="2.1.3 逻辑函数"></a>2.1.3 逻辑函数</h3><p><strong>逻辑函数</strong>：随自变量而变化的因变量。<br>与普通代数中函数的概念相比，逻辑函数具有如下特点：</p>
+<ul>
+<li>逻辑函数和逻辑变量一样，取值只有0和1两种可能。</li>
+<li>函数和变量之间的关系由“或”、“与“、”非”三种基本运算决定。</li>
+</ul>
+<p>此外，逻辑函数还有数字系统研究的角度的定义。</p>
+
+<p>设某一逻辑电路的输入逻辑变量为$A_1, A_2, \ldots, A_n$，输出逻辑变量为$F$。<br>如果当$A_1, A_2, \ldots, A_n$的值确定下来，$F$的值就唯一的确定下来，则$F$被称为$A_1, A_2, \ldots, A_n$的<strong>逻辑函数</strong>。记为：<br>$$F &#x3D; f(A_1, A_2, \ldots, A_n)$$</p>
+<p>我们知道，逻辑电路的输出取决于<strong>逻辑变量的取值</strong>和<strong>电路本身的结构</strong>，而电路本身的结构又取决于三种基本运算的组合。<br>因此对于电路的逻辑功能描述，我们可由相应的<strong>逻辑函数</strong>进行完全描述。对电路的分析，也可以借助抽象的代数表达式。</p>
+<p>逻辑函数的<strong>相等</strong>的定义如下。<br>设有两个<strong>相同变量</strong>的逻辑函数：<br>$$F_1 &#x3D; f_1(A_1, A_2, \ldots, A_n)$$<br>$$F_2&#x3D; f_2(A_1, A_2, \ldots, A_n)$$<br>若对应于逻辑变量$A_1, A_2, \ldots, A_n$的<strong>任何一组</strong>取值，$F_1$和$F_2$的值<strong>都</strong>相同，则称函数$F_1$和$F_2$相等，记做：<br>$$F_1 &#x3D; F_2$$</p>
+<p>判断函数相等的方法有以下两种：</p>
+<ul>
+<li>真值表法：若两函数的真值表相同，则两函数相等。</li>
+<li>代数法：若两函数能化为同一形式，则两函数相等。</li>
+</ul>
+<h3 id="2-1-4-逻辑函数的表示法"><a href="#2-1-4-逻辑函数的表示法" class="headerlink" title="2.1.4 逻辑函数的表示法"></a>2.1.4 逻辑函数的表示法</h3><p>逻辑函数的表示方法共有以下3种：</p>
+<ul>
+<li>逻辑表达式</li>
+<li>真值表</li>
+<li>卡诺图</li>
+</ul>
+<p>下面对其一一进行介绍。<br><strong>逻辑表达式</strong>是由逻辑变量和“或”、“与”、“非”3种运算符以及括号所构成。<br>示例如下：</p>
+
+<p>逻辑表达式可进行如下的简写：</p>
+<ul>
+<li>“非”运算符下可不加括号</li>
+<li>“与”运算符一般可省略</li>
+<li>在一个表达式中如果既有“与”运算又有“或”运算，则按<strong>先“与”后“或”</strong>的规则进行运算，可省去括号</li>
+<li>运算优先法则，可利用该规律去掉括号</li>
+<li>与运算和或运算均满足结合律，可利用该规律调整括号</li>
+</ul>
+<p><strong>真值表</strong>：依次列出一个逻辑函数的所有输入变量取值组合及其相应函数值的表格。<br>一个<strong>n个变量</strong>的逻辑函数，其真值表有<strong>2<sup>n</sup>行</strong>。因为n个逻辑变量一共有2<sup>n</sup>种可能的取值组合。<br>示例如下：</p>
+
+
+<p><strong>卡诺图</strong>：由表示逻辑变量所有取值组合的小方格所构成的平面图。它可以图形化的描述逻辑函数，常用于逻辑函数化简。<br>这一块后面讲逻辑函数化简的时候再详细说，这里就不详细介绍了。</p>
+<h2 id="2-2-逻辑代数的基本定理和规则"><a href="#2-2-逻辑代数的基本定理和规则" class="headerlink" title="2.2 逻辑代数的基本定理和规则"></a>2.2 逻辑代数的基本定理和规则</h2><h3 id="2-2-1-逻辑代数的基本定理"><a href="#2-2-1-逻辑代数的基本定理" class="headerlink" title="2.2.1 逻辑代数的基本定理"></a>2.2.1 逻辑代数的基本定理</h3><p>下面介绍一下逻辑代数的8大定理及其证明。</p>
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="2-2-2-逻辑代数的规则"><a href="#2-2-2-逻辑代数的规则" class="headerlink" title="2.2.2 逻辑代数的规则"></a>2.2.2 逻辑代数的规则</h3><p>逻辑代数中有以下3个重要规则：</p>
+<ul>
+<li><strong>代入规则</strong></li>
+<li><strong>反演规则</strong></li>
+<li><strong>对偶规则</strong></li>
+</ul>
+<p>下面一一对其进行介绍：<br><strong>代入规则</strong>：任何一个含有变量$A$的逻辑等式，如果将所有出现$A$的位置都代之以同一个逻辑函数$F$，则等式仍然成立。<br>例如：</p>
+
+<p>该规则的正确性是显而易见的，因为<strong>任何逻辑函数都和逻辑变量一样，只有0和1两种可能的取值</strong>。<br>利用代入规则可以将逻辑代数公理、定理中的变量用任意函数代替，从而推导出更多的等式。<br>不过有一点一定要注意，<strong>等式中所有出现同一变量的地方均应以同一函数代替！</strong></p>
+<p><strong>反演规则</strong>：</p>
+
+<p>需要注意的是，一定要<strong>保持原函数中运算符号的优先顺序不变！</strong>。必要时可以加上括号。<br>示例如下：</p>
+
+<p>可以看到，在原函数中$D\overline{E}$最先进行运算，因此在反函数中也应是$\overline{D} + E$先进行运算，其他运算顺序同理。<br>我感觉反函数就是对原函数进行取“非”运算，只不过换了个说法。不过网上也没查到这方面的资料，先这样理解吧。</p>
+<p><strong>对偶式</strong>：</p>
+
+<p>示例：</p>
+
+
+<p><strong>注意</strong>：如果$F$的对偶式是$F’$，则$F’$的对偶式就是$F$，即<br>$$(F’)’ &#x3D; F$$<br>也就是说**$F$和$F’$互为对偶式<strong>。<br>若</strong>$F’ &#x3D; F$<strong>，则该函数被称为</strong>自对偶函数<strong>。<br>在求对偶式的过程中，仍应</strong>保持原函数的运算顺序不变**。</p>
+<p><strong>对偶规则</strong>：</p>
+
+<p>利用对偶规则可以使定理、公式的证明减少一半。</p>
+<h3 id="2-2-3-复合逻辑"><a href="#2-2-3-复合逻辑" class="headerlink" title="2.2.3 复合逻辑"></a>2.2.3 复合逻辑</h3><p><strong>复合逻辑</strong>由3种基本运算构成的复合运算来描述，相应的逻辑门则称为<strong>复合门</strong>。<br>常见的复合逻辑有以下四种：</p>
+<ul>
+<li>“与非”逻辑</li>
+<li>“或非”逻辑</li>
+<li>“与或非”逻辑</li>
+<li>“异或”逻辑</li>
+<li>“同或”逻辑</li>
+</ul>
+<p>下面对其一一进行介绍。<br><strong>“与非”逻辑</strong>是由“与”、“非”两种逻辑复合形成的，可用逻辑函数表示为<br>$$F &#x3D; \overline{A \cdot B \cdot C \cdots}$$<br>其逻辑功能为：</p>
+<ul>
+<li>只要变量$A$、$B$、$C$、$\cdots$中<strong>有一个为0</strong>，则<strong>函数$F$为1</strong></li>
+<li>仅当变量$A$、$B$、$C$、$\cdots$<strong>全部为1</strong>时，<strong>函数$F$为0</strong></li>
+</ul>
+<p><strong>“与非”门</strong>：实现“与非”运算功能的逻辑电路称为“与非”门。</p>
+
+
+
+<p><strong>“或非”逻辑</strong>是由“或”、“非”两种逻辑复合形成的，可用逻辑函数表示为<br>$$F &#x3D; \overline{A + B + C \cdots}$$<br>其逻辑功能为：</p>
+<ul>
+<li>只要变量$A$、$B$、$C$、$\cdots$中<strong>有一个为1</strong>，则<strong>函数$F$为0</strong></li>
+<li>仅当变量$A$、$B$、$C$、$\cdots$<strong>全部为0</strong>时，<strong>函数$F$为1</strong></li>
+</ul>
+<p><strong>“或非”门</strong>：实现“或非”运算功能的逻辑电路称为“或非”门。</p>
+
+
+
+<p><strong>“与或非”逻辑</strong>是由“与”、“或”、“非”三种逻辑复合形成的，可用逻辑函数表示为<br>$$F &#x3D; \overline{AB + BC + CD \cdots}$$<br>其逻辑功能为：</p>
+<ul>
+<li>仅当每一个“与项”均为0时，才能使$F$为1,否则$F$为0</li>
+</ul>
+<p><strong>“与或非”门</strong>：实现“与或非”运算功能的逻辑电路称为“与或非”门。</p>
+
+
+
+<p><strong>异或逻辑</strong>可用逻辑函数表示为<br>$$F &#x3D; A \oplus B &#x3D; \overline{A}B + A\overline{B}$$<br>其逻辑功能为：</p>
+<ul>
+<li>变量$A$、$B$<strong>取值相同</strong>，$F$为<strong>0</strong></li>
+<li>变量$A$、$B$<strong>取值相异</strong>，$F$为<strong>1</strong></li>
+</ul>
+<p><strong>“异或”门</strong>：实现“异或”运算功能的逻辑电路称为“异或”门。</p>
+
+<p>异或逻辑具有以下性质：</p>
+
+<p><strong>注意</strong>：<br>异或运算的多个变量中，若有<strong>奇数个变量的值为1</strong>，则运算结果为<strong>1</strong>；若有<strong>偶数个变量的值为1</strong>，则运算结果为<strong>0</strong>。<br>奇偶校验码就是应用的此条性质。</p>
+<p>“同或逻辑”可用逻辑函数表示为<br>$$F &#x3D; A \odot B &#x3D; \overline{A} \cdot \overline{B} + AB$$<br>其逻辑功能为：</p>
+<ul>
+<li>变量$A$、$B$<strong>取值相同</strong>，$F$为<strong>1</strong></li>
+<li>变量$A$、$B$<strong>取值相异</strong>，$F$为<strong>0</strong></li>
+</ul>
+<p><strong>“同或”门</strong>：实现“同或”运算功能的逻辑电路称为“同或”门。</p>
+
+<p><strong>注意</strong>：<br>在进行“同或”运算的多个变量中，若有<strong>奇数个变量的值为0</strong>，则运算结果为<strong>0</strong>；若有<strong>偶数个变量的值为0</strong>，则运算结果为<strong>1</strong>。<br><strong>“同或”</strong>实际上是<strong>“异或”之非</strong>，所以实际应用中通常用“异或”门加“非”门实现“同或”运算。<br>“同或”逻辑和“异或”逻辑<strong>互为相反，又互为对偶</strong>。</p>
+<h2 id="2-3-逻辑表达式的形式与转换"><a href="#2-3-逻辑表达式的形式与转换" class="headerlink" title="2.3 逻辑表达式的形式与转换"></a>2.3 逻辑表达式的形式与转换</h2><h3 id="2-3-1-逻辑表达式的基本形式"><a href="#2-3-1-逻辑表达式的基本形式" class="headerlink" title="2.3.1 逻辑表达式的基本形式"></a>2.3.1 逻辑表达式的基本形式</h3><p>任何一个逻辑函数，其表达式的形式都不是唯一的。<br>逻辑函数有以下两种<strong>基本形式</strong>：</p>
+<ul>
+<li>“与-或”表达式</li>
+<li>“或-与”表达式</li>
+</ul>
+<p>下面对其一一进行介绍。<br><strong>“与-或”表达式</strong>：</p>
+
+
+<p><strong>“或-与”表达式</strong>：</p>
+
+
+<p>逻辑表达式可以被表示成任意的混合形式，无论什么形式都可以变换成两种基本形式。<br>举例说明：</p>
+
+
+<p>但是两种基本形式都不是唯一的，为了在逻辑问题中的研究中使逻辑函数能和唯一的表达式对应，引入了逻辑函数表达式的<strong>标准形式</strong>。</p>
+<h3 id="2-3-2-逻辑表达式的标准形式"><a href="#2-3-2-逻辑表达式的标准形式" class="headerlink" title="2.3.2 逻辑表达式的标准形式"></a>2.3.2 逻辑表达式的标准形式</h3><p><strong>标准形式</strong>使逻辑函数（功能）和唯一的逻辑表达式对应，其建立在<strong>最小项</strong>、<strong>最大项</strong>概念的基础上。<br>因此，我们先来介绍一下最小项与最大项的概念。</p>
+<p><strong>最小项</strong>定义：</p>
+<ul>
+<li>具有n个变量的函数的“与项”<strong>包含全部n个变量</strong></li>
+<li>每个变量都以原变量或反变量形式<strong>出现一次，且仅出现一次</strong></li>
+<li>该<strong>“与项”</strong>被称为<strong>“最小项”</strong>，有时又称为“标准与项”</li>
+</ul>
+<p><strong>n个变量可以构成2<sup>n</sup>个最小项</strong>。<br>示例：</p>
+
+<p>为了简写，我们通常用**$m_i$<strong>来表示最小项。<br><strong>下标i的取值规则</strong>：按照变量顺序将最小项中的</strong>原变量用1表示<strong>，</strong>反变量用0表示**，由此可得一个二进制数，与该二进制数对应的十进制数即下标i的值。<br>示例：</p>
+
+<p>再举一个用最小项表示函数的例子：</p>
+
+<p>注意最后一步的表示方法。</p>
+<p>下面介绍一下最小项的性质。<br><strong>性质1</strong>：任意一个最小项，其相应变量<strong>有且仅有一种</strong>取值使这个最小项的值为<strong>1</strong>。最小项不同，使其值为1的变量取值也不同，任何一种变量取值都不可能使两个不同最小项同时为1。<br>该性质的正确性也是显而易见的，因为不同的最小项中都存在<strong>互补变量</strong>，不可能存在一种取值使不同的最小项同时为1。<br>实际上，在由n个变量构成的任意“与项”中，最小项是使其值为1的变量组合数最少的一种“与项”，这也是最小项名字的由来。</p>
+<p><strong>性质2</strong>：相同变量构成的两个<strong>不同</strong>最小项<strong>相“与”为0</strong>。<br>由性质1可知，任何一种变量取值都不可能使两个不同最小项同时为1，故其相“与”为0。即<br>$$m_i \cdot m_j &#x3D; 0 \quad (i \ne j)$$</p>
+<p><strong>性质3</strong>：n个变量的<strong>全部</strong>最小项<strong>相“或”为1</strong>。<br>通常借用数学中的累加符号“$\sum$”，将其记为：<br>$$\sum_{i &#x3D; 0}^{2^n - 1} m_i &#x3D; 1$$</p>
+<p><strong>性质4</strong>：n个变量构成的最小项有<strong>n</strong>个<strong>相邻最小项</strong>。<br><strong>相邻最小项</strong>：除<strong>一个变量互为相反</strong>外，<strong>其余部分均相同</strong>的最小项。<br>示例：</p>
+
+
+<p><strong>最大项</strong>定义：</p>
+<ul>
+<li>如果一个具有n个变量的函数的“或项”<strong>包含全部n个变量</strong></li>
+<li>每个变量都以原变量或反变量形式<strong>出现一次，且仅出现一次</strong></li>
+<li>该<strong>“或项”</strong>被称为<strong>“最大项”</strong>，有时又称为“标准或项”</li>
+</ul>
+<p><strong>n个变量可以构成2<sup>n</sup>个最大项</strong>。<br>示例：</p>
+
+<p>为了简写，我们通常用**$M_i$<strong>来表示最小项。<br><strong>下标i的取值规则</strong>：按照变量顺序将最大项中的</strong>原变量用0表示<strong>，</strong>反变量用1表示**，由此可得一个二进制数，与该二进制数对应的十进制数即下标i的值。<br><strong>注意这里的下标i中0和1的取值与最小项的是相反的！</strong><br>示例：</p>
+
+<p>再举一个用最大项表示函数的例子：</p>
+
+<p>注意最后一步的表示方法。</p>
+<p>下面介绍一下最大项的性质。<br><strong>性质1</strong>：任意一个最大项，其相应变量<strong>有且只有仅有一种</strong>取值使这个最大项的值为<strong>0</strong>，最大项不同，使其值为0的变量取值不同。<br>在由n个变量构成的任意“或项”中，最大项是使其值为1的变量取值组合数最多的一种“或项”，这也是最大项名字的由来。</p>
+<p><strong>性质2</strong>：相同变量构成的两个<strong>不同</strong>最大项<strong>相“或”为1</strong>。<br>因为任何一种变量取值都不可能使两个不同最大项同时为0，故相“或”为1，即<br>$$M_i + M_j &#x3D; 1 \quad (i \ne j)$$</p>
+<p><strong>性质3</strong>：n个变量的全部最大项相“与”为0。<br>通常借用数学中的累乘符号“$\prod$”，将其记为：<br>$$\prod_{i &#x3D; 0}^{2^n - 1} M_i &#x3D; 0$$</p>
+<p><strong>性质4</strong>：n个变量构成的最大项有<strong>n</strong>个<strong>相邻最大项</strong>。<br><strong>相邻最大项</strong>：除<strong>一个变量互为相反</strong>外，<strong>其余部分均相同</strong>的最大项。<br>示例：</p>
+
+
+<p>在同一问题中，<strong>下标相同</strong>的最小项和最大项<strong>互为反函数</strong>，相同变量构成的最小项$m_i$和最大项$M_i$之间存在<strong>互补关系</strong>。即<br>$$\overline{m_i} &#x3D; M_i \quad 或 \quad \overline{M_i} &#x3D; m_i$$<br>示例：</p>
+
+
+<p>逻辑表达式的标准形式有以下两种：</p>
+<ul>
+<li><strong>标准“与-或”表达式</strong>：由若干个<strong>最小项相“或”</strong>构成的逻辑表达式，也称<strong>最小项表达式</strong>。</li>
+<li><strong>标准“或-与”表达式</strong>：由若干个<strong>最大项相“与”</strong>构成的逻辑表达式，也称<strong>最大项表达式</strong>。<br>有了这两个标准表达式之后，我们就可以把任何一个表达式变为这两个标准表达式之一，而这两个标准表达式的形式是<strong>唯一的</strong>。<br>示例：</li>
+</ul>
+<h3 id="2-3-3-逻辑表达式的转换"><a href="#2-3-3-逻辑表达式的转换" class="headerlink" title="2.3.3 逻辑表达式的转换"></a>2.3.3 逻辑表达式的转换</h3><p>这一节我们要研究如何将逻辑函数的表达式转换为标准形式。<br>转换方法主要有以下两种：</p>
+<ul>
+<li><strong>代数转换法</strong>：利用逻辑代数的公理、定理和规则进行逻辑变换，将函数表达式从一种形式变换为另一种形式。</li>
+<li><strong>真值表转换法</strong>：利用逻辑函数表达式和真值表之间的<strong>一一对应关系</strong>，将函数表达式从一种形式变换为另一种形式。</li>
+</ul>
+<p>下面依次对其进行介绍。<br><strong>代数转换法</strong>：<br>求一个函数的<strong>标准“与-或”表达式</strong>：</p>
+
+<p>示例：</p>
+
+
+
+<p>求一个函数的<strong>标准“或-与”表达式</strong>：</p>
+
+<p>示例：</p>
+
+
+
+<p><strong>真值表转换法</strong>：<br>求一个函数的<strong>标准“与-或”表达式</strong>：</p>
+
+<p>示例：</p>
+
+
+<p>求最小项表达式时，<strong>若真值表中的值为1，则对应原变量，否则对应反变量</strong>。</p>
+<p>求一个函数的<strong>标准“或-与”表达式</strong>：</p>
+
+<p>示例：</p>
+
+
+<p>求最大项表达式时，<strong>若真值表中的值为0，则对应原变量，否则对应反变量</strong>。<br>其实从上面的这些例子中可以看出来，不管是用真值表求最大项表达式或最小项表达式时，只要真值表是按顺序写的，<strong>标准式中项的下标都对应其在真值表中的位置（从0开始）</strong>。</p>
+<p>函数的真值表与函数的两种标准形式之间存在一一对应的关系，而任何一个逻辑函数的真值表都是唯一的。<br>由此可见：<strong>任何一个逻辑函数的两种标准形式也是唯一的</strong>。<br>逻辑函数表达式的唯一性为分析和研究逻辑电路问题带来了很大的方便。</p>
+<h2 id="2-4-逻辑函数代数化简法"><a href="#2-4-逻辑函数代数化简法" class="headerlink" title="2.4 逻辑函数代数化简法"></a>2.4 逻辑函数代数化简法</h2><p>为什么要化简？<br>实现某一逻辑功能的逻辑电路的复杂性与描述该功能的逻辑表达式的复杂性直接相关。一般来说，逻辑函数表达式越简单，设计出来的相应逻辑电路也就越简单。为了降低系统成本、减小复杂度、提高可靠性，必须对逻辑函数进行化简。<br>常用的化简方法有以下几种：</p>
+<ul>
+<li>代数化简法</li>
+<li>卡诺图化简法</li>
+<li>列表化简法</li>
+</ul>
+<p>下面先介绍代数化简法。<br><strong>代数化简法</strong>是运用逻辑代数的公理、定理和规则对逻辑函数进行化简。没有固定的规则可以遵循。关键是对逻辑代数中公理、定理和规则的熟练掌握及灵活运用。</p>
+<h3 id="2-4-1“与-或”表达式的化简"><a href="#2-4-1“与-或”表达式的化简" class="headerlink" title="2.4.1“与-或”表达式的化简"></a>2.4.1“与-或”表达式的化简</h3><p>什么是最简的“与-或”表达式呢？</p>
+<ul>
+<li>条件1：表达式中的<strong>“与”项个数最少</strong></li>
+<li>条件2：每个“与”项中的<strong>变量个数最少</strong></li>
+</ul>
+<p>满足上述两个条件，相应逻辑电路中所需门的数量以及门的输入端个数均为最少，电路最经济。</p>
+<p>常用的化简方法：</p>
+
+
+<p>示例;</p>
+
+<p>实际应用中遇到的逻辑函数往往比较复杂，化简时应灵活使用所学的公理、定理及规则，综合运用各种方法。</p>
+<h3 id="2-4-2“或-与”表达式的化简"><a href="#2-4-2“或-与”表达式的化简" class="headerlink" title="2.4.2“或-与”表达式的化简"></a>2.4.2“或-与”表达式的化简</h3><p>什么是最简的“或-与”表达式呢？</p>
+<ul>
+<li>条件1：表达式中的<strong>“或”项个数最少</strong></li>
+<li>条件2：每个“或”项中的<strong>变量个数最少</strong></li>
+</ul>
+<p>可直接运用公理、定理中的“或-与”形式，综合运用前面介绍“与-或”表达式化简时提出的各种方法进行化简。<br>示例：</p>
+
+
+<p>此外，还可以利用<strong>两次对偶法</strong>：</p>
+
+<p>示例：</p>
+
+
+<p>代数化简法的优点：</p>
+<ul>
+<li>不受变量数目的约束</li>
+<li>当对公式、定理和规则十分熟练时，化简比较方便</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>没有一定的规律和步骤</li>
+<li>技巧性很强</li>
+<li><strong>难以判断化简结果是否最简</strong></li>
+</ul>
+<h2 id="2-5-逻辑函数卡诺图化简法"><a href="#2-5-逻辑函数卡诺图化简法" class="headerlink" title="2.5 逻辑函数卡诺图化简法"></a>2.5 逻辑函数卡诺图化简法</h2><h3 id="2-5-1-卡诺图的组成和性质"><a href="#2-5-1-卡诺图的组成和性质" class="headerlink" title="2.5.1 卡诺图的组成和性质"></a>2.5.1 卡诺图的组成和性质</h3><p>卡诺图是一种图形化简法，方法简单、直观、容易掌握，在逻辑设计中得到广泛应用。<br><strong>卡诺图</strong>：一种平面方格图，每个小方格代表一个<strong>最小项</strong>，又称为<strong>“最小项方格图”</strong>。<br>卡诺图可以看成是真值表图形化的结果：</p>
+<ul>
+<li>n个变量的<strong>真值表</strong>是用2<sup>n</sup>行给出变量的2<sup>n</sup>种取值，<strong>每行取值与每一个最小项对应</strong>。</li>
+<li>n个变量的<strong>卡诺图</strong>是用二维图形中2<sup>n</sup>个小方格的坐标值给出变量的2<sup>n</sup>种取值，<strong>每个小方格与一个最小项对应</strong>。</li>
+</ul>
+<p>2变量卡诺图：</p>
+
+
+<p>3变量卡诺图：</p>
+
+<p>可以看到，AB中<strong>11是排在10前面的</strong>，为什么要这么做呢？<br>这样做是为了保证能清楚的反映<strong>最小项的相邻关系</strong>。我们知道，相邻最小项的特点是它里面的变量有一个是互反的，而这种排列方式恰恰让相邻、相对的小方格<strong>只有一个变量不同</strong>，能够反映出最小项的相邻关系。</p>
+<p>4变量卡诺图：</p>
+
+<p>同上，AB和CD的取值11也是排在10前面。</p>
+<p>5变量卡诺图：</p>
+
+<p>5变量卡诺图和3变量卡诺图都是长条形的，为什么5变量卡诺图需要拆开，而3变量卡诺图不用呢？<br>这个问题我在网上也没有找到答案，在这里说说我自己的理解吧。<br>根据相邻最小项的性质，5变量最小项有5个相邻最小项，只有将5变量卡诺图拆开，才能反映出最小项的所有相邻关系（有一个是相重相邻）。而3变量最小项只有3个相邻最小项，直接画出卡诺图就可以体现出其最小项的所有相邻关系，自然不需要拆开了。</p>
+<p><strong>卡诺图特点</strong>：</p>
+<ul>
+<li><strong>n</strong>个变量的卡诺图由**2<sup>n</sup>**小方格构成</li>
+<li>几何图形上处在<strong>相邻、相对、相重</strong>位置的小方格代表的最小项为<strong>相邻最小项</strong></li>
+<li>卡诺图中最小项的排列方案不是唯一的，教材中介绍的只是一种排列方案。</li>
+</ul>
+<p>注意：<strong>任何一种方案都应保证能清楚的反映最小项的相邻关系！</strong></p>
+<p>下面举几个例子来说明卡诺图的特点。</p>
+
+<p>关于相对相邻，可以看成将平面的卡诺图横着或竖着卷成一个筒后的相邻。</p>
+
+<p>3与19重叠相邻。</p>
+<h3 id="2-5-2-逻辑函数在卡诺图上的表示"><a href="#2-5-2-逻辑函数在卡诺图上的表示" class="headerlink" title="2.5.2 逻辑函数在卡诺图上的表示"></a>2.5.2 逻辑函数在卡诺图上的表示</h3><p><strong>标准“与-或”表达式</strong>在卡诺图上的表示：在卡诺图上找出和表达式中对应的小方格填上1，其余小方格填上0。<br><strong>一般“与-或”表达式</strong>需要先化为<strong>标准“与-或”表达式</strong>，再用卡诺图表示。<br>示例：</p>
+
+
+<p>对于一般的“与-或”表达式，还可根据<strong>“与”的公共性（与项变量全为1，与项为1）</strong>和<strong>“或”的叠加性（只要有1项为1，表达式为1）</strong>作出相应卡诺图。这样更加快速。<br>示例：</p>
+
+<p>$AB$对应11那一行，我们令其都取1。$CD$对应11那一列，我们令其都取1。$\overline{A}\overline{B}C$对应0011和0010两个小方格，令其为1。这样卡诺图就作出来了。<br>说实话我并没有看出来上面的这个做法跟所谓的“与”的公共性和“或”的叠加性有什么关系。<br>我的做法是这样的，最小项$AB$肯定对应卡诺图中变量$A$的取值为1，变量$B$的取值为1。但是其并没有变量$C$和变量$D$，因此卡诺图中变量$C$和变量$D$取任意值，即1100、1101、1111、1110四个小方格，也就是11那一行，将这一行全部填为1即可。后面的做法与之类似。</p>
+<h3 id="2-5-3-卡诺图上最小项的合并规律"><a href="#2-5-3-卡诺图上最小项的合并规律" class="headerlink" title="2.5.3 卡诺图上最小项的合并规律"></a>2.5.3 卡诺图上最小项的合并规律</h3><p>合并的理论依据是<br>$$A\overline{B} + AB &#x3D; A \quad （定理7）$$<br>两个相邻最小项<strong>有一个变量互反</strong>，可以合并为一项，消去一个变量。<br>而卡诺图的重要特征正是直观、清晰的反映了<strong>最小项的相邻关系</strong>。<br>由上面的分析，我们可以得出卡诺图化简逻辑函数的<strong>基本原理</strong>：</p>
+<ul>
+<li>将逻辑特征和图形特征结合起来</li>
+<li>将卡诺图上表征相邻最小项的相邻小方格<strong>“圈”</strong>在一起进行合并</li>
+<li>达到<strong>用一个简单“与”项代替若干最小项</strong>的目的</li>
+<li>用来包围那些能由一个简单“与”项代替的若干最小项的圈称为<strong>“卡诺圈”</strong></li>
+</ul>
+<p>下面通过一些例子来看一下<strong>卡诺图上最小项的合并规律</strong>：</p>
+
+
+
+
+<p><strong>n</strong>变量卡诺图中<strong>最小项的合并规律</strong>：</p>
+<ul>
+<li><strong>卡诺圈</strong>中小方格的个数必须是**2<sup>m</sup>**个，m为小于或等于n的整数</li>
+<li><strong>卡诺圈</strong>中的<strong>2<sup>m</sup><strong>个小方格含有</strong>m个不同变量</strong>，**(n - m)个相同变量**。</li>
+<li><strong>卡诺圈</strong>中的<strong>2<sup>m</sup><strong>个小方格对应的最小项可用</strong>(n - m)个变量的“与”项</strong>表示，该“与”项由这些最小项中的<strong>相同变量</strong>构成。</li>
+<li>当<strong>m &#x3D; n</strong>时，<strong>卡诺圈包围了整个卡诺图</strong>，可用<strong>1</strong>表示，即n个变量的全部最小项之和为1。</li>
+</ul>
+<p>上面说了一堆，其实简单来说就是<strong>卡诺圈</strong>中小方格的个数是2的几次方，就能消去几个变量。最终形成的“与”项由卡诺圈中的<strong>相同变量</strong>构成。</p>
+<h3 id="2-5-4-卡诺图化简逻辑函数"><a href="#2-5-4-卡诺图化简逻辑函数" class="headerlink" title="2.5.4 卡诺图化简逻辑函数"></a>2.5.4 卡诺图化简逻辑函数</h3><p>在介绍卡诺图化简逻辑函数之前，先介绍几个卡诺图化简中的术语。<br><strong>蕴涵项</strong>：“与-或”表达式中，每个<strong>“与”项</strong>被称为该函数的<strong>蕴涵项</strong>。</p>
+<ul>
+<li>在函数卡诺图中，任何一个1方格所对应的最小项或者卡诺圈中的2<sup>m</sup>个1方格（即化简后的结果）所对应的“与”项都是函数的<strong>蕴涵项</strong></li>
+</ul>
+<p><strong>质蕴涵项</strong>：若函数的一个蕴涵项<strong>不是</strong>该函数中其他蕴涵项的<strong>子集</strong>，则此蕴涵项称为<strong>质蕴涵项</strong>，简称为<strong>质项</strong>。</p>
+<ul>
+<li>在函数卡诺图中，按照最小项合并规律，如果某个卡诺圈<strong>不可能被其他更大的卡诺圈包含</strong>，该卡诺圈所对应的“与”项为<strong>质蕴涵项</strong>。</li>
+</ul>
+<p><strong>必要质蕴涵项</strong>：若函数的一个质蕴涵项包含有不被函数的其他任何质蕴涵项所包含的最小项，则此质蕴涵项被称为<strong>必要质蕴涵项</strong>，简称为<strong>必要质项</strong>。</p>
+<ul>
+<li>在函数卡诺图中，若某个卡诺圈<strong>包含了不可能被其他任何卡诺圈包含的1方格</strong>，该卡诺圈所对应的“与”项为<strong>必要质蕴涵项</strong>。</li>
+</ul>
+<p>求逻辑函数最简“与-或”表达式的一般步骤：</p>
+
+<p>示例：</p>
+
+<p>其中用“*”号标记的为必要质蕴涵项。<br>从上例中我们可以看出，一个函数的最简“与-或”表达式不一定是唯一的。并且多个最简形式的复杂程度相同。</p>
+<p>卡诺图化简的原则：</p>
+<ul>
+<li>在覆盖函数中所有最小项的前提下，卡诺圈的个数应达到最少</li>
+<li>在满足合并规律的前提下卡诺圈应达到最大</li>
+<li>根据合并的需要，每个最小项可以被多个卡诺圈包围</li>
+</ul>
+<p>求逻辑函数最简“或-与”表达式：</p>
+
+<p>示例：</p>
+
+
+
+<h2 id="2-6-列表化简法"><a href="#2-6-列表化简法" class="headerlink" title="2.6 列表化简法"></a>2.6 列表化简法</h2><p>卡诺图化简法缺点：受到变量个数的约束，当变量个数大于6时，画图以及对图形的识别都变得相当复杂。<br>为了克服这些缺陷，又提出了列表化简法。<br><strong>列表化简法</strong>又称为奎恩-麦克拉斯基化简法，是一种系统化简法，简称为Q-M化简法。<br>通过约定的表格形式，按照一定规则完成化简过程。<br>通过找出函数$F$的全部质蕴涵项，必要质蕴涵项以及最简质蕴涵项集来求得最简表达式。</p>
+<p>步骤如下：</p>
+
+<p>示例：</p>
+
+
+
+
+
+
+<p>列表化简法特点：</p>
+<ul>
+<li>规律性强，对变量数较多的函数，可经过反复比较、合并，得到最简结果。</li>
+<li>计算机处理</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%94%B5/" rel="tag"># 数电</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/07/05/Python%E5%AD%A6%E4%B9%A0/Python%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E4%B8%8E%E5%B1%95%E7%A4%BA/" rel="prev" title="Python数据分析与展示">
+      <i class="fa fa-chevron-left"></i> Python数据分析与展示
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/01/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91-tensorflow%E5%AE%9E%E8%B7%B5/" rel="next" title="深度学习应用开发-tensorflow实践">
+      深度学习应用开发-tensorflow实践 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86"><span class="nav-text">第一章 基本知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E6%95%B0%E5%AD%97%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F"><span class="nav-text">1.1 数字信号与系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E6%95%B0%E5%88%B6%E5%8F%8A%E5%85%B6%E8%BD%AC%E6%8D%A2"><span class="nav-text">1.2 数制及其转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E5%B8%A6%E7%AC%A6%E5%8F%B7%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E7%9A%84%E4%BB%A3%E7%A0%81%E8%A1%A8%E7%A4%BA"><span class="nav-text">1.3 带符号二进制数的代码表示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-1-%E5%8E%9F%E7%A0%81"><span class="nav-text">1.3.1 原码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-2-%E5%8F%8D%E7%A0%81"><span class="nav-text">1.3.2 反码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-3-%E8%A1%A5%E7%A0%81"><span class="nav-text">1.3.3 补码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-%E5%87%A0%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BC%96%E7%A0%81"><span class="nav-text">1.4 几种常见的编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-1-BCD%E7%A0%81"><span class="nav-text">1.4.1 BCD码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-2-%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%BC%96%E7%A0%81"><span class="nav-text">1.4.2 可靠性编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-3-%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81"><span class="nav-text">1.4.3 字符编码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E9%80%BB%E8%BE%91%E4%BB%A3%E6%95%B0%E5%9F%BA%E7%A1%80"><span class="nav-text">第二章 逻辑代数基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E9%80%BB%E8%BE%91%E4%BB%A3%E6%95%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">2.1 逻辑代数的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-%E9%80%BB%E8%BE%91%E4%BB%A3%E6%95%B0%E5%85%AC%E7%90%86"><span class="nav-text">2.1.1 逻辑代数公理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-2-%E9%80%BB%E8%BE%91%E5%8F%98%E9%87%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E8%BF%90%E7%AE%97"><span class="nav-text">2.1.2 逻辑变量及基本运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-3-%E9%80%BB%E8%BE%91%E5%87%BD%E6%95%B0"><span class="nav-text">2.1.3 逻辑函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-4-%E9%80%BB%E8%BE%91%E5%87%BD%E6%95%B0%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-text">2.1.4 逻辑函数的表示法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E9%80%BB%E8%BE%91%E4%BB%A3%E6%95%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86%E5%92%8C%E8%A7%84%E5%88%99"><span class="nav-text">2.2 逻辑代数的基本定理和规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-%E9%80%BB%E8%BE%91%E4%BB%A3%E6%95%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86"><span class="nav-text">2.2.1 逻辑代数的基本定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-%E9%80%BB%E8%BE%91%E4%BB%A3%E6%95%B0%E7%9A%84%E8%A7%84%E5%88%99"><span class="nav-text">2.2.2 逻辑代数的规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-3-%E5%A4%8D%E5%90%88%E9%80%BB%E8%BE%91"><span class="nav-text">2.2.3 复合逻辑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E9%80%BB%E8%BE%91%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%BD%A2%E5%BC%8F%E4%B8%8E%E8%BD%AC%E6%8D%A2"><span class="nav-text">2.3 逻辑表达式的形式与转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-%E9%80%BB%E8%BE%91%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%BD%A2%E5%BC%8F"><span class="nav-text">2.3.1 逻辑表达式的基本形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2-%E9%80%BB%E8%BE%91%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%A0%87%E5%87%86%E5%BD%A2%E5%BC%8F"><span class="nav-text">2.3.2 逻辑表达式的标准形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-3-%E9%80%BB%E8%BE%91%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="nav-text">2.3.3 逻辑表达式的转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-%E9%80%BB%E8%BE%91%E5%87%BD%E6%95%B0%E4%BB%A3%E6%95%B0%E5%8C%96%E7%AE%80%E6%B3%95"><span class="nav-text">2.4 逻辑函数代数化简法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-1%E2%80%9C%E4%B8%8E-%E6%88%96%E2%80%9D%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%8C%96%E7%AE%80"><span class="nav-text">2.4.1“与-或”表达式的化简</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-2%E2%80%9C%E6%88%96-%E4%B8%8E%E2%80%9D%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%8C%96%E7%AE%80"><span class="nav-text">2.4.2“或-与”表达式的化简</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-%E9%80%BB%E8%BE%91%E5%87%BD%E6%95%B0%E5%8D%A1%E8%AF%BA%E5%9B%BE%E5%8C%96%E7%AE%80%E6%B3%95"><span class="nav-text">2.5 逻辑函数卡诺图化简法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-1-%E5%8D%A1%E8%AF%BA%E5%9B%BE%E7%9A%84%E7%BB%84%E6%88%90%E5%92%8C%E6%80%A7%E8%B4%A8"><span class="nav-text">2.5.1 卡诺图的组成和性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-2-%E9%80%BB%E8%BE%91%E5%87%BD%E6%95%B0%E5%9C%A8%E5%8D%A1%E8%AF%BA%E5%9B%BE%E4%B8%8A%E7%9A%84%E8%A1%A8%E7%A4%BA"><span class="nav-text">2.5.2 逻辑函数在卡诺图上的表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-3-%E5%8D%A1%E8%AF%BA%E5%9B%BE%E4%B8%8A%E6%9C%80%E5%B0%8F%E9%A1%B9%E7%9A%84%E5%90%88%E5%B9%B6%E8%A7%84%E5%BE%8B"><span class="nav-text">2.5.3 卡诺图上最小项的合并规律</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-4-%E5%8D%A1%E8%AF%BA%E5%9B%BE%E5%8C%96%E7%AE%80%E9%80%BB%E8%BE%91%E5%87%BD%E6%95%B0"><span class="nav-text">2.5.4 卡诺图化简逻辑函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-%E5%88%97%E8%A1%A8%E5%8C%96%E7%AE%80%E6%B3%95"><span class="nav-text">2.6 列表化简法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李澳"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">李澳</p>
+  <div class="site-description" itemprop="description">自娱自乐</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李澳</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">199k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">11:02</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

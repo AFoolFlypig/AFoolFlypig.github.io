@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1 Redis底层数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis">
+<meta property="og:url" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/index.html">
+<meta property="og:site_name" content="移动城堡">
+<meta property="og:description" content="1 Redis底层数据结构">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig2.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig3.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig4.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig5.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig6.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig7.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig8.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig9.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig10.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig11.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig12.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig13.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig14.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig15.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig16.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig17.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig18.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig19.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig20.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig1.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig21.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig23.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig22.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig24.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig25.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig26.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig27.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig28.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig29.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig30.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig31.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig33.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig32.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig35.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig36.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig37.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig38.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig39.awebp">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig40.awebp">
+<meta property="article:published_time" content="2023-07-16T02:48:37.000Z">
+<meta property="article:modified_time" content="2023-07-17T01:59:12.459Z">
+<meta property="article:author" content="李澳">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="缓存">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig2.png">
+
+<link rel="canonical" href="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis | 移动城堡</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">移动城堡</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎来到我的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="李澳">
+      <meta itemprop="description" content="自娱自乐">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="移动城堡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-16 10:48:37" itemprop="dateCreated datePublished" datetime="2023-07-16T10:48:37+08:00">2023-07-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-07-17 09:59:12" itemprop="dateModified" datetime="2023-07-17T09:59:12+08:00">2023-07-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">分布式系统</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>30 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-Redis底层数据结构"><a href="#1-Redis底层数据结构" class="headerlink" title="1 Redis底层数据结构"></a>1 Redis底层数据结构</h1><span id="more"></span>
+
+<h2 id="1-1-SDS"><a href="#1-1-SDS" class="headerlink" title="1.1 SDS"></a>1.1 SDS</h2><p>Redis没有直接使用C语言中的字符串，而是自己构建了一种新的字符串结构，称为<strong>简单动态字符串（Simple Dynamic String，SDS）</strong>。</p>
+<h3 id="1-1-1-SDS定义"><a href="#1-1-1-SDS定义" class="headerlink" title="1.1.1 SDS定义"></a>1.1.1 SDS定义</h3><p>SDS的结构定义如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig2.png"></p>
+<ul>
+<li><code>len</code>：记录<code>buf</code>中已使用字节的数量，等于SDS所保存字符串的长度，不包含结束标识<code>\0</code>。</li>
+<li><code>alloc</code>：记录<code>buf</code>申请的总的字节数，不包含结束标识<code>\0</code>。</li>
+<li><code>flags</code>：不同SDS的头类型，用来控制SDS的头大小。<ul>
+<li>比如，<code>flags</code>取值为<code>SDS_TYPE_8</code>时，<code>len</code>与<code>alloc</code>的数据类型为<code>uint8_t</code>，即占8位。</li>
+<li>同理，<code>flags</code>取值为<code>SDS_TYPE_16</code>时，<code>len</code>与<code>alloc</code>的数据类型为<code>unit_16</code>，即占16位。</li>
+<li><code>SDS_TYPE_5</code>这一类型已被弃用。</li>
+</ul>
+</li>
+<li><code>buf</code>：<code>char</code>类型的数组，用于保存字符串。</li>
+</ul>
+<p>例如，一个包含字符串”name”的SDS结构如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig3.png"></p>
+<h3 id="1-1-2-使用SDS的好处"><a href="#1-1-2-使用SDS的好处" class="headerlink" title="1.1.2 使用SDS的好处"></a>1.1.2 使用SDS的好处</h3><ul>
+<li><strong>$O(1)$时间复杂度获取字符串长度</strong>。<ul>
+<li>C语言字符串不记录自身的长度信息，因此要想获取字符串长度，需要先遍历一遍，对遇到的每个字符进行计数，直到遇到<code>\n</code>为止。这一操作的时间复杂度为$O(n)$。</li>
+<li>SDS中的<code>len</code>属性记录了字符串长度，因此程序只需要访问SDS的<code>len</code>属性，就可以立即知道字符串的长度。这一操作的时间复杂度为$O(1)$。</li>
+</ul>
+</li>
+<li><strong>减少修改字符串时带来的内存重分配次数</strong>（下一部分细讲）。</li>
+<li><strong>二进制安全</strong>。当字符串中含有<code>\0</code>时，C语言会将其错认为字符串的结束标识，从而忽略后面的字符。而SDS则没有这种问题。</li>
+</ul>
+<h3 id="1-1-3-SDS的空间预分配与惰性空间释放"><a href="#1-1-3-SDS的空间预分配与惰性空间释放" class="headerlink" title="1.1.3 SDS的空间预分配与惰性空间释放"></a>1.1.3 SDS的空间预分配与惰性空间释放</h3><p>每次增长或者缩短一个C字符串时，程序都总要对保存这个C字符串的数组进行一次内存重分配操作：</p>
+<ul>
+<li>如果程序执行的是增长字符串的操作，比如拼接操作，那么在执行这个操作之前，程序需要先通过内存重分配来扩展底层数组的空间大小——如果忘了这一步就会产生缓冲区溢出。</li>
+<li>如果程序执行的是缩短字符串的操作，比如截断操作，那么在执行这个操作之后，程序需要通过内存重分配来释放字符串不再使用的那部分空间——如果忘了这一步就会产生内存泄露。</li>
+</ul>
+<p>内存重分配通常是一个比较耗时的操作，为了避免C字符串的这种缺陷，SDS实现了空间预分配和惰性空间释放两种优化策略。</p>
+<ul>
+<li><strong>空间预分配</strong>。空间预分配用于优化SDS的字符串增长操作。当SDS的API对一个SDS进行修改，并且需要对SDS进行空间扩展的时候，程序不仅会对SDS分配修改所必须要的空间，还会为SDS分配额外的未使用空间。</li>
+<li><strong>惰性空间释放</strong>。惰性空间释放用于优化SDS的字符串缩短操作。当SDS的API需要缩短SDS保存的字符串时，程序并不立即使用内存重分配来回收缩短后多出来的字节，而是使用<code>len</code>来记录缩短后的字符串长度，多出来的字节等待将来使用。</li>
+</ul>
+<h2 id="1-2-字典Dict"><a href="#1-2-字典Dict" class="headerlink" title="1.2 字典Dict"></a>1.2 字典Dict</h2><h3 id="1-2-1-字典定义"><a href="#1-2-1-字典定义" class="headerlink" title="1.2.1 字典定义"></a>1.2.1 字典定义</h3><p>与字典（Dict）有关的有三个数据结构：字典（dict）、哈希表（dictht）、哈希结点（dictEntry）。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig4.png"></p>
+<p>一个字典中含有两个哈希表（<code>ht[0]</code>和<code>ht[1]</code>）。一般情况下，字典只使用<code>ht[0]</code>哈希表，<code>ht[1]</code>哈希表只会在rehash的时候使用。</p>
+<p>Redis中的字典使用<strong>链地址法（separate chaining）</strong>来解决哈希冲突。</p>
+<p>字典的示例图如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig5.png"></p>
+<h3 id="1-2-2-字典的扩容"><a href="#1-2-2-字典的扩容" class="headerlink" title="1.2.2 字典的扩容"></a>1.2.2 字典的扩容</h3><p>当以下条件中的任意一个被满足时，程序会自动开始对哈希表执行扩展操作：</p>
+<ul>
+<li>服务器目前没有在执行<code>BGSAVE</code>命令或者<code>BGREWRITEAOP</code>命令，并且哈希表的负载因子大于等于1。</li>
+<li>服务器目前正在执行<code>BGSAVE</code>命令或者<code>BFREWRITEAOF</code>命令，并且哈希表的负载因子大于等于5。</li>
+</ul>
+<p>另外，当哈希表的负载因子小于0.1时，Redis自动开始对哈希表执行收缩操作。</p>
+<h3 id="1-2-3-渐进式rehash"><a href="#1-2-3-渐进式rehash" class="headerlink" title="1.2.3 渐进式rehash"></a>1.2.3 渐进式rehash</h3><p>为了避免rehash对服务器性能造成影响，服务器不是一次性将<code>ht[0]</code>里面的所有键值对全部rehash到<code>ht[1]</code>，而是分多次、渐进式地将<code>ht[0]</code>里面的键值对慢慢地rehash到<code>ht[1]</code>。</p>
+<p>以下是哈希表渐进式rehash的详细步骤：</p>
+<ol>
+<li><p>为<code>ht[1]</code>分配空间，这个哈希表的空间大小取决于要执行的操作，以及<code>ht[0]</code>当前包含的键值对数量（<code>ht[0].used</code>属性的值）：</p>
+<ul>
+<li>如果执行的是扩展操作，那么<code>ht[1]</code>的大小为第一个大于等于<code>ht[0].used * 2</code>的$2^{n}$。</li>
+<li>如果执行的是收缩操作，那么<code>ht[1]</code>的大小为第一个大于等于<code>ht[0].used</code>的$2^{n}$。</li>
+</ul>
+<p>此时，字典同时持有<code>ht[0]</code>和<code>ht[1]</code>两个哈希表。</p>
+</li>
+<li><p>在字典中维持一个索引计数器变量<code>rehashidx</code>，并将它的值设置为<code>0</code>，表示rehash工作正式开始。</p>
+</li>
+<li><p>在rehash进行期间，每次对字典执行添加、删除、查找或者更新操作时，程序除了执行指定的操作以外，还会顺带将<code>ht[0]</code>哈希表在<code>rehashidx</code>索引上的所有键值对<code>rehash</code>到<code>ht[1]</code>，并将<code>rehashidx</code>属性的值加1。</p>
+</li>
+<li><p>当<code>ht[0]</code>的所有键值对都被rehash至<code>ht[1]</code>后（<code>ht[0]</code>变为空表），释放<code>ht[0]</code>，将<code>ht[1]</code>设置为<code>ht[0]</code>，并在<code>ht[1]</code>新创建一个空白哈希表，为下一次rehash做准备。</p>
+</li>
+<li><p>将<code>rehashidx</code>属性的值设为-1，表示<code>rehash</code>操作已完成。</p>
+</li>
+</ol>
+<p>在渐进式rehash进行期间，字典的删除、查找、更新等操作会在两个哈希表上进行。例如，要在字典里面查找一个键的话，程序会先在<code>ht[0]</code>里面进行查找，如果没找到的话，就会继续到<code>ht[1]</code>里面进行查找。</p>
+<p>另外，在渐进式rehash执行期间，新添加到字典的键值对一律会被保存到<code>ht[1]</code>里面，而<code>ht[0]</code>则不再进行任何添加操作，这一措施保证了<code>ht[0]</code>包含的键值对数量会只减不增，并随着rehash操作的执行而最终变为空表。</p>
+<h2 id="1-3-跳表SkipList"><a href="#1-3-跳表SkipList" class="headerlink" title="1.3 跳表SkipList"></a>1.3 跳表SkipList</h2><p>跳表（SkipList）首先是<strong>双向链表</strong>，其主要特点如下：</p>
+<ul>
+<li>跳跃表中每个结点都包含<code>score</code>（<code>double</code>类型的浮点数）和<code>ele</code>（字符串对象）。</li>
+<li>结点按照<code>socre</code>由小到大排序，当<code>score</code>值相同时，按照<code>ele</code>的字典序进行排序。</li>
+<li>每个结点都可以包含多层指针，层数是1到32之间的随机数。</li>
+<li>不同层指针到下一个结点的跨度（span）不同，层级越高、跨度越大。</li>
+</ul>
+<p>Redis中SkipList的结构定义如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig6.png"></p>
+<p>SkipList的示意图如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig7.png"></p>
+<p>层级中的跨度（<code>span</code>）实际上是用来计算排位（rank）的。在查找某个结点的过程中，将沿途访问过的所有层的跨度累计起来，得到的结果就是目标结点在跳跃表中的排位（也就是第几个元素）。</p>
+<h2 id="1-4-整数集合IntSet"><a href="#1-4-整数集合IntSet" class="headerlink" title="1.4 整数集合IntSet"></a>1.4 整数集合IntSet</h2><h3 id="1-4-1-整数集合定义"><a href="#1-4-1-整数集合定义" class="headerlink" title="1.4.1 整数集合定义"></a>1.4.1 整数集合定义</h3><p>IntSet是Redis中Set集合的底层实现之一，当一个Set只包含整数值元素，并且这个Set的元素数量不多时，Redis就会使用IntSet作为集合的底层实现。</p>
+<p>IntSet结构定义如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig8.png"></p>
+<p>其中，<code>contents</code>数组是整数集合的底层实现：整数集合的每个元素都是<code>contents</code>数组的一个数组项，各个项在数组中按值的大小<strong>从小到大有序排列</strong>，并且数组中<strong>不包含任何重复项</strong>。</p>
+<p>另外，由于IntSet是有序的，所以底层可采用二分查找进行查询。</p>
+<p>虽然IntSet结构将<code>contents</code>属性声明为<code>int8_t</code>类型的数组，但实际上<code>contents</code>数组并不保存任何<code>int8_t</code>类型的值，<strong>contents</strong>数组的真正类型取决于<code>enconding</code>属性的值。其中<code>enconding</code>包含以下三种模式：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig9.png"></p>
+<p>如果<code>encoding</code>属性的值为<code>INTSET_ENC_INT16</code>，那么<code>contents</code>就是一个<code>int16_t</code>类型的数组，数组里的每个项都是一个<code>int16_t</code>类型的整数值。另外两种模式同理。</p>
+<p>IntSet的示例如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig10.png"></p>
+<p>数组中每个数字都在<code>int16_t</code>的范围内，因此采用的编码方式是<code>INTSET_ENC_INT16</code>。</p>
+<h3 id="1-4-2-IntSet升级"><a href="#1-4-2-IntSet升级" class="headerlink" title="1.4.2 IntSet升级"></a>1.4.2 IntSet升级</h3><p>当我们要将一个新元素添加到IntSet中，并且新元素超出了IntSet当前数据类型的表示范围时，我们需要先对IntSet进行升级，然后再将新元素添加到整数集合。</p>
+<p>升级整数集合并添加新元素主要有以下几步：</p>
+<ul>
+<li>根据新元素的类型，以及集合元素的数量，对底层数组进行空间重分配。</li>
+<li>将底层数组现有的所有元素都转换成与新元素相同的类型，并将类型转换后的元素放置到正确的位置上，并且在放置元素的过程中，需要继续维持底层数组的有序性质不变。</li>
+<li>将新元素添加到底层数组里面，并修改<code>encoding</code>为新元素的类型，<code>length</code>加一。</li>
+</ul>
+<p>例如，向上一节的IntSet中添加<code>5000</code>这一元素值，由于超出了<code>int16_t</code>的取值范围，因此要对IntSet进行升级，将<code>int16_t</code>升级为<code>int32_t</code>。升级后的IntSet如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig11.png"></p>
+<p>需要注意的是，<strong>IntSet不支持降级操作</strong>。</p>
+<h2 id="1-5-压缩列表ZipList"><a href="#1-5-压缩列表ZipList" class="headerlink" title="1.5 压缩列表ZipList"></a>1.5 压缩列表ZipList</h2><h3 id="1-5-1-压缩列表定义"><a href="#1-5-1-压缩列表定义" class="headerlink" title="1.5.1 压缩列表定义"></a>1.5.1 压缩列表定义</h3><p>ZipList是Redis为了节约内存而开发的，由一系列特殊编码的<strong>连续内存块</strong>组成，可以看作一种连续内存空间的双向链表。一个压缩列表可以包含任意多个节点，每个结点可以保存一个<strong>字节数组（字符串）</strong>或者一个<strong>整数值</strong>。</p>
+<p>ZipList结构如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig12.png"></p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>属性</strong></th>
+<th align="center"><strong>类型</strong></th>
+<th align="center"><strong>长度</strong></th>
+<th align="center"><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>zlbytes</code></td>
+<td align="center"><code>uint32_t</code></td>
+<td align="center">4字节</td>
+<td align="center">记录整个压缩列表占用的内存字节数。</td>
+</tr>
+<tr>
+<td align="center"><code>zltail</code></td>
+<td align="center"><code>uint32_t</code></td>
+<td align="center">4字节</td>
+<td align="center">记录压缩列表表尾结点距离压缩列表的其实地址有多少字节。通过这个偏移量，程序无须遍历整个压缩列表就可以确定表尾结点的地址。</td>
+</tr>
+<tr>
+<td align="center"><code>zllen</code></td>
+<td align="center"><code>uint16_t</code></td>
+<td align="center">2字节</td>
+<td align="center">记录了压缩列表包含的结点数量。当该属性值小于<code>UINT16_MAX</code>（65535）时，这个属性的值就是压缩列表包含结点的数量。当这个值等于<code>UINT16_MAX</code>时，结点的真实数量需要遍历整个压缩列表才能计算得出。</td>
+</tr>
+<tr>
+<td align="center"><code>entry</code></td>
+<td align="center">列表结点</td>
+<td align="center">不定</td>
+<td align="center">压缩列表包含的各个结点，结点的长度由结点保存的内容决定。</td>
+</tr>
+<tr>
+<td align="center"><code>zlend</code></td>
+<td align="center"><code>uint8_t</code></td>
+<td align="center">1字节</td>
+<td align="center">特殊值<code>0xff</code>（十进制255），用于标记压缩列表的末端。</td>
+</tr>
+</tbody></table>
+<h3 id="1-5-2-压缩列表结点的构成"><a href="#1-5-2-压缩列表结点的构成" class="headerlink" title="1.5.2 压缩列表结点的构成"></a>1.5.2 压缩列表结点的构成</h3><p>ZipList中的Entry并不像普通链表那样记录前后结点的指针，因为记录两个指针就要占用16个字节，浪费内存。而是采用了下面的结构：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig13.png"></p>
+<ul>
+<li><code>previous_entry_length</code>：前一结点的长度，占1个或5个字节。<ul>
+<li>如果前一结点的长度小于254字节，则采用1个字节来保存这个长度值。</li>
+<li>如果前一结点的长度大于等于254字节，则用5个字节来保存这个长度值，第一个字节为<code>0xfe</code>（<code>0xff</code>已被作为压缩列表结尾标记，因此不能使用，且<code>0xfe</code>的十进制表示就是254），后四个字节才是真实长度数据。</li>
+</ul>
+</li>
+<li><code>encoding</code>：记录了结点的<code>content</code>属性所保存数据的类型（字符串还是整数）以及长度。</li>
+<li><code>content</code>：负责保存结点的数据，可以是字符串或整数。</li>
+</ul>
+<p>由于Entry中即记录了前一个Entry的长度（<code>previous_entry_length</code>），又记录了当前结点存储的数据的长度（<code>encoding</code>），因此ZipList类似于双向链表，<strong>即可以从前往后遍历，也可以从后往前遍历</strong>。</p>
+<p><code>encoding</code>编码分为字符串和整数两种：</p>
+<ul>
+<li>字符串：如果<code>encoding</code>是以<code>00</code>、<code>01</code>或者<code>10</code>开头，则说明<code>content</code>是字符串。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig14.png"><br>例如，我们要保存字符串“ab”和“bc”。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig15.png"></li>
+<li>整数：如果<code>encoding</code>是以<code>11</code>开始，则说明<code>content</code>是整数，且<code>encoding</code>固定只占用1个字节。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig16.png"><br>例如，我们要保存两个整数值<code>2</code>和<code>5</code>。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig17.png"></li>
+</ul>
+<h3 id="1-5-3-连锁更新"><a href="#1-5-3-连锁更新" class="headerlink" title="1.5.3 连锁更新"></a>1.5.3 连锁更新</h3><p>ZipList的每个Entry都包含<code>previous_entry_length</code>来记录上一个结点的大小，长度是1个或5个字节：</p>
+<ul>
+<li>如果前一结点的长度小于254字节，则采用1个字节来保存这个长度值</li>
+<li>如果前一结点的长度大于等于254字节，则采用5个字节来保存这个长度值，第一个字节为<code>0xfe</code>，后四个字节才是真实长度数据。</li>
+</ul>
+<p>现在，假设我们有N个<strong>连续的，长度为250~253之间</strong>的Entry，因此Entry的<code>previous_entry_length</code>属性用1个字节即可表示，如图所示：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig18.png"></p>
+<p>这时，如果我们将一个长度大于等于254字节的新结点设置为压缩列表的表头结点，由于其后继结点$e_{1}$的<code>previous_entry_length</code>属性仅长1字节，无法保存新结点的长度，因此程序会对压缩列表执行空间重分配操作，将$e_{1}$的<code>previous_entry_length</code>属性由1个字节扩展为5个字节。</p>
+<p>由于<code>previous_entry_length</code>属性由1字节变为5字节，使得$e_{1}$长度也变得大于等于254字节，因此程序又会会压缩列表执行空间重分配操作，将$e_{1}$后继结点$e_{2}$的<code>previous_entry_length</code>属性由1个字节扩展为5个字节。</p>
+<p>正如扩展$e_{1}$引发了对$e_{2}$的扩展一样，扩展$e_{2}$也会引发对$e_{3}$的扩展，而扩展$e_{3}$又会引发对$e_{4}$的扩展……为此，程序需要不断地对压缩列表执行空间重分配操作，直到$e_{n}$为止。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig19.png"></p>
+<p>ZipList这种特殊情况下产生的连续多次空间扩展操作称之为<strong>连锁更新（Cascade Update）</strong>。新增、删除都可能导致连锁更新的发生。</p>
+<h2 id="1-6-QuickList"><a href="#1-6-QuickList" class="headerlink" title="1.6 QuickList"></a>1.6 QuickList</h2><p>QuickList是一个结点为<strong>ZipList的双向链表</strong>。其主要具有以下特点：</p>
+<ul>
+<li>结点采用ZipList，解决了传统链表的内存占用问题。</li>
+<li>控制了ZipList的大小，解决了连续内存空间申请效率的问题。</li>
+<li>中间结点可以压缩，进一步节省了内存。</li>
+</ul>
+<p>QuickList的结构示意图如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig20.png"></p>
+<h1 id="2-Redis中的基本数据类型"><a href="#2-Redis中的基本数据类型" class="headerlink" title="2 Redis中的基本数据类型"></a>2 Redis中的基本数据类型</h1><h2 id="2-1-RedisObject"><a href="#2-1-RedisObject" class="headerlink" title="2.1 RedisObject"></a>2.1 RedisObject</h2><p>Redis中的任意数据类型的键和值都会被封装为一个<code>RedisObject</code>，也叫做Redis对象，源码如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig1.png"></p>
+<p>Redis中key是<code>String</code>类型，而value可以是多种数据类型，比如<code>String</code>、<code>List</code>、<code>Hash</code>、<code>Set</code>、<code>SortedSet</code>等。</p>
+<p>Redis使用<code>RedisObject</code>中的<code>type</code>字段指明当前对象的数据类型，并且使用<code>encoding</code>字段指明当前对象的编码方式（也就是底层存储的数据结构）。Redis会根据存储的数据类型不同，选择不同的编码方式，共包含11种不同类型：</p>
+<table>
+<thead>
+<tr>
+<th><strong>编号</strong></th>
+<th><strong>编码方式</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>OBJ_ENCODING_RAW</td>
+<td>raw编码动态字符串</td>
+</tr>
+<tr>
+<td>1</td>
+<td>OBJ_ENCODING_INT</td>
+<td>long类型的整数的字符串</td>
+</tr>
+<tr>
+<td>2</td>
+<td>OBJ_ENCODING_HT</td>
+<td>hash表（字典dict）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>OBJ_ENCODING_ZIPMAP</td>
+<td>已废弃</td>
+</tr>
+<tr>
+<td>4</td>
+<td>OBJ_ENCODING_LINKEDLIST</td>
+<td>双端链表</td>
+</tr>
+<tr>
+<td>5</td>
+<td>OBJ_ENCODING_ZIPLIST</td>
+<td>压缩列表</td>
+</tr>
+<tr>
+<td>6</td>
+<td>OBJ_ENCODING_INTSET</td>
+<td>整数集合</td>
+</tr>
+<tr>
+<td>7</td>
+<td>OBJ_ENCODING_SKIPLIST</td>
+<td>跳表</td>
+</tr>
+<tr>
+<td>8</td>
+<td>OBJ_ENCODING_EMBSTR</td>
+<td>embstr的动态字符串</td>
+</tr>
+<tr>
+<td>9</td>
+<td>OBJ_ENCODING_QUICKLIST</td>
+<td>快速列表</td>
+</tr>
+<tr>
+<td>10</td>
+<td>OBJ_ENCODING_STREAM</td>
+<td>Stream流</td>
+</tr>
+</tbody></table>
+<h2 id="2-2-String"><a href="#2-2-String" class="headerlink" title="2.2 String"></a>2.2 String</h2><p><code>String</code>对象的编码可以是<code>int</code>（虽然编码是<code>int</code>，但实际上是64位的<code>long</code>类型的整数）、<code>raw</code>或者<code>embstr</code>。</p>
+<ul>
+<li>如果字符串对象保存的是整数值，并且这个整数值可以用<code>long</code>类型表示，那么字符串对象会将整数值保存在<code>redisObject</code>中的<code>ptr</code>属性中（将<code>void*</code>转换成<code>long</code>），并将字符串对象的编码设置为<code>int</code>。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig21.png"></li>
+<li>如果字符串对象保存的是一个字符串，并且字符串值的长度大于44字节，字符串对象的编码为<code>raw</code>。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig23.png"><ul>
+<li><code>raw</code>编码<strong>调用两次内存分配函数</strong>分别创建<code>redisObject</code>结构和<code>sdshdr</code>结构。</li>
+</ul>
+</li>
+<li>如果字符串对象保存的是一个字符串，并且字符串的长度小于等于44字节，字符串对象的编码为<code>embstr</code>。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig22.png"><ul>
+<li><code>embstr</code>编码通过调用一次内存分配函数来分配一块连续的空间，空间中依次包含<code>redisObject</code>和<code>sdshdr</code>两个结构。</li>
+</ul>
+</li>
+</ul>
+<p>使用<code>embstr</code>编码的字符串对象来保存短字符串值有以下好处：</p>
+<ul>
+<li><code>embstr</code>编码将创建字符串对象所需的内存分配次数从<code>raw</code>编码的两次降低为一次。</li>
+<li>释放<code>embstr</code>编码的字符串对象只需要调用一次内存释放函数，而释放<code>raw</code>编码的字符串对象需要调用两次内存释放函数。</li>
+</ul>
+<h2 id="2-3-List"><a href="#2-3-List" class="headerlink" title="2.3 List"></a>2.3 List</h2><p>Redis中的List对象类似一个双端队列，可以从首、尾操作列表中的元素：</p>
+<ul>
+<li>在3.2版本之前，Redis采用ZipList和LinkedList来实现List，编码为<code>ziplist</code>或<code>linkedlist</code>。<ul>
+<li>当元素数量小于512并且元素大小小于64字节时采用ZipList编码。</li>
+<li>超过则采用LinkedList编码。</li>
+</ul>
+</li>
+<li>在3.2版本之后，Redis统一采用QuickList来实现List，编码为<code>quicklist</code>。</li>
+</ul>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig24.png"></p>
+<h2 id="2-4-Hash"><a href="#2-4-Hash" class="headerlink" title="2.4 Hash"></a>2.4 Hash</h2><p>Hash对象的编码可以是<code>ziplist</code>或者<code>ht</code>（hashtable，即使用Dict结构实现）。</p>
+<ul>
+<li>Hash对象默认使用<code>ziplist</code>编码，以节省内存。ZipList中相邻的两个Entry分别保存field（即key）和value。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig25.png"><ul>
+<li>当满足以下条件中的任意一个时，Hash对象的编码会由<code>ziplist</code>转为<code>ht</code>：<ul>
+<li>ZipList中的元素数量超过了<code>hash-max-ziplist-entries</code>（默认512）。</li>
+<li>ZipList中的任意Entry大小超过了<code>hash-max-ziplist-value</code>（默认64，单位为字节）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>ht</code>编码的Hash对象示意图如下：<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig26.png"></li>
+</ul>
+<h2 id="2-5-Set"><a href="#2-5-Set" class="headerlink" title="2.5 Set"></a>2.5 Set</h2><p>Set对象的编码可以是<code>intset</code>或者<code>ht</code>。</p>
+<ul>
+<li>当存储的所有数据都是整数，并且元素数量不超过<code>set-max-intset-entries</code>（默认512，单位为字节）时，Set对象会使用<code>intset</code>编码，以节省内存。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig27.png"></li>
+<li>上述两个条件中有一个不满足时，Set集合的编码会由<code>intset</code>转为<code>ht</code>（Dict结构）。Dict中的key用来存储元素，value统一为<code>null</code>。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig28.png"></li>
+</ul>
+<h2 id="2-6-SortedSet"><a href="#2-6-SortedSet" class="headerlink" title="2.6 SortedSet"></a>2.6 SortedSet</h2><h3 id="2-6-1-底层实现"><a href="#2-6-1-底层实现" class="headerlink" title="2.6.1 底层实现"></a>2.6.1 底层实现</h3><p>SortedSet对象的编码可以是<code>ziplist</code>或者<code>skiplist</code>。</p>
+<ul>
+<li><code>ziplist</code>编码的SortedSet对象使用压缩列表ZipList作为底层实现。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig29.png"><ul>
+<li>ZipList本身没有排序功能，因此需要由SortedSet通过编程实现：<ul>
+<li>ZipList是连续内存，因此<code>score</code>和<code>element</code>是紧挨在一起的两个Entry，<code>element</code>在前，<code>score</code>在后。</li>
+<li><code>score</code>越小越接近表头，<code>score</code>越大越接近表尾，按照<code>score</code>值升序排列。</li>
+</ul>
+</li>
+<li>当以下条件有一个不满足时，SortedSet的编码就会由<code>ziplist</code>变为<code>skiplist</code>：<ul>
+<li>元素数量小于<code>zset-max-ziplist-entries</code>（默认值128）。</li>
+<li>每个元素都小于<code>zset-max-ziplist-value</code>（默认值64，单位为字节）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>skiplist</code>编码的SortedSet对象使用<code>zset</code>结构作为底层实现，一个<code>zset</code>结构同时包含一个Dict字典和一个SkipList跳跃表。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig30.png"><ul>
+<li>SkipList按分值从小到大保存了所有集合元素，每个跳跃表结点都保存了一个集合元素。</li>
+<li>Dict中的每个键值对都保存了一个集合元素，Dict的键保存了元素的<code>element</code>，值保存了元素的<code>score</code>。</li>
+</ul>
+</li>
+</ul>
+<p>值得一提的是，虽然<code>zset</code>结构同时使用跳跃表和字典来保存有序集合元素，但这两种数据结构都会通过指针来共享相同元素的成员和分值，所以同时使用SkipList和Dict来保存集合元素不会产生任何重复成员或者分值，也不会因此而浪费额外的内存。</p>
+<h3 id="2-6-2-为什么SortedSet要同时使用跳表和字典来实现？"><a href="#2-6-2-为什么SortedSet要同时使用跳表和字典来实现？" class="headerlink" title="2.6.2 为什么SortedSet要同时使用跳表和字典来实现？"></a>2.6.2 为什么SortedSet要同时使用跳表和字典来实现？</h3><p>主要是为了性能考虑：</p>
+<ul>
+<li>使用**字典能够实现以$O(1)$的时间复杂度查找<code>element</code>对应的<code>score</code>**，但无法高效的执行范围查询。</li>
+<li>使用<strong>跳表能够高效的实现范围查询</strong>，但是因为没有了字典，所以根据<code>element</code>查找<code>score</code>这一操作的时间复杂度将从$O(1)$上升为$O(logN)$。</li>
+</ul>
+<p>基于上述考虑，Redis中的SortedSet同时使用跳表和字典来实现。</p>
+<h2 id="2-7-总结"><a href="#2-7-总结" class="headerlink" title="2.7 总结"></a>2.7 总结</h2><table>
+<thead>
+<tr>
+<th align="center"><strong>数据类型</strong></th>
+<th align="center"><strong>编码方式</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">OBJ_STRING</td>
+<td align="center">int、embstr、raw</td>
+</tr>
+<tr>
+<td align="center">OBJ_LIST</td>
+<td align="center">ZipList、LinkedList（3.2以前）；QuickList（3.2以后）</td>
+</tr>
+<tr>
+<td align="center">OBJ_SET</td>
+<td align="center">intset、HT</td>
+</tr>
+<tr>
+<td align="center">OBJ_ZSET</td>
+<td align="center">ZipList、HT组合SkipList</td>
+</tr>
+<tr>
+<td align="center">OBJ_HASH</td>
+<td align="center">ZipList、HT</td>
+</tr>
+</tbody></table>
+<h1 id="3-Redis持久化"><a href="#3-Redis持久化" class="headerlink" title="3 Redis持久化"></a>3 Redis持久化</h1><p>Redis有两种持久化方案：</p>
+<ul>
+<li>RDB持久化</li>
+<li>AOF持久化</li>
+</ul>
+<p>下面一一对其进行介绍。</p>
+<h2 id="3-1-RDB持久化"><a href="#3-1-RDB持久化" class="headerlink" title="3.1 RDB持久化"></a>3.1 RDB持久化</h2><p>RDB全称Redis Database Backup file，简单来说就是将内存中Redis存储的数据都保存到磁盘中，当Redis实例故障重启后，能够从磁盘中读取RDB文件，恢复数据。</p>
+<p>RDB持久化在以下四种情况下会执行：</p>
+<ul>
+<li><p><strong>执行<code>save</code>命令</strong>。<code>save</code>命令会阻塞Redis服务器进程，直到RDB文件创建完毕为止，在服务器进程阻塞期间，服务器不能处理任何命令请求。</p>
+</li>
+<li><p><strong>执行<code>bgsave</code>命令</strong>。<code>bgsave</code>命令会派生出一个子进程，然后由子进程负责创建RDB文件，服务器进程（父进程）继续处理命令请求。</p>
+</li>
+<li><p><strong>Redis正常停机时</strong>。Redis正常停机时会执行一次<code>save</code>命令，实现RDB持久化（注意是正常停机，宕机时不会执行）。</p>
+</li>
+<li><p><strong>触发RDB条件</strong>。Redis内部有触发RDB的机制，可以在redis.conf文件中找到：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 900秒内，如果至少有1个key被修改，则执行bgsave，下面几个配置同理</span></span><br><span class="line"><span class="comment"># 如果是save &quot;&quot; 则表示禁用RDB</span></span><br><span class="line"><span class="attr">save</span> <span class="string">900 1  </span></span><br><span class="line"><span class="attr">save</span> <span class="string">300 10  </span></span><br><span class="line"><span class="attr">save</span> <span class="string">60 10000 </span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="3-2-AOF持久化"><a href="#3-2-AOF持久化" class="headerlink" title="3.2 AOF持久化"></a>3.2 AOF持久化</h2><h3 id="3-2-1-介绍"><a href="#3-2-1-介绍" class="headerlink" title="3.2.1 介绍"></a>3.2.1 介绍</h3><p>RDB持久化保存Redis中存储的全部数据，当Redis中存储的数据量很大时，执行RDB持久化会非常耗时。所以Redis提供了另外一种持久化机制——AOF持久化。</p>
+<p><strong>AOF（Append Only File）持久化</strong>通过<strong>保存Redis所执行的写命令</strong>来实现持久化的，可以看做是命令日志文件。</p>
+<h3 id="3-2-2-AOF配置"><a href="#3-2-2-AOF配置" class="headerlink" title="3.2.2 AOF配置"></a>3.2.2 AOF配置</h3><p>AOF默认是关闭的，需要修改redis.conf配置文件来开启AOF：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 是否开启AOF功能，默认是no</span></span><br><span class="line"><span class="attr">appendonly</span> <span class="string">yes</span></span><br><span class="line"><span class="comment"># AOF文件的名称</span></span><br><span class="line"><span class="attr">appendfilename</span> <span class="string">&quot;appendonly.aof&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>AOF的命令记录的频率也可以通过redis.conf文件来配置：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 表示每执行一次写命令，立即记录到AOF文件（这里以及下面说的AOF文件都是存储在磁盘中的）</span></span><br><span class="line"><span class="attr">appendfsync</span> <span class="string">always</span></span><br><span class="line"><span class="comment"># 写命令执行完先放入AOF缓冲区，然后表示每隔1秒将缓冲区数据写到AOF文件，是默认方案</span></span><br><span class="line"><span class="attr">appendfsync</span> <span class="string">everysec</span></span><br><span class="line"><span class="comment"># 写命令执行完先放入AOF缓冲区，由操作系统决定何时将缓冲区内容写回磁盘</span></span><br><span class="line"><span class="attr">appendfsync</span> <span class="string">no</span></span><br></pre></td></tr></table></figure>
+
+<p>三种策略对比：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig31.png"></p>
+<h3 id="3-2-3-AOF文件重写"><a href="#3-2-3-AOF文件重写" class="headerlink" title="3.2.3 AOF文件重写"></a>3.2.3 AOF文件重写</h3><p>因为是记录命令，AOF文件比RDB文件大得多。而且AOF会记录对同一个key的多次写操作，但只有最后一次写操作才有意义。通过执行<code>bgrewriteaof</code>命令，可以让AOF文件执行重写功能，用最少的命令达到相同效果。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig33.png"></p>
+<p>如图，AOF原本有三个命令，但是<code>set num 123</code>和<code>set num 666</code>都是对<code>num</code>的操作，第二次操作会覆盖掉第一次的值，因此第一个命令记录下来没有意义。而且对<code>num</code>和<code>name</code>的操作也可以简化为一条命令。</p>
+<p>所以重写命令后，AOF文件内容就是<code>mset name jack num 666</code>。</p>
+<p>Redis也会在触发阈值时自动重写AOF文件，阈值可以在<code>redis.conf</code>中配置：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># AOF文件比上次文件增长超过多少百分比则重写</span></span><br><span class="line"><span class="comment"># 此处配置当AOF文件比上次重写后的文件大100%时进行重写</span></span><br><span class="line"><span class="attr">auto-aof-rewrite-percentage</span> <span class="string">100</span></span><br><span class="line"><span class="comment"># AOF文件体积小于多少时不进行重写，此处配置当文件小于64M时不进行重写</span></span><br><span class="line"><span class="attr">auto-aof-rewrite-min-size</span> <span class="string">64mb</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-3-RDB与AOF对比"><a href="#3-3-RDB与AOF对比" class="headerlink" title="3.3 RDB与AOF对比"></a>3.3 RDB与AOF对比</h2><p>总的来说，Redis提供两种持久化机制：</p>
+<ul>
+<li>RDB：将数据库的快照以二进制的方式保存到磁盘。</li>
+<li>AOF：将所有写入命令及相关参数以协议文本的方式写入文件并持久保存磁盘。</li>
+</ul>
+<p>RDB和AOF各有自己的优缺点，实际开发中往往会结合两者来使用。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig32.png"></p>
+<p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://xie.infoq.cn/article/a078e5d692fd7c1cbb2723f5a">【Redis 干货领域】从底层彻底吃透 AOF 重写 (原理篇)</a></p>
+<h1 id="4-Redis主从复制"><a href="#4-Redis主从复制" class="headerlink" title="4 Redis主从复制"></a>4 Redis主从复制</h1><p>Redis主从复制大体可以分为两个阶段：<strong>数据同步阶段</strong>与<strong>命令传播阶段</strong>。</p>
+<h2 id="4-1-数据同步阶段"><a href="#4-1-数据同步阶段" class="headerlink" title="4.1 数据同步阶段"></a>4.1 数据同步阶段</h2><p>在2.8版本以前，Redis只能进行全量同步，使用<code>sync</code>命令实现。在2.8版本之后，引入了增量同步的概念，使用<code>psync</code>命令实现，即<code>psync</code>具有<strong>全量同步</strong>和<strong>增量同步</strong>两种模式。</p>
+<ul>
+<li>全量同步用于处理初次复制的情况。</li>
+<li>增量同步用于处理断开连接后重连进行复制的情况。</li>
+</ul>
+<h3 id="4-1-1-同步原理"><a href="#4-1-1-同步原理" class="headerlink" title="4.1.1 同步原理"></a>4.1.1 同步原理</h3><p>在主从复制模式下，<strong>Redis使用<code>replication id, offset</code>对来唯一识别master节点数据集的版本</strong>，下面先介绍一下其中的几个关键概念：</p>
+<ul>
+<li><p><strong>replication id（复制ID）</strong>：每个Redis的主节点都用一个随机生成的字符串来<strong>表示在某一时刻其内部存储数据的状态</strong>，“某一时刻”可以理解为其称为master的那一刻，即在第一个从结点加入时，Redis初始化了replication id（下文中的replid就是这里的复制ID）。</p>
+</li>
+<li><p><strong>offset（复制偏移量）</strong>：主从模式下，主节点会持续不断的向从结点传播引起数据集更改的命令，<strong>offset所表示的是主节点向从节点传递命令的字节总数</strong>。</p>
+</li>
+<li><p><strong>replication backlog（复制积压缓冲区）</strong>：它是一个环形缓冲区，用于存储主节点向从节点传递的命令。<br><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig35.png"></p>
+<ul>
+<li><p>复制积压缓冲区会<strong>为其中的每个字节记录相应的复制偏移量</strong>，如上图。</p>
+</li>
+<li><p>它的大小是固定的，可存储的命令有限，超出部分将会覆盖旧的数据。</p>
+</li>
+<li><p>它即可用于增量同步，也可用于命令传播阶段的命令重推。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>以上内容是master存储维护的，在slave中也有复制ID、复制偏移量的概念。</p>
+<ul>
+<li>复制ID：<ul>
+<li>如果slave从未与任何master进行过主从复制，那就不存在。</li>
+<li>如果slave与master连接正常，复制ID存储在<code>server.master</code>中。</li>
+<li>如果slave与master连接断开，Redis会将复制ID存储在<code>server.cache_master</code>中。</li>
+</ul>
+</li>
+<li>复制偏移量：<strong>从结点收到主节点传递命令的字节总数</strong>。<ul>
+<li>如果主节点和从节点处于一致状态，那么二者的偏移量总是相同的。</li>
+<li>相反，如果主节点和从结点的偏移量并不相同，那么说明主从结点并未处于一致状态。</li>
+</ul>
+</li>
+</ul>
+<p><code>server.master</code>代表的是正在进行主从复制且正常工作的主节点信息；<code>server.cache_master</code>是曾经正常进行主从复制工作的主节点信息，它是为增量同步做准备的。</p>
+<p>介绍了这么多概念，下面说一下数据同步的大致流程：</p>
+<ul>
+<li>从结点与主节点建立连接后，需要从结点使用命令<code>psync &lt;replid&gt; &lt;offset&gt;</code>向主节点发起同步请求，从结点会从<code>server.cache_master</code>中取出这两个参数构建命令，然后发给主节点。需要注意的是，如果该从结点从未与任何主节点进行主从复制，那么会使用特殊的命令<code>psync ? -1</code>。</li>
+<li>主节点接收到命令，解析请求中的复制ID和offset，然后去判断当前请求是否可以进行增量同步。</li>
+<li>能够使用增量同步需要满足以下两个条件：<ul>
+<li>从节点的复制ID与主节点的复制ID一致。</li>
+<li>复制偏移量offset之后的数据（即offset+1开始的数据）仍然存在于复制积压缓冲区中。</li>
+</ul>
+</li>
+<li>如果无法进行增量同步，则执行全量同步。</li>
+</ul>
+<h3 id="4-1-2-全量同步"><a href="#4-1-2-全量同步" class="headerlink" title="4.1.2 全量同步"></a>4.1.2 全量同步</h3><p>执行全量同步的大致流程如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig36.png"></p>
+<ol>
+<li>从服务器向主服务器发送<code>psync &lt;replid&gt; &lt;offset&gt;</code>命令</li>
+<li>主节点接收到命令，解析请求中的复制ID和offset，然后去判断当前请求是否可以进行增量同步。</li>
+<li>如果不满足执行增量同步的条件，主节点向从节点返回<code>+FULLRESYNC &lt;replid&gt; &lt;offset&gt;</code>回复，表示执行全量同步。其中：<ul>
+<li><code>&lt;replid&gt;</code>是主节点的复制ID，从节点会将该ID保存起来。</li>
+<li><code>&lt;offset&gt;</code>则是主节点当前的复制偏移量，从节点会将这个值作为自己的初始化偏移量。</li>
+</ul>
+</li>
+<li>主节点执行<code>bgsave</code>命令，在后台生成一个RDB文件，并使用缓冲区（复制积压缓冲区）记录从现在开始执行的所有写命令。</li>
+<li>当主节点的<code>bgsave</code>执行完毕时，主节点会将生成的RDB文件发送给从节点，从节点接收并载入这个RDB文件，将自己的数据库状态更新至主节点执行<code>bgsave</code>命令时的数据库状态。</li>
+<li>主节点将记录在缓冲区里面的所有写命令发送给从节点，从节点执行这些写命令，将自己的数据库状态更新至主节点服务器当前所处的状态。</li>
+</ol>
+<h3 id="4-1-3-增量同步"><a href="#4-1-3-增量同步" class="headerlink" title="4.1.3 增量同步"></a>4.1.3 增量同步</h3><p>执行增量同步的大致流程如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig37.png"></p>
+<ol>
+<li>从服务器向主服务器发送<code>psync &lt;replid&gt; &lt;offset&gt;</code>命令</li>
+<li>主节点接收到命令，解析请求中的复制ID和offset，然后去判断当前请求是否可以进行增量同步。</li>
+<li>满足执行增量同步的条件，主节点向从结点返回<code>+CONTINUE</code>回复，表示执行增量同步。</li>
+<li>主节点按照从结点发送的offset，从复制积压缓冲区中读取offset之后的所有命令发送至从结点，从结点执行这些写命令，主从结点再次回到一致状态。</li>
+</ol>
+<h2 id="4-2-命令传播阶段"><a href="#4-2-命令传播阶段" class="headerlink" title="4.2 命令传播阶段"></a>4.2 命令传播阶段</h2><h3 id="4-2-1-介绍"><a href="#4-2-1-介绍" class="headerlink" title="4.2.1 介绍"></a>4.2.1 介绍</h3><p>当完成数据同步之后，主从结点之间就会进入命令传播阶段，此时主从结点的数据是一致的。</p>
+<p>当主节点执行完新的写命令后，会将该命令追加至复制积压缓冲区，然后异步地发送给从结点。从结点接收命令并执行，同时更新从结点维护的复制偏移量offset。命令传播如下图所示：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig38.png"></p>
+<h3 id="4-2-2-心跳检测"><a href="#4-2-2-心跳检测" class="headerlink" title="4.2.2 心跳检测"></a>4.2.2 心跳检测</h3><p>在命令传播阶段，每隔一秒，<strong>从节点向主节点发送</strong>一次心跳信息，命令格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REPLCONF ACK &lt;offset&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>&lt;offset&gt;</code>是从结点当前的复制偏移量。</p>
+<p>心跳检测主要有以下两个作用：</p>
+<ul>
+<li><strong>检测主从结点的网络连接状态是否正常</strong>。如果主节点超过一秒钟没有收到从节点发来的<code>REPLCONF ACK</code>命令，那么就说明主从结点之间的网络连接出现问题了（可能是网络问题，也可能是从节点本身的问题）。</li>
+<li><strong>检测命令丢失</strong>。命令中的<code>&lt;offset&gt;</code>是从节点当前的复制偏移量，主节点收到后会与自己的复制偏移量对比，如果不一致，说明命令在传输过程中丢失，主节点会重新推送丢失的命令。</li>
+</ul>
+<p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000039242024">Redis专题：一文搞懂主从复制原理！</a></p>
+<h1 id="5-Redis哨兵"><a href="#5-Redis哨兵" class="headerlink" title="5 Redis哨兵"></a>5 Redis哨兵</h1><h2 id="5-1-介绍"><a href="#5-1-介绍" class="headerlink" title="5.1 介绍"></a>5.1 介绍</h2><p>Redis<strong>哨兵（Sentinel）</strong>是运行在特殊模式下的Redis服务器，不支持读写操作，它的作用是配合Redis的复制功能，实现对主从结点的监控，对下线的主节点进行故障转移和通知。</p>
+<p>哨兵不是一个单独的进程，而是有多个哨兵服务组成的分布式系统。哨兵集群独立于Redis集群，哨兵之间彼此建立连接，共同监控、管理所有的Redis结点。哨兵主要有以下几个作用：</p>
+<ul>
+<li><strong>监控</strong>：监控所有Redis结点（包括主节点与从结点）的状态。</li>
+<li><strong>故障转移</strong>：如果主节点故障，哨兵会选取一个从结点作为新的主节点。</li>
+<li><strong>通知</strong>：当集群发生故障转移时，哨兵可以通过API通知Redis客户端。</li>
+</ul>
+<p>哨兵的配置文件示例如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sentinel-26379.conf</span></span><br><span class="line"><span class="attr">port</span> <span class="string">26379</span></span><br><span class="line"><span class="attr">daemonize</span> <span class="string">yes</span></span><br><span class="line"><span class="attr">dir</span> <span class="string">&quot;/Users/eleme/raysonxin/docker/redis-docker/log&quot;</span></span><br><span class="line"><span class="attr">logfile</span> <span class="string">&quot;26379.log&quot;</span></span><br><span class="line"><span class="comment"># 配置监听的主服务器，这里sentinel monitor代表监控，mymaster代表服务器的名称，可以自定义，192.168.11.128代表监控的主服务器，6379代表端口，2代表只有两个或两个以上的哨兵认为主服务器不可用的时候，才会进行failover操作。</span></span><br><span class="line"><span class="attr">sentinel</span> <span class="string">monitor mymaster 127.0.0.1 6379 2   </span></span><br><span class="line"><span class="comment"># 判断主节点时间</span></span><br><span class="line"><span class="attr">sentinel</span> <span class="string">down-after-milliseconds mymaster 10000</span></span><br><span class="line"><span class="attr">sentinel</span> <span class="string">parallel-syncs mymaster 1    </span></span><br><span class="line"><span class="attr">sentinel</span> <span class="string">failover-timeout mymaster 180000</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-节点自动发现"><a href="#5-2-节点自动发现" class="headerlink" title="5.2 节点自动发现"></a>5.2 节点自动发现</h2><p>首先说明一下，这里的 节点指的是其他哨兵节点及从节点。</p>
+<p>我们可以看到在哨兵的配置文件中，仅配置了主节点的相关信息，并没有配置从节点和其他哨兵节点的信息。那么哨兵是如何发现从结点与其他哨兵节点的呢？这一功能是由哨兵的自动发现机制实现的，下面我们来看一下。</p>
+<h3 id="5-2-1-从结点自动发现"><a href="#5-2-1-从结点自动发现" class="headerlink" title="5.2.1 从结点自动发现"></a>5.2.1 从结点自动发现</h3><p>一般情况下，哨兵节点每隔10秒向<strong>主从节点</strong>（注意是主节点和从节点）发送<code>INFO</code>命令，以此获取主从结点的信息。</p>
+<p>第一次执行时，哨兵仅知道我们给出的主节点信息，通过对主节点执行<code>INFO</code>命令就可以获取其从节点列表，再以此与其从结点建立连接进行监控。此后，如果有新结点加入，哨兵也可以自动发现，并与新结点建立连接进行监控。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig39.awebp"></p>
+<p>对主节点执行<code>INFO</code>命令获得的回复，其中的Replication信息示例如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Replication</span></span><br><span class="line"><span class="attr">role</span>:<span class="string">master</span></span><br><span class="line"><span class="attr">connected_slaves</span>:<span class="string">2</span></span><br><span class="line"><span class="attr">slave0</span>:<span class="string">ip=172.25.0.102,port=6379,state=online,offset=258369,lag=1</span></span><br><span class="line"><span class="attr">slave1</span>:<span class="string">ip=172.25.0.103,port=6379,state=online,offset=258508,lag=0</span></span><br><span class="line"><span class="attr">master_failover_state</span>:<span class="string">no-failover</span></span><br><span class="line"><span class="attr">master_replid</span>:<span class="string">a4a6a7f3b2e15d9a43c01d4ba6c842539e582d6a</span></span><br><span class="line"><span class="attr">master_replid2</span>:<span class="string">0000000000000000000000000000000000000000</span></span><br><span class="line"><span class="attr">master_repl_offset</span>:<span class="string">258508</span></span><br><span class="line"><span class="attr">...</span></span><br></pre></td></tr></table></figure>
+
+<p>对从结点执行<code>INFO</code>命令获得的回复，其中的Replication信息示例如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Replication</span></span><br><span class="line"><span class="attr">role</span>:<span class="string">slave</span></span><br><span class="line"><span class="attr">master_host</span>:<span class="string">172.25.0.102</span></span><br><span class="line"><span class="attr">master_port</span>:<span class="string">6379</span></span><br><span class="line"><span class="attr">master_link_status</span>:<span class="string">up</span></span><br><span class="line"><span class="attr">slave_repl_offet</span>:<span class="string">258369</span></span><br><span class="line"><span class="attr">slave_priority</span>:<span class="string">100</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-2-其他哨兵节点自动发现"><a href="#5-2-2-其他哨兵节点自动发现" class="headerlink" title="5.2.2 其他哨兵节点自动发现"></a>5.2.2 其他哨兵节点自动发现</h3><p>哨兵们在连接同一个主节点之后，是通过<strong>发布&#x2F;订阅（pub&#x2F;sub）</strong>模式来发现彼此的存在的。</p>
+<p>在哨兵模式下，哨兵们会在<strong>每个Redis节点</strong>上创建并订阅一个名为<code>__sentinel__:hello</code>的频道，哨兵们就是通过它来相互发现，实现相互通信的。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/fig40.awebp"></p>
+<p>订阅后，每个哨兵每隔2秒都会向<code>__sentinel__:hello</code>频道发布一条携带自身信息的hello消息，这样每个哨兵发布的消息都会被其他哨兵接收到，从而达到信息交换的目的。</p>
+<h3 id="5-2-3-补充"><a href="#5-2-3-补充" class="headerlink" title="5.2.3 补充"></a>5.2.3 补充</h3><p>对于每个被哨兵监视的节点（主节点或从结点）来说，哨兵会创建两个连向节点的异步网络连接：</p>
+<ul>
+<li>命令连接，这个连接专门用于向主服务器发送命令，并接收命令回复。</li>
+<li>订阅连接，这个连接专门用于订阅节点的<code>__sentinel__:hello</code>频道。</li>
+</ul>
+<p>需要注意的是，客户端执行订阅命令后，就会进入订阅状态，此状态下的客户端只能使用<code>subscribe</code>、<code>psubscribe</code>、<code>unsubscribe</code>、<code>punsubscribe</code>这四个命令。这应该是为什么要建立两个连接的原因。</p>
+<p><strong>参考资料</strong></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6998564627525140494">【Redis】哨兵（Sentinel）介绍及其工作原理</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6934984432273063967#heading-0">Redis专题：深入解读哨兵模式</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+              <a href="/tags/%E7%BC%93%E5%AD%98/" rel="tag"># 缓存</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/07/16/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E9%A1%B9%E7%9B%AE/" rel="prev" title="黑马点评项目">
+      <i class="fa fa-chevron-left"></i> 黑马点评项目
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="next" title="分布式">
+      分布式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">1 Redis底层数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-SDS"><span class="nav-text">1.1 SDS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-1-SDS%E5%AE%9A%E4%B9%89"><span class="nav-text">1.1.1 SDS定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-2-%E4%BD%BF%E7%94%A8SDS%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-text">1.1.2 使用SDS的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-3-SDS%E7%9A%84%E7%A9%BA%E9%97%B4%E9%A2%84%E5%88%86%E9%85%8D%E4%B8%8E%E6%83%B0%E6%80%A7%E7%A9%BA%E9%97%B4%E9%87%8A%E6%94%BE"><span class="nav-text">1.1.3 SDS的空间预分配与惰性空间释放</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E5%AD%97%E5%85%B8Dict"><span class="nav-text">1.2 字典Dict</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-%E5%AD%97%E5%85%B8%E5%AE%9A%E4%B9%89"><span class="nav-text">1.2.1 字典定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-%E5%AD%97%E5%85%B8%E7%9A%84%E6%89%A9%E5%AE%B9"><span class="nav-text">1.2.2 字典的扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-3-%E6%B8%90%E8%BF%9B%E5%BC%8Frehash"><span class="nav-text">1.2.3 渐进式rehash</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E8%B7%B3%E8%A1%A8SkipList"><span class="nav-text">1.3 跳表SkipList</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88IntSet"><span class="nav-text">1.4 整数集合IntSet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-1-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88%E5%AE%9A%E4%B9%89"><span class="nav-text">1.4.1 整数集合定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-2-IntSet%E5%8D%87%E7%BA%A7"><span class="nav-text">1.4.2 IntSet升级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5-%E5%8E%8B%E7%BC%A9%E5%88%97%E8%A1%A8ZipList"><span class="nav-text">1.5 压缩列表ZipList</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-1-%E5%8E%8B%E7%BC%A9%E5%88%97%E8%A1%A8%E5%AE%9A%E4%B9%89"><span class="nav-text">1.5.1 压缩列表定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-2-%E5%8E%8B%E7%BC%A9%E5%88%97%E8%A1%A8%E7%BB%93%E7%82%B9%E7%9A%84%E6%9E%84%E6%88%90"><span class="nav-text">1.5.2 压缩列表结点的构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-3-%E8%BF%9E%E9%94%81%E6%9B%B4%E6%96%B0"><span class="nav-text">1.5.3 连锁更新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-6-QuickList"><span class="nav-text">1.6 QuickList</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Redis%E4%B8%AD%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">2 Redis中的基本数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-RedisObject"><span class="nav-text">2.1 RedisObject</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-String"><span class="nav-text">2.2 String</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-List"><span class="nav-text">2.3 List</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-Hash"><span class="nav-text">2.4 Hash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-Set"><span class="nav-text">2.5 Set</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-SortedSet"><span class="nav-text">2.6 SortedSet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-1-%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="nav-text">2.6.1 底层实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-2-%E4%B8%BA%E4%BB%80%E4%B9%88SortedSet%E8%A6%81%E5%90%8C%E6%97%B6%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%E5%92%8C%E5%AD%97%E5%85%B8%E6%9D%A5%E5%AE%9E%E7%8E%B0%EF%BC%9F"><span class="nav-text">2.6.2 为什么SortedSet要同时使用跳表和字典来实现？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-7-%E6%80%BB%E7%BB%93"><span class="nav-text">2.7 总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Redis%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-text">3 Redis持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-RDB%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-text">3.1 RDB持久化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-AOF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-text">3.2 AOF持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1-%E4%BB%8B%E7%BB%8D"><span class="nav-text">3.2.1 介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-2-AOF%E9%85%8D%E7%BD%AE"><span class="nav-text">3.2.2 AOF配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-3-AOF%E6%96%87%E4%BB%B6%E9%87%8D%E5%86%99"><span class="nav-text">3.2.3 AOF文件重写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-RDB%E4%B8%8EAOF%E5%AF%B9%E6%AF%94"><span class="nav-text">3.3 RDB与AOF对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-text">4 Redis主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E9%98%B6%E6%AE%B5"><span class="nav-text">4.1 数据同步阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-1-%E5%90%8C%E6%AD%A5%E5%8E%9F%E7%90%86"><span class="nav-text">4.1.1 同步原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-2-%E5%85%A8%E9%87%8F%E5%90%8C%E6%AD%A5"><span class="nav-text">4.1.2 全量同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-3-%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5"><span class="nav-text">4.1.3 增量同步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-%E5%91%BD%E4%BB%A4%E4%BC%A0%E6%92%AD%E9%98%B6%E6%AE%B5"><span class="nav-text">4.2 命令传播阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-1-%E4%BB%8B%E7%BB%8D"><span class="nav-text">4.2.1 介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-2-%E5%BF%83%E8%B7%B3%E6%A3%80%E6%B5%8B"><span class="nav-text">4.2.2 心跳检测</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Redis%E5%93%A8%E5%85%B5"><span class="nav-text">5 Redis哨兵</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-%E4%BB%8B%E7%BB%8D"><span class="nav-text">5.1 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-%E8%8A%82%E7%82%B9%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0"><span class="nav-text">5.2 节点自动发现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-1-%E4%BB%8E%E7%BB%93%E7%82%B9%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0"><span class="nav-text">5.2.1 从结点自动发现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-2-%E5%85%B6%E4%BB%96%E5%93%A8%E5%85%B5%E8%8A%82%E7%82%B9%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0"><span class="nav-text">5.2.2 其他哨兵节点自动发现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-3-%E8%A1%A5%E5%85%85"><span class="nav-text">5.2.3 补充</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李澳"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">李澳</p>
+  <div class="site-description" itemprop="description">自娱自乐</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李澳</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">199k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">11:02</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

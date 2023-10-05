@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1 Java集合框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaSE">
+<meta property="og:url" content="http://example.com/2023/07/16/Java%E5%AD%A6%E4%B9%A0/JavaSE/index.html">
+<meta property="og:site_name" content="移动城堡">
+<meta property="og:description" content="1 Java集合框架">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/07/16/Java%E5%AD%A6%E4%B9%A0/JavaSE/fig1.jpg">
+<meta property="og:image" content="http://example.com/2023/07/16/Java%E5%AD%A6%E4%B9%A0/JavaSE/fig2.jpg">
+<meta property="article:published_time" content="2023-07-16T02:31:37.000Z">
+<meta property="article:modified_time" content="2023-07-18T07:37:04.081Z">
+<meta property="article:author" content="李澳">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/07/16/Java%E5%AD%A6%E4%B9%A0/JavaSE/fig1.jpg">
+
+<link rel="canonical" href="http://example.com/2023/07/16/Java%E5%AD%A6%E4%B9%A0/JavaSE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>JavaSE | 移动城堡</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">移动城堡</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎来到我的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/16/Java%E5%AD%A6%E4%B9%A0/JavaSE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="李澳">
+      <meta itemprop="description" content="自娱自乐">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="移动城堡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaSE
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-16 10:31:37" itemprop="dateCreated datePublished" datetime="2023-07-16T10:31:37+08:00">2023-07-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-07-18 15:37:04" itemprop="dateModified" datetime="2023-07-18T15:37:04+08:00">2023-07-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">Java学习</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-Java集合框架"><a href="#1-Java集合框架" class="headerlink" title="1 Java集合框架"></a>1 Java集合框架</h1><span id="more"></span>
+
+<h2 id="1-1-总体介绍"><a href="#1-1-总体介绍" class="headerlink" title="1.1 总体介绍"></a>1.1 总体介绍</h2><p>Java集合大致可以分为两大体系，一个是<code>Collection</code>，另一个<code>Map</code>：</p>
+<ul>
+<li><code>Collection</code>：主要由<code>List</code>、<code>Set</code>以及<code>Queue</code>接口组成。<ul>
+<li><code>List</code>：代表有序、可重复的集合。</li>
+<li><code>Set</code>：代表无序、不可重复的集合。</li>
+<li><code>Queue</code>：提供了基于队列的集合体系。</li>
+</ul>
+</li>
+<li><code>Map</code>：代表具有映射关系的键值对集合。</li>
+</ul>
+<p><img src="/2023/07/16/Java%E5%AD%A6%E4%B9%A0/JavaSE/fig1.jpg"></p>
+<p><img src="/2023/07/16/Java%E5%AD%A6%E4%B9%A0/JavaSE/fig2.jpg"></p>
+<h2 id="1-2-List集合"><a href="#1-2-List集合" class="headerlink" title="1.2 List集合"></a>1.2 List集合</h2><p><code>List</code>集合的特点就是存取有序，可以存储重复的元素，可以用下标进行元素的操作。</p>
+<p><code>List</code>的主要实现类有<code>ArrayList</code>、<code>LinkedList</code>、<code>Vector</code>以及<code>Stack</code>：</p>
+<ul>
+<li><code>ArrayList</code><ul>
+<li>基于动态数组实现，需要分配连续的内存空间。</li>
+<li>支持随机访问，可直接通过元素下标获取元素。</li>
+<li>由于插入与删除操作需要移动数组元素，所以插入删除效率较低。</li>
+<li>当数组满时，会进行扩容（使用<code>copyOf</code>实现）。</li>
+</ul>
+</li>
+<li><code>LinkedList</code><ul>
+<li>基于双向链表实现，不需要分配连续的内存空间。</li>
+<li>不支持随机访问，每次查询都只能从一端开始遍历，直到找到查询的对象。</li>
+<li>插入与删除只需要变更指针指向即可，效率较高。</li>
+<li>由于需要记录前驱以及后继指针，因此内存占用较高。</li>
+</ul>
+</li>
+<li><code>Vector</code><ul>
+<li>与<code>ArrayList</code>类似，但<code>Vector</code>是线程安全的。</li>
+<li>由于<code>Vector</code>的线程安全实现仅仅是在每个方法上面添加了<code>synchronized</code>关键字，因此效率低，如今已经很少使用了。</li>
+</ul>
+</li>
+<li><code>Stack</code><ul>
+<li><code>Stack</code>是<code>Vector</code>的子类，不同的是，它的数据结构是先进后出，也就是栈。</li>
+<li><code>Stack</code>同样是线程安全的，同样效率低，不推荐使用，建议使用<code>Deque</code>双端队列来替代<code>Stack</code>。</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-3-Map集合"><a href="#1-3-Map集合" class="headerlink" title="1.3 Map集合"></a>1.3 Map集合</h2><p><code>Map</code>中保存的是键值对，键要求唯一、不可重复，值可以重复，无下标。</p>
+<p><code>Map</code>的主要实现类有<code>HashMap</code>、<code>LindedHashMap</code>、<code>TreeMap</code>：</p>
+<ul>
+<li><code>HashMap</code>：基于哈希表实现，查找对象时通过哈希函数计算其位置。<ul>
+<li>由于使用的是哈希表存储元素，所以无法保证数据的输入顺序与输出顺序一致。</li>
+<li>使用链地址法解决哈希冲突，当链表长度大于8并且哈希表长度大于64时，将链表转化为红黑树。</li>
+</ul>
+</li>
+<li><code>LinkedHashMap</code>：底层原理与<code>HashMap</code>类似，只是内部多了一个双向链表，用来维护插入顺序或者LRU顺序。默认为按照插入顺序排序。</li>
+<li><code>TreeMap</code>：基于红黑树实现，每个key-value都作为红黑树的一个结点。可以使用自然排序（默认升序）或者自定义比较器排序。</li>
+</ul>
+<h2 id="1-4-Set集合"><a href="#1-4-Set集合" class="headerlink" title="1.4 Set集合"></a>1.4 Set集合</h2><p><code>Set</code>集合的特点是存取无序、元素不重复、无下标。</p>
+<p><code>Set</code>的主要实现类有<code>HashSet</code>、<code>LinkedHashSet</code>和<code>TreeSet</code>。</p>
+<p><code>Set</code>的这几个实现类都是基于<code>Map</code>的几个实现类所实现的，key存储<code>Set</code>的元素，value置为<code>null</code>。</p>
+<h2 id="1-5-Queue集合"><a href="#1-5-Queue集合" class="headerlink" title="1.5 Queue集合"></a>1.5 Queue集合</h2><p><code>Queue</code>是一个队列集合，队列通常是指先进先出（FiFO）的容器。新元素插入到队列的尾部，访问元素操作会返回队列头部的元素。通常，队列不允许随机访问队列的元素。</p>
+<p><code>Queue</code>主要实现类有<code>ArrayDeque</code>、<code>LinkedList</code>、<code>PriorityQueue</code>：</p>
+<ul>
+<li><code>ArrayQueue</code>是一个基于数组实现的双端队列，既然是双端队列，那么即可以先进先出（FIFO队列的特性），也可以先进后出（栈的特性）。</li>
+<li><code>LinkedList</code>是<code>List</code>接口的实现类，也是<code>Deque</code>（双端队列）的实现类，底层是双向链表的数据结构。</li>
+<li><code>PriorityQueue</code>基于堆实现，该类能够对存储在其中的元素按照元素大小进行排序。</li>
+</ul>
+<p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="http://www.justdojava.com/2019/09/16/java-collection-1/">【集合系列】- 初探 java 集合框架图</a></p>
+<p><a target="_blank" rel="noopener" href="https://chasing987.github.io/2020/12/13/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%20list-set-map%20/">Java集合框架史上最详解（list set 以及map）</a></p>
+<h1 id="2-Java函数式接口"><a href="#2-Java函数式接口" class="headerlink" title="2 Java函数式接口"></a>2 Java函数式接口</h1><h2 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h2><p>JDK8之后新增了<code>java.util.function</code>包，该包下都是函数式接口，其中最为基础的有四大接口：<code>Consumer</code>、<code>Supplier</code>、<code>Predicate</code>、<code>Function</code>。这四大接口的总结如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>接口</strong></th>
+<th align="center"><strong>参数</strong></th>
+<th align="center"><strong>返回值</strong></th>
+<th align="center"><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>Consumer&lt;T&gt;</code></td>
+<td align="center"><code>T</code></td>
+<td align="center">无</td>
+<td align="center">消费型：用来接收一个泛型<code>T</code>对象并执行相关操作，无返回值</td>
+</tr>
+<tr>
+<td align="center"><code>Supplier&lt;T&gt;</code></td>
+<td align="center">无</td>
+<td align="center"><code>T</code></td>
+<td align="center">供给型：无参，用于生成泛型<code>T</code>对象并返回</td>
+</tr>
+<tr>
+<td align="center"><code>Predicate&lt;T&gt;</code></td>
+<td align="center"><code>T</code></td>
+<td align="center"><code>boolean</code></td>
+<td align="center">谓词型：用于判断泛型<code>T</code>对象是否符合条件，符合返回<code>ture</code>，否则返回<code>false</code></td>
+</tr>
+<tr>
+<td align="center"><code>Function&lt;T,R&gt;</code></td>
+<td align="center"><code>T</code></td>
+<td align="center"><code>R</code></td>
+<td align="center">函数型：接收一个泛型T对象的参数，产生泛型R对象的结果并返回</td>
+</tr>
+</tbody></table>
+<p>除此之外，<code>java.util.function</code>包下还有许多这四种基础接口的变种，不够在理解了这四种接口之后，其他的自然也就理解了。</p>
+<h2 id="2-2-Consumer接口"><a href="#2-2-Consumer接口" class="headerlink" title="2.2 Consumer接口"></a>2.2 Consumer接口</h2><p><code>Consumer</code>接口的源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Consumer</span>&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 消费逻辑</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">accept</span><span class="params">(T t)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用于组合Consumer，相当于串联，并返回经过组合之后的Consumer</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">default</span> Consumer&lt;T&gt; <span class="title function_">andThen</span><span class="params">(Consumer&lt;? <span class="built_in">super</span> T&gt; after)</span> &#123;</span><br><span class="line">        Objects.requireNonNull(after);</span><br><span class="line">        <span class="keyword">return</span> (T t) -&gt; &#123; accept(t); after.accept(t); &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Iterable</code>接口中的<code>forEach</code>方法就使用到了<code>Consumer</code>接口，相关代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title function_">forEach</span><span class="params">(Consumer&lt;? <span class="built_in">super</span> T&gt; action)</span> &#123;</span><br><span class="line">    Objects.requireNonNull(action);</span><br><span class="line">    <span class="keyword">for</span> (T t : <span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="comment">// 执行消费逻辑</span></span><br><span class="line">        action.accept(t);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此，我们可以向<code>forEach</code>中传入自己的处理逻辑，来对其中的每个元素都进行相应的处理。以遍历打印元素为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(1, 2, 3, 4, 5);</span><br><span class="line">list.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<p>注意，方法引用或者lambda表达式都可以看做实现了函数式接口的匿名内部类。</p>
+<h2 id="2-3-Supplier接口"><a href="#2-3-Supplier接口" class="headerlink" title="2.3 Supplier接口"></a>2.3 Supplier接口</h2><p><code>Supplier</code>接口的源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Supplier</span>&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取泛型T对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    T <span class="title function_">get</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Optional</code>对象中的<code>orElseGet</code>方法中就使用到了<code>Supplier</code>接口，对应代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 如果value值存在，则返回该值，否则返回Supplier生成的结果</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">orElseGet</span><span class="params">(Supplier&lt;? extends T&gt; supplier)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value != <span class="literal">null</span> ? value : supplier.get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-4-Predicate接口"><a href="#2-4-Predicate接口" class="headerlink" title="2.4 Predicate接口"></a>2.4 Predicate接口</h2><p><code>Predicate</code>接口的源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Predicate</span>&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 具体判断逻辑，用于判断泛型T对象是否符合要求，可以理解为条件A</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">test</span><span class="params">(T t)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对当前断言进行“与”操作，如果将other视为条件B，</span></span><br><span class="line"><span class="comment">     * 则该方法可理解为 条件A &amp;&amp; 条件B</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">default</span> Predicate&lt;T&gt; <span class="title function_">and</span><span class="params">(Predicate&lt;? <span class="built_in">super</span> T&gt; other)</span> &#123;</span><br><span class="line">        Objects.requireNonNull(other);</span><br><span class="line">        <span class="keyword">return</span> (t) -&gt; test(t) &amp;&amp; other.test(t);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对当前断言进行“取非”操作，可以理解为 !条件A</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">default</span> Predicate&lt;T&gt; <span class="title function_">negate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (t) -&gt; !test(t);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对当前断言进行“或”操作，如果将other视为条件B，</span></span><br><span class="line"><span class="comment">     * 则该方法可理解为 条件A || 条件B</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">default</span> Predicate&lt;T&gt; <span class="title function_">or</span><span class="params">(Predicate&lt;? <span class="built_in">super</span> T&gt; other)</span> &#123;</span><br><span class="line">        Objects.requireNonNull(other);</span><br><span class="line">        <span class="keyword">return</span> (t) -&gt; test(t) || other.test(t);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对当前断言进行“取等”操作，如果将other视为条件B，</span></span><br><span class="line"><span class="comment">     * 则该方法可理解为 条件A == 条件B</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> &lt;T&gt; Predicate&lt;T&gt; <span class="title function_">isEqual</span><span class="params">(Object targetRef)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="literal">null</span> == targetRef)</span><br><span class="line">                ? Objects::isNull</span><br><span class="line">                : object -&gt; targetRef.equals(object);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Predicate</code>接口多用于<code>filter</code>方法中，用于筛选符合条件的元素，最为常见的就是Stream流中的<code>filter</code>方法。</p>
+<h2 id="2-5-Function接口"><a href="#2-5-Function接口" class="headerlink" title="2.5 Function接口"></a>2.5 Function接口</h2><p><code>Function</code>接口源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Function</span>&lt;T, R&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 转换逻辑</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    R <span class="title function_">apply</span><span class="params">(T t)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 组合方法，会在调用当前Function之前调用before中的代码逻辑</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">default</span> &lt;V&gt; Function&lt;V, R&gt; <span class="title function_">compose</span><span class="params">(Function&lt;? <span class="built_in">super</span> V, ? extends T&gt; before)</span> &#123;</span><br><span class="line">        Objects.requireNonNull(before);</span><br><span class="line">        <span class="keyword">return</span> (V v) -&gt; apply(before.apply(v));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 组合方法，会在调用当前Function之后调用after中的代码逻辑</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">default</span> &lt;V&gt; Function&lt;T, V&gt; <span class="title function_">andThen</span><span class="params">(Function&lt;? <span class="built_in">super</span> R, ? extends V&gt; after)</span> &#123;</span><br><span class="line">        Objects.requireNonNull(after);</span><br><span class="line">        <span class="keyword">return</span> (T t) -&gt; after.apply(apply(t));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 静态方法，返回输入参数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> &lt;T&gt; Function&lt;T, T&gt; <span class="title function_">identity</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> t -&gt; t;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Stream流中的<code>map</code>方法就用到了<code>Function</code>接口。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="prev" title="神经网络">
+      <i class="fa fa-chevron-left"></i> 神经网络
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/07/16/Java%E5%AD%A6%E4%B9%A0/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="next" title="Java并发编程">
+      Java并发编程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6"><span class="nav-text">1 Java集合框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E6%80%BB%E4%BD%93%E4%BB%8B%E7%BB%8D"><span class="nav-text">1.1 总体介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-List%E9%9B%86%E5%90%88"><span class="nav-text">1.2 List集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-Map%E9%9B%86%E5%90%88"><span class="nav-text">1.3 Map集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-Set%E9%9B%86%E5%90%88"><span class="nav-text">1.4 Set集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5-Queue%E9%9B%86%E5%90%88"><span class="nav-text">1.5 Queue集合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Java%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3"><span class="nav-text">2 Java函数式接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%A6%82%E8%BF%B0"><span class="nav-text">2.1 概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-Consumer%E6%8E%A5%E5%8F%A3"><span class="nav-text">2.2 Consumer接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-Supplier%E6%8E%A5%E5%8F%A3"><span class="nav-text">2.3 Supplier接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-Predicate%E6%8E%A5%E5%8F%A3"><span class="nav-text">2.4 Predicate接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-Function%E6%8E%A5%E5%8F%A3"><span class="nav-text">2.5 Function接口</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李澳"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">李澳</p>
+  <div class="site-description" itemprop="description">自娱自乐</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李澳</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">199k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">11:02</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

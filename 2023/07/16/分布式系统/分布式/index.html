@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1 全局唯一ID">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式">
+<meta property="og:url" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/index.html">
+<meta property="og:site_name" content="移动城堡">
+<meta property="og:description" content="1 全局唯一ID">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig1.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig2.webp">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig3.jpg">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig4.jpg">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig6.jpg">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig2.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig7.awebp">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig8.awebp">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig9.awebp">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig10.awebp">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig11.awebp">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig12.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig13.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig14.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig15.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig20.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig21.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig22.jpg">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig23.jpg">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig24.jpg">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig25.jpg">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig26.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig27.png">
+<meta property="og:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig28.png">
+<meta property="article:published_time" content="2023-07-16T02:50:37.000Z">
+<meta property="article:modified_time" content="2023-07-17T01:59:12.488Z">
+<meta property="article:author" content="李澳">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig1.png">
+
+<link rel="canonical" href="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>分布式 | 移动城堡</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">移动城堡</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎来到我的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="李澳">
+      <meta itemprop="description" content="自娱自乐">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="移动城堡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-16 10:50:37" itemprop="dateCreated datePublished" datetime="2023-07-16T10:50:37+08:00">2023-07-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-07-17 09:59:12" itemprop="dateModified" datetime="2023-07-17T09:59:12+08:00">2023-07-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">分布式系统</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>14k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>48 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-全局唯一ID"><a href="#1-全局唯一ID" class="headerlink" title="1 全局唯一ID"></a>1 全局唯一ID</h1><span id="more"></span>
+
+<p>全局唯一ID一般需要满足以下几点要求：</p>
+<ul>
+<li><strong>全局唯一</strong>：不能出现重复的ID，这是最基本的。</li>
+<li><strong>趋势递增</strong>：多数关系型数据库都是使用B+树的数据结构来存储索引数据的，因此我们应该尽量使用有序的主键保证写入性能。</li>
+<li><strong>信息安全</strong>：如果我们的ID是连续的，比如我们用这一ID作为订单号，那么竞争对手就可以直接知道我们一天的订单数量。所以一些应用场景下，会需要ID无规则、不规则。</li>
+</ul>
+<p>简单来说，就是全局唯一、趋势递增且无规律。</p>
+<h2 id="1-1-雪花算法"><a href="#1-1-雪花算法" class="headerlink" title="1.1 雪花算法"></a>1.1 雪花算法</h2><p>雪花（snowflake）算法是Twitter开源的分布式ID生成算法，其产生的ID是一个64位的长整型。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig1.png"></p>
+<ul>
+<li><strong>符号位</strong>：1bit，永远为0</li>
+<li><strong>时间戳</strong>：41bit，单位为毫秒</li>
+<li><strong>工作机器ID</strong>：10bit，标识该分布式ID是在哪台机器上产生的，通过工作机器ID的唯一保证该分布式ID的唯一。</li>
+<li><strong>序列号</strong>：毫秒内的递增序列号</li>
+</ul>
+<p>雪花算法单机每秒理论上最多可以生成$1000 * (2^{12})$（每毫秒生成$2^{12}$个分布式ID，1秒为1000毫秒），也就是$409.6$万个ID。</p>
+<p>由于雪花算法生成的分布式ID高位是时间戳，因此该分布式ID是趋势递增的，而且由于工作机器ID是唯一的，因此整个分布式ID也是唯一的。另外，<strong>雪花算法不需要依赖其他的第三方系统就可以生成全局唯一ID</strong>。</p>
+<p>但是<strong>雪花算法强依赖机器时钟，如果发生时间回拨可能会导致生成的ID重复</strong>。</p>
+<h2 id="1-2-薄雾算法"><a href="#1-2-薄雾算法" class="headerlink" title="1.2 薄雾算法"></a>1.2 薄雾算法</h2><p>薄雾（Mist）算法生成的ID同样是64位：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig2.webp"></p>
+<ul>
+<li><strong>符号位</strong>：1bit，永远为0</li>
+<li><strong>自增数</strong>：47bit，递增且唯一。</li>
+<li><strong>随机数1</strong>：8bit，使结果值不可预测。</li>
+<li><strong>随机数2</strong>：8bit，使结果值不可预测。</li>
+</ul>
+<p>薄雾算法中，自增数放在高位，能够保证生成的ID趋势递增，因此低位就可以为所欲为。所以薄雾算法生成的ID里面低16位放置了两个8位的数据数，用于保证ID的无规律性。另外，该自增数是唯一的，因此也可以保证所生成ID的唯一性。</p>
+<p>一般来说，我们可以使用Redis来存储该自增数并实现自增。</p>
+<h2 id="1-3-雪花算法时钟回拨问题"><a href="#1-3-雪花算法时钟回拨问题" class="headerlink" title="1.3 雪花算法时钟回拨问题"></a>1.3 雪花算法时钟回拨问题</h2><p>前文中提到过，雪花算法是强依赖于机器时钟的，如果发生时钟回拨，可能会产生重复的ID，这是我们所不能接受的。</p>
+<p>要想解决时钟回拨问题，我们首先需要判断当前时钟是否发生了回拨。我们可以使用一个变量记录上一次生成ID的时间戳，每次生成ID的时候，都与我们记录的时间戳进行比较，如果当前时间戳在其之前，说明发生了时钟回拨。</p>
+<p>当发生了时钟回拨之后，我们可以使用以下几种解决方案：</p>
+<ul>
+<li><strong>直接抛出异常</strong>。</li>
+<li><strong>等待时钟校正</strong>。线程睡眠或者自旋，直到当前时间戳大于我们所记录的上一时间戳。<ul>
+<li>适用于回拨幅度小的场景。</li>
+<li>可限定校正的次数，超过最大校正次数，直接抛出异常。</li>
+<li>对实时性要求较高的任务不友好。</li>
+</ul>
+</li>
+<li><strong>使用历史序列号</strong>。在出现时钟回拨时，使用上一时间戳的序号来继续累加。<ul>
+<li>比如上一秒是0时0分0秒，自增序号到达了$x$。由于时钟回拨，下一秒时间是23时59分0秒，那么下一次生成序号时，发现当前时间戳小于上一时间戳，则使用0时0分0秒这一时间戳，自增序号使用$x+1$（实际上雪花算法是以毫秒为单位的，这里只是为了方便举例）。</li>
+<li>自增序列号用完之后要怎么办？重新等待？</li>
+</ul>
+</li>
+<li><strong>时间戳自增</strong>。不使用机器的时间戳，而是自己控制时间戳。当序列号自增超过最大值时（即溢出），时间戳自增1。<ul>
+<li>生成的ID中的时间戳，并不是真实的时间，如果不使用从ID中解析出的时间戳，那么可以忽略这一点。</li>
+<li>可以与上面使用历史序列号这一方法相结合。如果历史序列号自增溢出时，可以将时间戳自增1，直到机器时间戳大于等于当前计算的时间戳为止。</li>
+</ul>
+</li>
+</ul>
+<p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000023087471">忘掉 Snowflake，感受一下性能高出 587 倍的全局唯一 ID 生成算法</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903562007314440">分布式唯一id：snowflake算法思考</a></p>
+<p><a target="_blank" rel="noopener" href="https://pdai.tech/md/arch/arch-z-id.html#mist-%E8%96%84%E9%9B%BE%E7%AE%97%E6%B3%95"> 分布式系统 - 全局唯一ID实现方案</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.modb.pro/db/139829">雪花算法与时间回拨</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/stefanxfy/4722168#_414">雪花算法snowflake分布式id生成原理详解，以及对解决时钟回拨问题几种方案讨论</a></p>
+<h1 id="2-布隆过滤器"><a href="#2-布隆过滤器" class="headerlink" title="2 布隆过滤器"></a>2 布隆过滤器</h1><p>布隆过滤器（Bloom Filter）主要用于判断一个元素是否在一个集合中。</p>
+<p>布隆过滤器是由一个固定大小的二进制数组或位图（bitmap）和一系列哈希函数组成的。</p>
+<p>在初始状态时，对于长度为$m$的二进制数组，它的所有位都被置为0，如下图所示：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig3.jpg"></p>
+<p>当有元素被加入集合中，通过$k$个哈希函数对该元素进行哈希，得到$k$个下标，将对应下标的二进制数组元素置为1。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig4.jpg"></p>
+<p>当我们查询某个元素是否存在于集合中时，只需要使用上述$k$个哈希函数对该元素进行哈希，得到$k$个下标，然后查看这$k$个下标对应的二进制数组元素值：</p>
+<ul>
+<li>如果有一个为0，则被查询元素<strong>一定不存在</strong>。</li>
+<li>如果都是1，则被查询元素<strong>可能存在</strong>。</li>
+</ul>
+<p>布隆过滤器的缺点：</p>
+<ul>
+<li><strong>存在误判</strong>。<ul>
+<li>布隆过滤器只能判断某个元素<strong>一定不存在或可能存在</strong>，当判断结果为存在的时候，元素不一定存在。</li>
+<li>随着存入的元素数量增加，误判率随之增加。</li>
+<li>可以通过增加二进制数组长度的方式减小误判率。</li>
+</ul>
+</li>
+<li><strong>布隆过滤器只能添加元素，不能删除</strong>。</li>
+</ul>
+<p>那么我们可不可以让布隆过滤器支持删除呢？可以！</p>
+<p>我们可以使用布隆过滤器的一个变种——计数布隆过滤器（Counting Bloom Filter）。原理就是将二进制数组中的二进制位升级为计数器（Counter）：</p>
+<ul>
+<li>添加元素，对应的Counter分别加1。</li>
+<li>删除元素，对应的Counter分别减1。</li>
+</ul>
+<p>用多占用几倍存储空间的代价，给布隆过滤器增加了删除操作。</p>
+<p>还有另外一种解决方案就是布谷鸟过滤器，这里就不展开介绍了。</p>
+<p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000024566947">布隆过滤器，没那么难</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000039156246">布隆，牛逼！布谷鸟，牛逼！</a></p>
+<h1 id="3-JWT"><a href="#3-JWT" class="headerlink" title="3 JWT"></a>3 JWT</h1><h2 id="3-1-介绍"><a href="#3-1-介绍" class="headerlink" title="3.1 介绍"></a>3.1 介绍</h2><p><strong>JWT（Json Web Token）</strong>也是一种token，其与普通token的区别在于：</p>
+<ul>
+<li>使用普通token时，除了发送给客户端之外，服务器也要存储一份token（存储在session或者redis中），而验证普通token时要进行数据的查询操作。</li>
+<li>使用JWT时，服务器是不需要存储token的，验证token时使用密钥校验（验签）即可，而不需要进行查询。</li>
+</ul>
+<h2 id="3-2-JWT组成"><a href="#3-2-JWT组成" class="headerlink" title="3.2 JWT组成"></a>3.2 JWT组成</h2><p>实际的JWT如下所示：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig6.jpg"></p>
+<p>它是一个很长的字符串，中间用点号$.$分隔成三个部分。JWT的三部分组成分别如下：</p>
+<ul>
+<li>Header（头部）</li>
+<li>Payload（载荷）</li>
+<li>Signature（签名）</li>
+</ul>
+<p>写成一行，就是下面的样子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Header.Payload.Signature</span><br></pre></td></tr></table></figure>
+
+<p>下面依次介绍这三部分。</p>
+<h3 id="3-2-1-Header"><a href="#3-2-1-Header" class="headerlink" title="3.2.1 Header"></a>3.2.1 Header</h3><p>JWT的Header部分是一个JSON对象，描述JWT的元数据，通常是下面的样子：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  &#x27;typ&#x27;<span class="punctuation">:</span> &#x27;JWT&#x27;<span class="punctuation">,</span></span><br><span class="line">  &#x27;alg&#x27;<span class="punctuation">:</span> &#x27;HS256&#x27;</span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li><code>typ</code>属性表示这个token的类型，JWT令牌统一写为<code>JWT</code>。</li>
+<li><code>alg</code>属性表示签名的算法，默认是HMAC SHA256，写做<code>HS256</code>。</li>
+</ul>
+<p>将Header部分进行Base64URL编码后，就得到了JWT的第一部分。</p>
+<h3 id="3-2-2-Payload"><a href="#3-2-2-Payload" class="headerlink" title="3.2.2 Payload"></a>3.2.2 Payload</h3><p>Payload部分也是一个JSON对象，用来存放实际需要传递的数据。JWT规定了7个官方字段，供选用：</p>
+<ul>
+<li><code>iss</code>（Issuer）：JWT签发者。</li>
+<li><code>exp</code>（Expiration Time）：过期时间，该过期时间必须要大于签发时间。</li>
+<li><code>sub</code>（Subject）：JWT所面向的用户，通常是能唯一标识该用户的标识符。</li>
+<li><code>aud</code>（Audience）：接收JWT的一方。</li>
+<li><code>nbf</code>（Not Before）：生效时间，表示JWT在这个时间后使用。</li>
+<li><code>iat</code>（Issued At）：签发时间。</li>
+<li><code>iti</code>（JWT ID）：签发JWT时给予当前token的唯一ID，通常用于一次性消费的token，从而回避重放攻击。</li>
+</ul>
+<p>除了标准中定义的字段，我们还可以在这个部分定义私有字段，如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// 这里也可以是签发JWT的服务器的域名</span></span><br><span class="line">    <span class="attr">&quot;iss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;John Wu JWT&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;iat&quot;</span><span class="punctuation">:</span> <span class="number">1441593502</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;exp&quot;</span><span class="punctuation">:</span> <span class="number">1441594722</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;aud&quot;</span><span class="punctuation">:</span> <span class="string">&quot;www.example.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// 能够唯一标识目标用户的标识符，这里使用的是邮箱，像电话号码或者ID也可以</span></span><br><span class="line">    <span class="attr">&quot;sub&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jrocket@example.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// 下面两个是自己定义的私有字段</span></span><br><span class="line">  	<span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;John Doe&quot;</span><span class="punctuation">,</span></span><br><span class="line">  	<span class="attr">&quot;admin&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>将Payload进行Base64URL编码后，就得到了JWT的第二部分。</p>
+<h3 id="3-2-3-Signature"><a href="#3-2-3-Signature" class="headerlink" title="3.2.3 Signature"></a>3.2.3 Signature</h3><p>Signature是对前面两部分的签名，防止数据被篡改。</p>
+<p>首先需要指定一个密钥（secret），这个秘钥只有服务器自己知道。然后，使用Header中指定的签名算法（默认是HMAC SHA256），按照下面的公式产生签名：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HMACSHA256(</span><br><span class="line">  base64UrlEncode(header) + &quot;.&quot; +</span><br><span class="line">  base64UrlEncode(payload),</span><br><span class="line">  secret)</span><br></pre></td></tr></table></figure>
+
+<p>其实就是将Header与Payload使用点号$.$连接起来，然后再对这一字符串进行签名。</p>
+<p>算出签名之后，将这三部分使用点号$.$连接起来，就得到了JWT。</p>
+<h3 id="3-2-4-Base64URL"><a href="#3-2-4-Base64URL" class="headerlink" title="3.2.4 Base64URL"></a>3.2.4 Base64URL</h3><p>前面提到，对Header和Payload进行的Base64URL编码。这个算法与Base64类似，但有一些小的不同。</p>
+<p>JWT作为一个token，有些场合可能会放到URL中。Base64中有三个字符<code>+</code>、<code>/</code>和<code>=</code>，在URL里面有特殊含义，所以要被替换掉。Base64URL将<code>+</code>替换成<code>-</code>，<code>/</code>替换成<code>_</code>，并去掉末尾填充的<code>=</code>。</p>
+<h2 id="3-3-JWT使用"><a href="#3-3-JWT使用" class="headerlink" title="3.3 JWT使用"></a>3.3 JWT使用</h2><p>客户端收到服务器返回的JWT，可以存储在Cookie里面，也可以存储在localStorage中。</p>
+<p>此后，客户端每次与服务器通信，都要带上这个JWT。我们可以将其放在Coolie里面自动发送，但是这样不能进行跨域，所以更好的做法是将其放在HTTP请求头的<code>Authorization</code>字段中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Bearer &lt;token&gt;</span><br></pre></td></tr></table></figure>
+
+<p>通常，token前面要加上一个Bearer前缀，并用空格隔开（规范是这么要求的）。</p>
+<p>客户端使用JWT访问服务器资源的流程如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig2.png"></p>
+<h2 id="3-4-JWT的特点"><a href="#3-4-JWT的特点" class="headerlink" title="3.4 JWT的特点"></a>3.4 JWT的特点</h2><ul>
+<li>JWT默认是不加密的，但也可以进行加密。生成原始token后，可以用密钥再加密一次。</li>
+<li>JWT不加密的情况下，不能将诸如用户密码等保密信息写入JWT。</li>
+<li>JWT不仅可以用于认证，也可以用于交换信息。有效使用JWT，可以降低服务器查询数据库的次数。</li>
+<li>JWT的最大缺点是，服务器无法在使用过程中废止某个token，或者更改token的权限。也就是说，<strong>一旦JWT签发了，在到期之前都会始终有效</strong>，除非服务器部署额外的逻辑。</li>
+<li>JWT本身包含了认证信息，一旦泄露，任何人都可以获取该令牌的所有权限。为了减少盗用，JWT的有效期应该设置的比较短。对于一些比较重要的权限，使用时应该再次对用户进行认证。</li>
+</ul>
+<p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/576dbf44b2ae">什么是 JWT – JSON WEB TOKEN</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7001821199550382117">[ tool ] JWT认证 和base64编码</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html">JSON Web Token 入门教程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaxveliang/p/15097947.html">一文详解 Base64 编码原理</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.leapoahead.com/2015/09/06/understanding-jwt/">JSON Web Token - 在Web应用间安全地传递信息</a></p>
+<p><a target="_blank" rel="noopener" href="https://llbetter.com/JWT-default-claims/">JWT(Json Web Token)中默认的声明含义</a></p>
+<h1 id="4-OAuth2-0"><a href="#4-OAuth2-0" class="headerlink" title="4 OAuth2.0"></a>4 OAuth2.0</h1><h2 id="4-1-介绍"><a href="#4-1-介绍" class="headerlink" title="4.1 介绍"></a>4.1 介绍</h2><p>OAuth2.0是一种授权协议，允许用户授权第三方应用访问他存储在另外服务商里的各种信息数据，而这种授权<strong>不需要提供用户名和密码</strong>。</p>
+<p>在我们登录某些第三方应用时，可以使用相关社交账号（微信、QQ、微博）登录。传统的方式是，用户将自己社交账号（比如微信）的用户名和密码告诉第三方应用，但这样做会有很多问题：</p>
+<ul>
+<li>第三方应用拥有了用户微信的所有权限，用户没有办法限制第三方应用获得<strong>授权的范围和有效期</strong>。</li>
+<li>用户只有修改密码，才能收回赋予给第三方应用的权限，但是这样做会使得其他所有获得用户授权的第三方应用程序全部失效。</li>
+<li>只要有一个第三方应用程序被破解，就会导致用户密码泄露，以及所有使用微信登录的第三方应用的数据泄露。</li>
+</ul>
+<p>OAuth2.0的作用就是让“第三方应用”安全可控地获取“用户”的授权，与“服务提供商”进行交互。<strong>本质是使用token令牌代替用户名密码（可指定token的权限范围和有效期）</strong>。</p>
+<h2 id="4-2-OAuth2-0名词定义"><a href="#4-2-OAuth2-0名词定义" class="headerlink" title="4.2 OAuth2.0名词定义"></a>4.2 OAuth2.0名词定义</h2><ul>
+<li><strong>Third-party application</strong>：第三方应用程序，也被称为客户端（Client）。</li>
+<li><strong>HTTP service</strong>：服务提供商，本文中指的是微信。</li>
+<li><strong>Resource Owner</strong>：用户&#x2F;资源拥有者，本文中指的是在微信中注册的用户。</li>
+<li><strong>Authorization server</strong>：认证服务器，在资源拥有者授权后，向第三方应用授权（颁发Access Token）的服务器。</li>
+<li><strong>Resource server</strong>：资源服务器，即服务提供商存放用户生成资源的服务器。它与认证服务器可以是同一台服务器，也可以是不同的服务器。</li>
+</ul>
+<h2 id="4-3-OAuth2-0授权流程"><a href="#4-3-OAuth2-0授权流程" class="headerlink" title="4.3 OAuth2.0授权流程"></a>4.3 OAuth2.0授权流程</h2><p>OAuth2.0的交互流程如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig7.awebp"></p>
+<ol>
+<li>用户访问第三方应用之后，第三方应用要访问服务提供方，要求用户给予授权。</li>
+<li>用户同意给予第三方应用访问服务提供方的授权，并返回一个授权凭证。</li>
+<li>第三方应用使用上一步获得的授权凭证，向认证服务器申请令牌。</li>
+<li>认证服务器验证第三方应用的授权凭证通过后，同意授权，并返回一个资源访问的令牌。</li>
+<li>第三方应用程序使用令牌，向资源服务器请求相关资源。</li>
+<li>资源服务器验证令牌通过后，同意向第三方应用开放资源，返回第三方应用请求的资源。</li>
+</ol>
+<p>下面是时序图：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig8.awebp"></p>
+<p>不难看出，上面6个步骤中，第2步是关键，即用户怎样才能给予第三方应用授权。有了这个授权之后，第三方应用就可以获取令牌，进而凭借令牌获取资源。</p>
+<p>下一节讲解第三方应用获取授权的四种模式。</p>
+<h2 id="4-4-OAuth2-0的授权模式"><a href="#4-4-OAuth2-0的授权模式" class="headerlink" title="4.4 OAuth2.0的授权模式"></a>4.4 OAuth2.0的授权模式</h2><p>OAuth2.0的授权模式主要有以下四种：</p>
+<ul>
+<li>授权码模式（authorization code）</li>
+<li>简化模式（implicit）</li>
+<li>密码模式（Resource owner password credentials）</li>
+<li>客户端模式（client credentials）</li>
+</ul>
+<h3 id="4-4-1-授权码模式"><a href="#4-4-1-授权码模式" class="headerlink" title="4.4.1 授权码模式"></a>4.4.1 授权码模式</h3><p>第三方应用先申请获取一个授权码，然后再使用该授权码获取令牌，最后使用令牌获取资源。授权码模式是功能最完整、流程最严密的授权模式。它的特点是通过第三方应用的后台服务器与服务提供商的认证服务器交互。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig9.awebp"></p>
+<p>步骤如下：</p>
+<ul>
+<li>A（步骤1,2）：用户访问第三方应用客户端，需要使用服务提供商的数据，因此第三方应用客户端将用户导向服务提供商的认证服务器（也称授权服务器）。</li>
+<li>B（步骤3）：用户选择是否给予第三方应用授权。</li>
+<li>C（步骤4）：假设用户同意授权，认证服务器将用户导向第三方应用事先指定的“重定向URI”（redirection URI），同时带上一个授权码。</li>
+<li>D（步骤5,6）：<ul>
+<li>第三方应用客户端收到授权码，然后发送给第三方应用服务器。</li>
+<li>第三方应用服务器收到授权码后，附上授权码和早先的“重定向URI”，向认证服务器申请令牌。这一步是在第三方应用的后台的服务器上完成的，对用户不可见。</li>
+</ul>
+</li>
+<li>E（步骤7,8）：<ul>
+<li>认证服务器核对授权码和重定向URI，确认无误后，向第三方应用服务器发送访问令牌（access token）和更新令牌（refresh token）。</li>
+<li>第三方应用服务器将访问令牌（access token）发送给第三方应用客户端。</li>
+</ul>
+</li>
+<li>F（步骤9,10）：<ul>
+<li>第三方应用客户端携带access token向第三方应用服务器发起资源请求。</li>
+<li>客户端服务器再向服务提供商的资源服务器请求资源。</li>
+</ul>
+</li>
+<li>G（步骤11,12,13）：<ul>
+<li>资源服务器验证令牌通过后，向第三方应用服务器返回资源。</li>
+<li>第三方应用服务器再将数据回传给第三方应用客户端使用。</li>
+</ul>
+</li>
+</ul>
+<p>上面的F以及G步骤其实第三方应用客户端直接向服务提供商请求资源即可，感觉没必要再去经过第三方应用服务器，除非第三方应用服务器中要保存一份该资源。</p>
+<p>A步骤中的<strong>授权请求</strong>示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/authorize?response_type=code&amp;client_id=s6BhdRkqt3&amp;state=xyz&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>server.example.com</span><br></pre></td></tr></table></figure>
+
+<p>参数解释：</p>
+<ul>
+<li><code>response_type</code>：必选项，表示授权类型，此处的值固定为<code>code</code>，表示使用授权码模式。</li>
+<li><code>client_id</code>：必选项，第三方应用在服务提供商处注册时生成的ID。</li>
+<li><code>redirect_uri</code>：可选项，表示重定向URI，接收或拒绝请求后的跳转网址。</li>
+<li><code>scope</code>：可选项，表示申请的权限范围。</li>
+<li><code>state</code>：可选项，表示第三方应用的当前状态，可以指定任意值，认证服务器会原封不动地返回这个值（<strong>为了防止CSRF攻击</strong>）。</li>
+</ul>
+<p>C步骤中的<strong>授权响应</strong>示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">302</span> Found</span><br><span class="line"><span class="attribute">Location</span><span class="punctuation">: </span>https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA</span><br><span class="line">          &amp;state=xyz</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>Location</code>指定的是重定向地址，一般在响应码为<code>3xx</code>的响应中才会有意义。</p>
+<p>参数解释：</p>
+<ul>
+<li><p><code>code</code>：必选项，表示授权码。</p>
+<ul>
+<li><p>该码的有效期应该很短，通常设为10分钟。</p>
+</li>
+<li><p>客户端只能使用该码一次，否则会被认证服务器拒绝。</p>
+</li>
+<li><p><strong>该码与第三方应用的ID和重定向URI是一一对应的关系</strong>。</p>
+</li>
+</ul>
+</li>
+<li><p><code>state</code>：如果客户端的请求中包含这个参数，认证服务器的响应中也必须一模一样包含这个参数。</p>
+</li>
+</ul>
+<p>D步骤中的<strong>令牌请求</strong>示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/token</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>server.example.com</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line"><span class="language-routeros"><span class="attribute">grant_type</span>=authorization_code\</span></span><br><span class="line"><span class="language-routeros">&amp;<span class="attribute">code</span>=SplxlOBeZQQYbYS6WxSbIA\</span></span><br><span class="line"><span class="language-routeros">&amp;<span class="attribute">redirect_uri</span>=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb\</span></span><br><span class="line"><span class="language-routeros">&amp;<span class="attribute">client_id</span>=s6BhdRkqt3\</span></span><br><span class="line"><span class="language-routeros">&amp;<span class="attribute">client_secret</span>=7Ft7ym8MpE54yWGUNvxxg6KqGwPFsyhYn9</span></span><br></pre></td></tr></table></figure>
+
+<p>参数解释：</p>
+<ul>
+<li><code>grant_type</code>：必选项，表示使用的授权模式，此处的值固定为<code>authorization_code</code>。</li>
+<li><code>code</code>：必选项，上一步获取的授权码。</li>
+<li><code>redirect_uri</code>：表示重定向URI，如果A步骤中的授权请求中包含<code>redirect_uri</code>，那么就是必选项，且必须与授权请求中的该参数值保持一致。</li>
+<li><code>client_id</code>：必选项，第三方应用在服务提供商处注册时生成的ID。</li>
+<li><code>client_secret</code>：必选项，第三方应用在服务提供商处注册时生成的密钥。<ul>
+<li>该密钥主要是为了防止伪造，用于确认第三方应用使用的<code>client_id</code>确实是第三方应用自己所持有的。</li>
+<li><code>client_secret</code>参数是保密的，因此只能在后端发送该请求（也就是说<code>client_secret</code>是不能保存在前端的）。</li>
+</ul>
+</li>
+</ul>
+<p>E步骤中的<strong>令牌响应</strong>示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json;charset=UTF-8</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>no-store</span><br><span class="line"><span class="attribute">Pragma</span><span class="punctuation">: </span>no-cache</span><br><span class="line"></span><br><span class="line"><span class="language-json"><span class="punctuation">&#123;</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;access_token&quot;</span><span class="punctuation">:</span><span class="string">&quot;2YotnFZFEjr1zCsicMWpAA&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;token_type&quot;</span><span class="punctuation">:</span><span class="string">&quot;Bearer&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span><span class="number">3600</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;refresh_token&quot;</span><span class="punctuation">:</span><span class="string">&quot;tGzv3JOkF0XG5Qx2TlKWIA&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;example_parameter&quot;</span><span class="punctuation">:</span><span class="string">&quot;example_value&quot;</span></span></span><br><span class="line"><span class="language-json"><span class="punctuation">&#125;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>可以看出，相关参数使用JSON格式发送。另外，HTTP头信息中明确指定不得缓存。</p>
+<p>参数解释：</p>
+<ul>
+<li><code>access_token</code>：必选项，表示访问令牌。</li>
+<li><code>token_type</code>：必选项，表示令牌类型，可以是<code>bearer</code>类型或<code>mac</code>类型。</li>
+<li><code>expires_in</code>：可选项，表示过期时间，单位为秒。如果省略该参数，必须以其他方式设置过期时间。</li>
+<li><code>refresh_token</code>：可选项，表示更新令牌，用来获取下一次的访问令牌。</li>
+<li><code>scope</code>：表示权限范围，如果与客户端申请的范围一致，此项可省略。</li>
+</ul>
+<h3 id="4-4-2-简化模式"><a href="#4-4-2-简化模式" class="headerlink" title="4.4.2 简化模式"></a>4.4.2 简化模式</h3><p>简化模式不通过第三方应用的后台服务器，而是直接在浏览器中向认证服务器申请令牌，跳过了授权码这个步骤，因此得名。所有步骤均在浏览器中完成，<strong>令牌对访问者是可见的，不可刷新，且第三方应用不需要进行认证</strong>（不需要根据<code>client_id</code>和<code>client_secret</code>对第三方应用进行验证，请求中只传递<code>client_id</code>）。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig10.awebp"></p>
+<p>步骤如下：</p>
+<ul>
+<li>A（步骤1,2）：用户访问第三方应用客户端，需要使用服务提供商的数据，因此第三方应用客户端将用户导向服务提供商的认证服务器（也称授权服务器）。</li>
+<li>B（步骤3）：用户选择是否给予第三方应用授权。</li>
+<li>C（步骤4）：假设用户同意授权，认证服务器将用户导向第三方应用事先指定的“重定向URI”（redirection URI），并在URI的hash部分添加访问令牌（access token）。</li>
+<li>D（步骤5）：第三方应用客户端携带access token向服务提供商的资源服务器发起资源请求。</li>
+<li>E（步骤6,7）：资源服务器验证令牌通过后，向第三方应用客户端返回资源。</li>
+</ul>
+<p>A步骤中的<strong>令牌请求</strong>示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/authorize?response_type=token&amp;client_id=s6BhdRkqt3&amp;state=xyz&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>server.example.com</span><br></pre></td></tr></table></figure>
+
+<p>参数解释：</p>
+<ul>
+<li><code>response_type</code>：必选项，表示授权类型，此处的值固定为<code>code</code>。</li>
+<li><code>client_id</code>：必选项，第三方应用在服务提供商处注册时生成的ID。</li>
+<li><code>redirect_uri</code>：可选项，重定向URI。</li>
+<li><code>scope</code>：可选项，表示申请的权限范围。</li>
+<li><code>state</code>：可选项，表示第三方应用的当前状态，可以指定任意值，认证服务器会原封不动地返回这个值。</li>
+</ul>
+<p>C步骤中的<strong>令牌响应</strong>示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">302</span> Found</span><br><span class="line"><span class="attribute">Location</span><span class="punctuation">: </span>http://example.com/cb#access_token=2YotnFZFEjr1zCsicMWpAA</span><br><span class="line">		  &amp;state=xyz&amp;token_type=bearer&amp;expires_in=3600</span><br></pre></td></tr></table></figure>
+
+<p>参数解释：</p>
+<ul>
+<li><code>access_token</code>：必选项，表示访问令牌。</li>
+<li><code>token_type</code>：必选项，表示令牌类型，可以是<code>bearer</code>或<code>mac</code>。</li>
+<li><code>expires_in</code>：可选项，表示过期时间，单位为秒。如果省略该参数，必须使用其他方式设置过期时间。</li>
+<li><code>scope</code>：可选项，表示权限范围，如果与第三方应用申请的范围一致，此项可省略。</li>
+<li><code>state</code>：如果第三方应用的请求中包含这个参数，认证服务器的响应中也必须一模一样包含这个参数。</li>
+</ul>
+<p>上面的例子中，认证服务器用HTTP头信息的<code>Location</code>栏，指定浏览器重定向的URI。注意，这个URI的hash部分包含了令牌，即URI中<code>#</code>后面的部分。hash部分也称为锚（fragment）部分，<code>#</code>作为hash部分（或锚部分）的开头，其中<code>#</code>不属于哈希部分的值。</p>
+<p><code>#</code>是用来指导浏览器动作的，对服务端完全无用。所以，HTTP请求中不包括<code>#</code>及其后面的部分。</p>
+<p>比如，访问下面的网址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.example.com/index.html#print</span><br></pre></td></tr></table></figure>
+
+<p>浏览器实际发出的请求是这样的：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/index.html</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>www.example.com</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，只是请求<code>index.html</code>，根本没有<code>#print</code>的部分。</p>
+<p>OAuth2.0在简化模式中之所以要将令牌放在URI中的hash部分，主要是因为浏览器跳转时，hash部分不会发到服务器，减少了泄露令牌的风险。</p>
+<h3 id="4-4-3-密码模式"><a href="#4-4-3-密码模式" class="headerlink" title="4.4.3 密码模式"></a>4.4.3 密码模式</h3><p>密码模式中，用户向第三方应用提供自己用户名和密码，第三方应用使用这些信息，向服务提供商索要授权。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig11.awebp"></p>
+<p>步骤如下：</p>
+<ul>
+<li><p>A（步骤1,2）：用户向第三方应用提供自己在服务提供商处注册的用户名和密码。</p>
+</li>
+<li><p>B（步骤3）：第三方应用将用户名和密码发给认证服务器，向后者请求访问令牌（access token）。</p>
+</li>
+<li><p>C（步骤4）：认证服务器确认身份无误后，向客户端提供访问令牌。</p>
+</li>
+</ul>
+<p>B步骤中的<strong>令牌请求</strong>的示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/token</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>server.example.com</span><br><span class="line"><span class="attribute">Authorization</span><span class="punctuation">: </span>Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line"><span class="language-dts">grant_<span class="attr">type</span><span class="operator">=</span>password<span class="variable">&amp;username</span>=johndoe<span class="variable">&amp;password</span>=A3ddj3w</span></span><br></pre></td></tr></table></figure>
+
+<p>参数解释：</p>
+<ul>
+<li><code>grant_type</code>：必选项，表示授权类型，此处的值固定为<code>password</code>。</li>
+<li><code>username</code>：必选项，表示用户名。</li>
+<li><code>password</code>：必选项，表示用户密码。</li>
+<li><code>scope</code>：可选项，表示权限范围。</li>
+</ul>
+<p>在密码模式中，不再需要<code>client_id</code>参数了，说明密码模式在第三方应用没有在服务提供商注册处的情况下也可以使用。</p>
+<p>C步骤中的<strong>令牌响应</strong>示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json;charset=UTF-8</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>no-store</span><br><span class="line"><span class="attribute">Pragma</span><span class="punctuation">: </span>no-cache</span><br><span class="line"></span><br><span class="line"><span class="language-json"><span class="punctuation">&#123;</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;access_token&quot;</span><span class="punctuation">:</span><span class="string">&quot;2YotnFZFEjr1zCsicMWpAA&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;token_type&quot;</span><span class="punctuation">:</span><span class="string">&quot;example&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span><span class="number">3600</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;refresh_token&quot;</span><span class="punctuation">:</span><span class="string">&quot;tGzv3JOkF0XG5Qx2TlKWIA&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;example_parameter&quot;</span><span class="punctuation">:</span><span class="string">&quot;example_value&quot;</span></span></span><br><span class="line"><span class="language-json"><span class="punctuation">&#125;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这里面的参数就不展开了，前面都介绍过。</p>
+<p>需要注意的是，令牌响应中包含<code>refresh_token</code>字段，所以密码模式下应该也是要经过第三方应用服务器来与认证服务器进行通信的。</p>
+<h3 id="4-4-4-客户端模式"><a href="#4-4-4-客户端模式" class="headerlink" title="4.4.4 客户端模式"></a>4.4.4 客户端模式</h3><p>客户端模式指第三方应用以自己的名义，而不是以用户的名义，向服务提供商进行认证。在这种授权场景下，不需要普通用户的参与，客户端从认证服务器获取到access token令牌后，使用这个令牌从资源服务器获取的资源也都是跟用户没有关联性质的数据。</p>
+<p>这种授权模式应用的场景是B2B的服务授权调用，属于企业间数据授权和交互的范畴，并不存在用户向第三方应用授权。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig12.png"></p>
+<p>步骤如下：</p>
+<ul>
+<li>A：第三方应用向认证服务器进行身份认证，并要求一个访问令牌。</li>
+<li>B：认证服务器进行身份认证通过后，向第三方应用提供访问令牌。</li>
+</ul>
+<p>A步骤中的<strong>令牌请求</strong>示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/token</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>server.example.com</span><br><span class="line"><span class="attribute">Authorization</span><span class="punctuation">: </span>Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line"><span class="language-ini"><span class="attr">grant_type</span>=client_credentials</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>grant_type</code>：必选项，表示授权类型，此处的值固定为<code>client_credentials</code>。</li>
+<li><code>scope</code>：可选项，表示权限范围。</li>
+</ul>
+<p>认证服务器必须以某种方式，验证客户端身份。一种方式是在请求中附加<code>client_id</code>和<code>client_secret</code>用来对第三方应用进行身份验证。</p>
+<p>B步骤中的令牌响应示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json;charset=UTF-8</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>no-store</span><br><span class="line"><span class="attribute">Pragma</span><span class="punctuation">: </span>no-cache</span><br><span class="line"></span><br><span class="line"><span class="language-json"><span class="punctuation">&#123;</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;access_token&quot;</span><span class="punctuation">:</span><span class="string">&quot;2YotnFZFEjr1zCsicMWpAA&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;token_type&quot;</span><span class="punctuation">:</span><span class="string">&quot;bearer&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span><span class="number">3600</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;example_parameter&quot;</span><span class="punctuation">:</span><span class="string">&quot;example_value&quot;</span></span></span><br><span class="line"><span class="language-json"><span class="punctuation">&#125;</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-5-OAuth2-0更新令牌"><a href="#4-5-OAuth2-0更新令牌" class="headerlink" title="4.5 OAuth2.0更新令牌"></a>4.5 OAuth2.0更新令牌</h2><p>如果用户访问的时候，第三方应用的访问令牌（access token）已经过期，则需要使用更新令牌（refresh token）申请一个新的访问令牌。</p>
+<p><strong>更新令牌请求</strong>的示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/token</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>server.example.com</span><br><span class="line"><span class="attribute">Authorization</span><span class="punctuation">: </span>Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line"><span class="language-angelscript">grant_type=<span class="built_in">ref</span>resh_token&amp;<span class="built_in">ref</span>resh_token=tGzv3JOkF0XG5Qx2TlKWIA</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>grant_type</code>：必选项，表示使用的授权模式，此处的值固定为<code>refresh_token</code>。</li>
+<li><code>refresh_token</code>：必选项，表示第三方应用收到的refresh token。</li>
+<li><code>scope</code>：可选项，表示申请的授权范围，不可以超出上一次申请的范围，如果省略该参数，则表示与上一次一致。</li>
+</ul>
+<p><strong>令牌响应</strong>示例如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json;charset=UTF-8</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>no-store</span><br><span class="line"><span class="attribute">Pragma</span><span class="punctuation">: </span>no-cache</span><br><span class="line"></span><br><span class="line"><span class="language-json"><span class="punctuation">&#123;</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;access_token&quot;</span><span class="punctuation">:</span><span class="string">&quot;2YotnFZFEjr1zCsicMWpAA&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;token_type&quot;</span><span class="punctuation">:</span><span class="string">&quot;example&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span><span class="number">3600</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;refresh_token&quot;</span><span class="punctuation">:</span><span class="string">&quot;tGzv3JOkF0XG5Qx2TlKWIA&quot;</span><span class="punctuation">,</span></span></span><br><span class="line"><span class="language-json"><span class="attr">&quot;example_parameter&quot;</span><span class="punctuation">:</span><span class="string">&quot;example_value&quot;</span></span></span><br><span class="line"><span class="language-json"><span class="punctuation">&#125;</span></span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html">理解OAuth 2.0</a></p>
+<p><a target="_blank" rel="noopener" href="https://learnku.com/articles/20082">[简易图解]『 OAuth2.0』 『进阶』 授权模式总结</a></p>
+<p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/175894.html">Web服务端应用的OAuth2.0接入流程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.coding10.com/section/oauth2-implicit-grant-type">OAuth2.0—简化授权模式详解</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.coding10.com/section/oauth2-client-credentials-grant-type">OAuth2.0—客户端模式详解</a></p>
+<h1 id="5-Raft算法"><a href="#5-Raft算法" class="headerlink" title="5 Raft算法"></a>5 Raft算法</h1><h2 id="5-1-状态机复制"><a href="#5-1-状态机复制" class="headerlink" title="5.1 状态机复制"></a>5.1 状态机复制</h2><p>在分布式环境中，如果我们要让一个服务具有容错能力，那么最常用最直接的方法就是让一个服务的副本同时运行在不同的节点上。但是，当一个服务的多个副本都在运行的时候，我们如何保证它们的状态都是同步的呢？或者说，如果让客户端看起来无论请求发送到哪一个服务器副本，最后都能得到相同的结果？实现这种同步的方法就是所谓的状态机复制（State Mache Replication）。</p>
+<p>状态机复制的理论基础是：如果集群中的每个节点上都运行着相同的<strong>确定性状态机</strong>$S$，并且所有的状态机都处于同样的初始状态$s_{0}$，那么给予这些状态机相同的输入序列${i_{1}, i_{2}, \dots, i_{n}}$，这些状态机必然后经过相同的状态转换路径$s_{0} \to s_{1} \to s_{2} \to \dots \to s_{n}$，最终到达相同的状态$s_{n}$，同时生成相同的输出序列${o_{1}, o_{2}, \dots, o_{n}}$。简单来说，就是<strong>相同的初始状态 + 相同的输入 &#x3D; 相同的结束状态</strong>。</p>
+<p>状态机复制使得多个节点具有完全相同的状态，运行完全相同的确定性状态机，这多个节点组成一个整体对外服务，其中部分节点失效不影响整体的可用性。</p>
+<p>在执行输入序列的过程中，根据同步方式的不同，系统就有了强一致性和最终一致性。如果我们要求对于序列中的每一个$i_{n}$，都需要所有的服务副本确认成功执行了$i_{n}$，才能执行$i_{n+1}$，那么这个系统就是<strong>强一致性</strong>的系统。如果我们取消掉这个限制，仅仅要求所有的服务副本执行相同的输入序列，但是完全独立执行，而不需要在中间同步，那么就有了<strong>最终一致性</strong>（各服务都会到达相同的最终状态，但是到达的时间不确定）。</p>
+<p><strong>共识算法</strong>其实就是实现状态机复制的一种方法，使得多个节点达到相同的数据状态，从而保证分布式系统的一致性。即使遇到机器宕机，整个系统仍然能够对外保持服务的可用性。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig13.png"></p>
+<p>状态机复制通常都是基于日志复制实现的，如上图。</p>
+<h2 id="5-2-Raft介绍"><a href="#5-2-Raft介绍" class="headerlink" title="5.2 Raft介绍"></a>5.2 Raft介绍</h2><p>Raft将共识问题分解为如下三个子问题：</p>
+<ul>
+<li><strong>Leader election（领导者选举）</strong>：当集群启动或者leader宕机时，必须通过选举机制选出新的leader。</li>
+<li><strong>Log replication（日志复制）</strong>：leader必须接收客户端提交的日志，并将其复制到集群中的其他节点，强制其他节点的日志与leader一致。</li>
+<li><strong>Safety（安全性）</strong>：通过安全性原则来处理一些特殊case，保证Raft算法的完备性。</li>
+</ul>
+<p>所以，Raft算法的核心流程可以归纳为：</p>
+<ul>
+<li>首先选出leader，leader节点负责接收客户端的请求，并将请求追加到日志中。</li>
+<li>然后leader将日志复制到其他follower节点，同时通过安全性准则来保证整个日志复制的一致性。</li>
+<li>如果leader宕机，follower节点会重新发起选举选出新的leader。</li>
+</ul>
+<p>下面首先介绍一下Raft算法中的基本概念，然后再分别介绍每个子问题。</p>
+<h2 id="5-3-Raft基本概念"><a href="#5-3-Raft基本概念" class="headerlink" title="5.3 Raft基本概念"></a>5.3 Raft基本概念</h2><h3 id="5-3-1-state（状态）"><a href="#5-3-1-state（状态）" class="headerlink" title="5.3.1 state（状态）"></a>5.3.1 state（状态）</h3><p>在Raft中，一个节点任时刻都会处于以下三种状态之一：</p>
+<ul>
+<li><strong>leader</strong>：leader负责处理客户端的所有请求（如果客户端请求发送给了follower，follower会将请求重定向至leader）。</li>
+<li><strong>follower</strong>：follower不会主动发起请求，只是对leader与candidate的请求做出响应。</li>
+<li><strong>candidate</strong>：用于选出新的leader。</li>
+</ul>
+<p>几种状态的转换如下：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig14.png"></p>
+<ul>
+<li>follower<ul>
+<li>初始时所有节点都是follower。</li>
+<li>如果一段时间内没有收到来自leader的心跳，从follower切换到candidate，发起选举竞选leader。</li>
+</ul>
+</li>
+<li>candidate<ul>
+<li>如果candidate获得了半数以上的投票，则转为leader。</li>
+<li>如果选举超时，重新发起选举。</li>
+<li>如果发现已存在leader或者更高任期的节点，转化为follower。</li>
+</ul>
+</li>
+<li>leader<ul>
+<li>如果leader发现存在更高任期的节点，则转化为follower。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-3-2-term（任期）"><a href="#5-3-2-term（任期）" class="headerlink" title="5.3.2 term（任期）"></a>5.3.2 term（任期）</h3><p>Raft将时间划分为任意长度的<strong>term（任期）</strong>，如下所示：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig15.png"></p>
+<p>任期使用连续的整数标识，并且每一段任期从一次选举开始。</p>
+<ul>
+<li>如果选举成功，选出的leader将会管理整个集群，直到任期结束。</li>
+<li>如果选举失败，这个任期将会由于没有leader而结束。</li>
+</ul>
+<p>Raft保证了在每一段任期中，最多只会有一个leader（0个或1个）。</p>
+<p>每个节点都会存储一个当前任期号，这一编号是单调递增的。当节点之间通信的时候会交换当前任期号：</p>
+<ul>
+<li>如果一个节点的当前任期号小于其他节点，则更新该节点的当前任期号。</li>
+<li>如果一个candidate或leader发现自己的任期号过期了，那么它们会转化为follower状态。</li>
+<li>如果一个节点收到一个包含过期任期号的请求，那么该结点会直接拒绝这一请求。</li>
+</ul>
+<h3 id="5-3-3-RPC"><a href="#5-3-3-RPC" class="headerlink" title="5.3.3 RPC"></a>5.3.3 RPC</h3><p>Raft算法中节点之间的通信使用<strong>远程过程调用（Remote Procedure Call，RPC）</strong>，基本的Raft算法只需要两种RPC：</p>
+<ul>
+<li><strong>RequestVote RPC</strong>： 请求投票RPC，由candidate在选举期间发起。</li>
+<li><strong>AppendEntries RPC</strong>：追加条目RPC，由leader发起，用于复制日志和提供一种心跳机制。</li>
+</ul>
+<p>这两种RPC的具体内容下面再细讲。</p>
+<h2 id="5-4-Leader-election"><a href="#5-4-Leader-election" class="headerlink" title="5.4 Leader election"></a>5.4 Leader election</h2><p>Raft使用<strong>心跳机制</strong>触发领导者选举。leader在任期内会周期性地向所有follower节点发送心跳消息（不携带log entry的AppendEntries RPC）来维持自己的地位，阻止新leader的产生。</p>
+<p>每个follower都设置了一个<strong>随机</strong>的<strong>竞选超时时间（election timeout）</strong>，一般为150ms~300ms。如果follower在竞选超时时间内没有收到leader的心跳消息，就会认为当前集群中不存在leader，此时follower会发起选举来选出一个新的leader。需要注意的是，当follower收到来自其他节点的消息之后都会重置竞选超时时间，不管是leader还是candidate，而不只是leader的心跳消息。</p>
+<p>发起一个选举时，follower会先将自己的当前任期号加一，并且状态转化为candidate。该candidate首先会投票给自己，然后并行的向集群中的其他结点发送投票请求（RequestVote RPC）。选举结果有三种情况：</p>
+<ul>
+<li>该节点赢得选举，成为leader。<ul>
+<li>当一个candidate获得集群中<strong>半数以上</strong>节点的投票之后，该节点赢得选举，成为leader。这一规则确保了集群中最多只会有一个leader。</li>
+<li>当节点成为leader后，会向其他节点发送心跳消息，从而确定自己的leader地位，阻止新一轮的选举。</li>
+<li>每个节点在一个任期中只能投出一张选票，按照先来先服务的原则投出。</li>
+</ul>
+</li>
+<li>其他结点赢得选举，成为leader。<ul>
+<li>在等待投票的过程中，candidate可能会收到其他节点声明自己是leader的AppendEntries RPC。</li>
+<li>如果该RPC中的任期号不小于candidate当前的任期号，则candidate会承认该leader合法并回到follower状态。</li>
+<li>否则，拒绝这一请求，继续保持candidate状态。</li>
+</ul>
+</li>
+<li>无节点赢得选举，无leader。<ul>
+<li>如果有多个follower同时成为candidate，那么选票可能会被瓜分以至于没有一个candidate可以赢得半数以上的投票。</li>
+<li>上述情况发生时，每一个candidate都会竞选超时，然后通过增加当前任期号来开始一轮新的选举。然而，没有其他的机制的话，选票可能会被无限的重复瓜分。</li>
+<li>Raft算法使用随机的竞选超时时间（election timeout）的方法来解决上述问题。<ul>
+<li>在大多数情况下，只有一个节点会超时，然后其赢得选举，成为leader，并在其他节点超时之前发送心跳消息。</li>
+<li>同样的机制也被用在选票瓜分的情况下。每一个candidate在开始一次选举时会重置一个随机的竞选超时时间，然后在超时时间内等待投票的结果，减少了新的选举中发生选票瓜分的可能性。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="5-5-Log-replication"><a href="#5-5-Log-replication" class="headerlink" title="5.5 Log replication"></a>5.5 Log replication</h2><p>在一个Raft集群中，只有leader节点能够处理客户端的请求（如果客户端的请求发送给了follower，follower会将请求重定向到leader）。</p>
+<p>客户端的每一个请求都包含一条待状态机执行的命令，leader会将该命令作为一个新的日志条目（entry）追加到日志中，然后并行的向所有follower发送AppendEntries RPC以复制该entry。</p>
+<p>当该entry被安全复制（后面会详细说）之后，leader会将该日志应用到自己的状态机中，并将执行结果返回给客户端。如果follower崩溃或者运行缓慢，又或者网络丢包，leader会不断重发AppendEntries RPC（即使已经向客户端返回了响应），直到所有的follower最终都存储了所有的日志条目为止。</p>
+<p>Raft中的日志条目（entry）由三部分组成：</p>
+<ul>
+<li>索引号。用于表明entry在日志中的位置。</li>
+<li>任期号。用来检查是否出现不一致的情况。</li>
+<li>状态机需要执行的命令。</li>
+</ul>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig20.png"></p>
+<p>Raft日志复制保证以下两点，这两点组合起来就构成了Log Matching Property：</p>
+<ul>
+<li><p>如果不同日志中的两个日志条目有着相同的索引号和任期号，则它们所存储的命令是相同的。</p>
+<blockquote>
+<p>这个特性基于这条原则：leader最多在一个term内，在指定的一个日志索引上创建一条日志条目，同时日志条目在日志中的位置不会改变。</p>
+</blockquote>
+</li>
+<li><p>如果不同日志中的两个日志条目有着相同的索引号和任期号，则它们之前的所有条目都是完全一样的。</p>
+<blockquote>
+<p>这个特性由AppendEntries RPC的一致性检查保证。在发送AppendEntries RPC时，leader会把新日志条目之前的日志条目的索引号和任期号一起发送。如果follower在它的日志中找不到包含相同索引号和任期号的日志条目，它就会拒绝接收新的日志条目。</p>
+</blockquote>
+</li>
+</ul>
+<p>一般情况下，leader和follower的日志能够保持一致，因此AppendEntries RPC的一致性检查通常不会失败。然而，leader崩溃可能会导致日志不一致（旧的leader可能没有复制完日志中的所有条目）。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig21.png"></p>
+<p>Raft中，<strong>leader通过强制follower复制它的日志来处理日志的不一致</strong>，follower上不一致的日志会被leader的日志覆盖。</p>
+<p>leader为了使follower的日志同自己的一致，leader需要找到follower同它的日志相同的位置，然后覆盖follower在该位置之后的条目。上述操作是基于AppendEntries RPC一致性检查的检查结果实现的。</p>
+<ul>
+<li>leader中会为每个follower维持一个<code>nextIndex</code>属性，即leader要发送给follower的日志条目的索引号。当leader当选之后，它会初始化该属性为自己最新的索引号+1，在上图中为11。</li>
+<li>如果follower的日志与leader的不一致，则AppendEntries RPC的一致性检查会失败。收到失败的返回之后，leader会将该follower对应的<code>nextIndex</code>减一，然后重发AppendEntries RPC。</li>
+<li>最终<code>nextIndex</code>会到达leader与follower日志相一致的位置，AppendEntries RPC成功执行，后续不一致的日志条目都会被覆盖，follower的log又变得与leader一致了。</li>
+</ul>
+<p>有了上面的知识之后，现在我们可以说一下Raft的log replication流程了，log replication主要可分为如下几步：</p>
+<ol>
+<li><p><strong>客户端发送请求到leader。</strong>leader在收到请求后，会将请求中的命令作为日志条目（entry）写入自己的本地日志中。需要注意的是，此时该entry的状态是未提交的，leader并不会在状态机中执行该命令。</p>
+</li>
+<li><p><strong>leader将entry发送到其他follower。</strong>leader并行的向所有follower发送AppendEntries RPC以复制该entry。</p>
+</li>
+<li><p><strong>leader等待follower回应</strong>。follower接收到leader的AppendEntries RPC后，有两种可能的回应：</p>
+<ul>
+<li>leader将entry写入到自己的本地日志中，返回true。</li>
+<li>一致性检查失败，返回写入，返回false。此时leader会将该follower对应的<code>nextIndex</code>减一，然后重发AppendEntries RPC，直到follower返回成功为止。</li>
+</ul>
+<p>当半数以上的follower都成功复制该entry之后，leader会将第一步中写入的entry标记为提交状态，并将该entry应用到它的状态机中。提交最新的entry时会将之前所有未提交的entry一并提交（这个后面会细讲）。</p>
+</li>
+<li><p><strong>leader回应客户端</strong>。完成上述三步之后，leader会向客户端返回执行结果，表示命令执行成功。需要注意的是，如果follower崩溃或者运行缓慢，又或者网络丢包，leader会不断重发AppendEntries RPC（即使已经向客户端返回了响应），直到所有的follower最终都存储了所有的日志条目为止。</p>
+</li>
+<li><p><strong>leader通知follower entry已提交</strong>。leader回应客户端后，将随着下一个心跳通知follower entry已提交，follower收到通知后也会将entry标记为提交状态，并将该entry应用到自己的状态机中。</p>
+</li>
+</ol>
+<h2 id="5-6-Safety"><a href="#5-6-Safety" class="headerlink" title="5.6 Safety"></a>5.6 Safety</h2><p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://netium.gitlab.io/2018/09/12/%E7%8A%B6%E6%80%81%E6%9C%BA%E5%A4%8D%E5%88%B6-(State-Machine-Replication)/">状态机复制 (State Machine Replication)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.lixueduan.com/posts/distributed/raft/">Raft 算法概述</a></p>
+<p><a target="_blank" rel="noopener" href="http://dockone.io/article/2434665">分布式一致性算法Raft</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000039847941">深入剖析共识性算法 Raft</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.sofastack.tech/projects/sofa-jraft/raft-introduction/">Raft 算法解读</a></p>
+<p><a target="_blank" rel="noopener" href="https://learnku.com/articles/63852">raft算法一致性的研究</a></p>
+<h1 id="6-Gossip协议"><a href="#6-Gossip协议" class="headerlink" title="6 Gossip协议"></a>6 Gossip协议</h1><h1 id="7-限流算法"><a href="#7-限流算法" class="headerlink" title="7 限流算法"></a>7 限流算法</h1><p>限流，也称流量控制，是指系统在面临高并发，或者大流量请求的情况下，限制新的请求对系统的访问，从而保证系统的稳定性。限流会导致部分用户请求处理不及时或者被拒，这就影响了用户体验。所以一般需要在系统稳定和用户体验之间进行平衡。</p>
+<p>常见的限流算法主要有以下几种：</p>
+<ul>
+<li>固定窗口限流算法</li>
+<li>滑动窗口限流算法</li>
+<li>漏桶算法</li>
+<li>令牌桶算法</li>
+</ul>
+<p>其中，固定窗口限流算法与滑动窗口限流算法都属于计数器限流算法。下面对这几种限流算法依次进行介绍。</p>
+<h2 id="7-1-固定窗口限流算法"><a href="#7-1-固定窗口限流算法" class="headerlink" title="7.1 固定窗口限流算法"></a>7.1 固定窗口限流算法</h2><p>首先维护一个计数器，将单位时间段当做一个窗口，计数器记录这个窗口接收请求的次数。</p>
+<ul>
+<li>当次数小于限流阈值，就允许访问，并且计数器加一。</li>
+<li>当次数大于限流阈值，就拒绝访问。</li>
+<li>当前的时间窗口过去之后，计数器清零。</li>
+</ul>
+<p>假设单位时间为1秒，限流阈值为3。在单位时间1秒内，没来一个请求，计数器加1，如果计数器累加的次数等于限流阈值3，后续的请求全部拒绝。等到1秒结束后，计数器清0，重新开始计数。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig22.jpg"></p>
+<p>伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 固定窗口时间算法</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">fixedWindowsTryAcquire</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">long</span> <span class="variable">currentTime</span> <span class="operator">=</span> System.currentTimeMillis();  <span class="comment">//获取系统当前时间</span></span><br><span class="line">    <span class="keyword">if</span> (currentTime - lastRequestTime &gt; windowUnit) &#123;  <span class="comment">//检查是否在时间窗口内</span></span><br><span class="line">        counter = <span class="number">0</span>;  <span class="comment">// 计数器清0</span></span><br><span class="line">        lastRequestTime = currentTime;  <span class="comment">//开启新的时间窗口</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (counter &lt; threshold) &#123;  <span class="comment">// 小于阀值</span></span><br><span class="line">        counter++;  <span class="comment">//计数器加1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然而，这种算法有一个很明显的临界问题：<strong>窗口切换可能会产生两倍于阈值流量的请求</strong>。假设限流阈值为5，单位时间窗口为1秒。假设我们在0.8-1s这一时间段来了5个请求，没有超出限流阈值，此时计数器为5。然后窗口发生切换，计数器的值清0，假设在1-1.2s又来了5个请求，也没有超出限流阈值。但还是如果我们观察0.8-1.2s这一区间，在0.4s内并发量高达10，已经<strong>超过了单位时间1s并发量不超过限流阈值5的要求</strong>了。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig23.jpg"></p>
+<h2 id="7-2-滑动窗口限流算法"><a href="#7-2-滑动窗口限流算法" class="headerlink" title="7.2 滑动窗口限流算法"></a>7.2 滑动窗口限流算法</h2><p>滑动窗口限流算法解决了固定窗口限流算法中的临界问题。它将一个单位时间窗口分为n个小窗口，每个小窗口维护一个独立的计数器。根据时间滑动删除过期的小窗口，并添加新的小窗口，同时要保证整个窗口中所有小窗口的请求数目之和不能超过限流阈值。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig24.jpg"></p>
+<p>假设单位时间还是1s，滑动窗口算法将这一时间窗口划分为5个小窗口，每个小窗口表示0.2秒的时间周期。没过0.2s，时间窗口都会往右滑动一格（一个小窗口）。每个小窗口都有自己独立的计数器，如果请求是0.83s到达的，那么0.8-1对应的计数器就会加1。</p>
+<p>不难看出，滑动窗口算法就是固定窗口的升级版。将计时窗口划分成一个小窗口，滑动窗口算法就退化成了固定窗口算法。而滑动窗口算法其实就是对请求数进行了更细粒度的限流，窗口划分的越多，那么滑动窗口的滚动就越平滑，限流就会越精准。</p>
+<p>滑动窗口限流算法的伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wdbyte.rate.limiter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.LocalTime;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 滑动窗口限流工具类</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> https://www.wdbyte.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RateLimiterSlidingWindow</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 阈值</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">qps</span> <span class="operator">=</span> <span class="number">2</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 时间窗口总大小（毫秒）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="variable">windowSize</span> <span class="operator">=</span> <span class="number">1000</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 多少个子窗口</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">Integer</span> <span class="variable">windowCount</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 窗口列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> WindowInfo[] windowArray = <span class="keyword">new</span> <span class="title class_">WindowInfo</span>[windowCount];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">RateLimiterSlidingWindow</span><span class="params">(<span class="type">int</span> qps)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.qps = qps;</span><br><span class="line">        <span class="type">long</span> <span class="variable">currentTimeMillis</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; windowArray.length; i++) &#123;</span><br><span class="line">            windowArray[i] = <span class="keyword">new</span> <span class="title class_">WindowInfo</span>(currentTimeMillis, <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 1. 计算当前时间窗口</span></span><br><span class="line"><span class="comment">     * 2. 更新当前窗口计数 &amp; 重置过期窗口计数</span></span><br><span class="line"><span class="comment">     * 3. 当前 QPS 是否超过限制</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">currentTimeMillis</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="comment">// 1. 计算当前时间窗口</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">currentIndex</span> <span class="operator">=</span> (<span class="type">int</span>)(currentTimeMillis % windowSize / (windowSize / windowCount));</span><br><span class="line">        <span class="comment">// 2.  更新当前窗口计数 &amp; 重置过期窗口计数</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; windowArray.length; i++) &#123;</span><br><span class="line">            <span class="type">WindowInfo</span> <span class="variable">windowInfo</span> <span class="operator">=</span> windowArray[i];</span><br><span class="line">            <span class="comment">// 如果当前时间减去小窗口开始时间的值大于计时窗口大小，说明当前小窗口过期，重置小窗口开始时间，并将计数器置为0</span></span><br><span class="line">            <span class="keyword">if</span> ((currentTimeMillis - windowInfo.getTime()) &gt; windowSize) &#123;</span><br><span class="line">                windowInfo.getNumber().set(<span class="number">0</span>);</span><br><span class="line">                windowInfo.setTime(currentTimeMillis);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 更新当前窗口计数</span></span><br><span class="line">            <span class="keyword">if</span> (currentIndex == i &amp;&amp; windowInfo.getNumber().get() &lt; qps) &#123;</span><br><span class="line">                windowInfo.getNumber().incrementAndGet();</span><br><span class="line">            &#125;</span><br><span class="line">            sum = sum + windowInfo.getNumber().get();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 3. 当前 QPS 是否超过限制</span></span><br><span class="line">        <span class="keyword">return</span> sum &lt;= qps;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">WindowInfo</span> &#123;</span><br><span class="line">        <span class="comment">// 窗口开始时间</span></span><br><span class="line">        <span class="keyword">private</span> Long time;</span><br><span class="line">        <span class="comment">// 计数器</span></span><br><span class="line">        <span class="keyword">private</span> AtomicInteger number;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">WindowInfo</span><span class="params">(<span class="type">long</span> time, AtomicInteger number)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.time = time;</span><br><span class="line">            <span class="built_in">this</span>.number = number;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// get...set...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>滑动窗口算法虽然解决了固定窗口的临界问题，但<strong>无法应对突发的流量增长</strong>。一旦到达限流阈值后，请求都会被直接被拒绝，这样的话我们会损失一部分请求。</p>
+<h2 id="7-3-漏桶算法"><a href="#7-3-漏桶算法" class="headerlink" title="7.3 漏桶算法"></a>7.3 漏桶算法</h2><p>漏桶算法的原理很简单，可以认为就是注水漏水的过程。往漏桶中以<strong>任意速率</strong>流入水，以<strong>固定速率</strong>流出水。当水超过桶的容量时，会溢出，也就是被丢弃。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig25.jpg"></p>
+<p>流入的水滴可以看作是访问系统的请求，而水滴流出的速率是恒定的，对应服务按照固定的速率处理请求。</p>
+<p>伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 每秒处理数（出水率）</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="type">long</span> rate;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *  当前剩余水量</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="type">long</span> currentWater;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 最后刷新时间</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="type">long</span> refreshTime;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 桶容量</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="type">long</span> capacity;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 漏桶算法</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="type">boolean</span> <span class="title function_">leakybucketLimitTryAcquire</span><span class="params">()</span> &#123;</span><br><span class="line">       <span class="type">long</span> <span class="variable">currentTime</span> <span class="operator">=</span> System.currentTimeMillis();  <span class="comment">//获取系统当前时间</span></span><br><span class="line">       <span class="type">long</span> <span class="variable">outWater</span> <span class="operator">=</span> (currentTime - refreshTime) / <span class="number">1000</span> * rate; <span class="comment">//流出的水量 =(当前时间-上次刷新时间)* 出水率</span></span><br><span class="line">       <span class="type">long</span> <span class="variable">currentWater</span> <span class="operator">=</span> Math.max(<span class="number">0</span>, currentWater - outWater); <span class="comment">// 当前水量 = 之前的桶内水量-流出的水量</span></span><br><span class="line">       refreshTime = currentTime; <span class="comment">// 刷新时间</span></span><br><span class="line"></span><br><span class="line">       <span class="comment">// 当前剩余水量还是小于桶的容量，则请求放行</span></span><br><span class="line">       <span class="keyword">if</span> (currentWater &lt; capacity) &#123;</span><br><span class="line">           currentWater++;</span><br><span class="line">           <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       <span class="comment">// 当前剩余水量大于等于桶的容量，限流</span></span><br><span class="line">       <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>漏桶的漏出速率是固定的，可以起到整流的作用</strong>。虽然请求的流量可能具有随机性，忽大忽小，但是经过漏桶算法之后，变成了有固定速率的稳定流量，从而对下游的系统起到保护作用。</p>
+<p>然而，这一特点即可以是优点也可以是缺点，在面对突发流量时，我们往往会希望在保持系统稳定的同时，能更快的处理用户请求以提升用户体验，而不是按部就班的佛系工作。</p>
+<h2 id="7-4-令牌桶算法"><a href="#7-4-令牌桶算法" class="headerlink" title="7.4 令牌桶算法"></a>7.4 令牌桶算法</h2><p>面对突发流量的时候，我们可以使用令牌桶算法进行限流。</p>
+<p>令牌桶算法原理：</p>
+<ul>
+<li>以固定的速率生成令牌，存入令牌桶中，如果令牌桶满了以后，多余令牌丢弃。</li>
+<li>请求进入后，必须先尝试从桶中获取令牌，获取到令牌后才可以被处理。</li>
+<li>如果令牌桶中没有令牌，则将请求丢弃。</li>
+</ul>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig26.png"></p>
+<p>漏桶算法伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 每秒处理数（放入令牌数量）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">long</span> putTokenRate;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 最后刷新时间</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">long</span> refreshTime;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 令牌桶容量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">long</span> capacity;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 当前桶内令牌数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">long</span> <span class="variable">currentToken</span> <span class="operator">=</span> <span class="number">0L</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 漏桶算法</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">tokenBucketTryAcquire</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span> <span class="variable">currentTime</span> <span class="operator">=</span> System.currentTimeMillis();  <span class="comment">//获取系统当前时间</span></span><br><span class="line">    <span class="type">long</span> <span class="variable">generateToken</span> <span class="operator">=</span> (currentTime - refreshTime) / <span class="number">1000</span> * putTokenRate; <span class="comment">//生成的令牌 =(当前时间-上次刷新时间)* 放入令牌的速率</span></span><br><span class="line">    currentToken = Math.min(capacity, generateToken + currentToken); <span class="comment">// 当前令牌数量 = 之前的桶内令牌数量+放入的令牌数量</span></span><br><span class="line">    refreshTime = currentTime; <span class="comment">// 刷新时间</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//桶里面还有令牌，请求正常处理</span></span><br><span class="line">    <span class="keyword">if</span> (currentToken &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        currentToken--; <span class="comment">//令牌数量-1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当请求较多时，令牌桶中的令牌生成一个就会被获取走，与漏桶算法的限流效果相同。但是如果有一段时间没有请求到来，令牌桶中会存储一定的令牌，这时候如果到来大量请求，会获取完令牌桶的所有令牌，从而得到执行，而不是像漏桶算法中始终以固定速率处理请求。</p>
+<h2 id="7-5-总结"><a href="#7-5-总结" class="headerlink" title="7.5 总结"></a>7.5 总结</h2><p>因为计数器算法一般都会采用滑动窗口计数器，所以这里我们对比三种算法。</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig27.png"></p>
+<p>其中，Gateway采用了基于Redis实现的令牌桶算法。</p>
+<p>而Sentinel内部却比较复杂：</p>
+<ul>
+<li>默认限流模式是基于滑动时间窗口算法。</li>
+<li>排队等待的限流模式则是基于漏桶算法。</li>
+<li>热点参数限流则是基于令牌桶算法。</li>
+</ul>
+<p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://z.itpub.net/article/detail/B049B6F216829EDD0827E97BC1AA9100">面试必备：4种经典限流算法讲解</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6870396751178629127">一文搞懂高频面试题之限流算法，从算法原理到实现，再到对比分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.51cto.com/article/704304.html">五种限流算法，七种限流方式，挡住突发流量？</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/479956069">服务器三种常见的限流算法</a></p>
+<h1 id="8-负载均衡算法"><a href="#8-负载均衡算法" class="headerlink" title="8 负载均衡算法"></a>8 负载均衡算法</h1><p>所谓负载均衡就是将外部发送过来的请求均匀或者根据某种算法分配到某一台服务器中。主要的负载均衡算法包括随机、轮询以及一致性哈希。</p>
+<h2 id="8-1-随机"><a href="#8-1-随机" class="headerlink" title="8.1 随机"></a>8.1 随机</h2><p>随机又可以分为完全随机和加权随机。</p>
+<h3 id="8-1-1-完全随机"><a href="#8-1-1-完全随机" class="headerlink" title="8.1.1 完全随机"></a>8.1.1 完全随机</h3><p>所谓完全随机就是完全没有规律可言，每次随机从IP列表中选取一个，将请求打到该服务器上。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FullRandom</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Servers</span> <span class="variable">servers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Servers</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Random</span> <span class="variable">random</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span>  <span class="keyword">static</span> String  <span class="title function_">getServer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">var</span> <span class="variable">number</span> <span class="operator">=</span> random.nextInt(servers.list.size());</span><br><span class="line">        <span class="keyword">return</span> servers.list.get(number);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完全随机是最简单的负载均衡算法了，实现起来也很简单。但是我们在日常生产过程中，机器的处理效率肯定是不同的，有些机器处理的块，有些机器处理的慢。我们希望性能好的服务器多处理些请求，性能差的服务器少处理一些请求，所以就有了加权随机。</p>
+<h3 id="8-1-2-加权随机"><a href="#8-1-2-加权随机" class="headerlink" title="8.1.2 加权随机"></a>8.1.2 加权随机</h3><p>加权随机虽然还是采用的随机算法，但是为每台服务器设置了权重，权重越大的服务器被获取的概率越大。</p>
+<p>加权随机算法主要有两种实现方式。</p>
+<p>一种是构建一个服务器<code>List</code>，如果A服务器的权重是2，那么往<code>List</code>里面<code>add</code>两次A服务器，如果B服务器的权重是7，那么往<code>List</code>里面<code>add</code>7次B服务器，以此类推。然后生成一个随机数作为索引从<code>List</code>中取服务器，随机数的上限就是权重的总和，也就是<code>List</code>的<code>size</code>。这样的话，权重越大的服务器被选中的概率越高。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ServerIps</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, Integer&gt; WEIGHT_LIST = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;String, Integer&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        WEIGHT_LIST.put(<span class="string">&quot;192.168.0.1&quot;</span>, <span class="number">1</span>);</span><br><span class="line">        WEIGHT_LIST.put(<span class="string">&quot;192.168.0.2&quot;</span>, <span class="number">8</span>);</span><br><span class="line">        WEIGHT_LIST.put(<span class="string">&quot;192.168.0.3&quot;</span>, <span class="number">3</span>);</span><br><span class="line">        WEIGHT_LIST.put(<span class="string">&quot;192.168.0.4&quot;</span>, <span class="number">6</span>);</span><br><span class="line">        WEIGHT_LIST.put(<span class="string">&quot;192.168.0.5&quot;</span>, <span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WeightRandom</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getServer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 构建一个新的List</span></span><br><span class="line">        List&lt;String&gt; ips = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 这里其实可以放在静态代码块中构建，而不用每次获取server都构建一次</span></span><br><span class="line">        <span class="keyword">for</span>(String ip : ServerIps.WEIGHT_LIST.keySet()) &#123;</span><br><span class="line">            <span class="type">Integer</span> <span class="variable">weight</span> <span class="operator">=</span> ServerIps.WEIGHT_LIST.get(ip);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; weight; i++) &#123;</span><br><span class="line">                ips.add(ip);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        java.util.<span class="type">Random</span> <span class="variable">random</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">java</span>.util.Random();</span><br><span class="line">        <span class="type">int</span> <span class="variable">randomPos</span> <span class="operator">=</span> random.nextInt(ips.size());</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ips.get(randomPos);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种实现方式相对比较简单，很容易就可以想到，但是缺点也很明显。如果服务器的权重设置的很大，比如上千上万，那么服务器<code>List</code>中也会有上万条数据，白白占用内存。当然，这里可以使用<code>intern()</code>进行优化，但是栈中的引用仍然要占据内存空间。</p>
+<p>所以就有了第二个方法。假设我们现在有3台服务器，A服务器的权重为$3$，B服务器的权重为$5$，C服务器的权重为$1$，然后我们随机生成一个数：</p>
+<ul>
+<li>如果生成的随机数为$1$，$1 &lt; 3$（$3$为A的权重），那么此时请求落在A的区间段，请求应该交给A来处理。</li>
+<li>如果生成的随机数为$5$，那么此时$5 &gt; 3$，所以不在A区间，而$5 - 3 &#x3D; 2 &lt; 5$（后面的$5$为B的权重），那么此时应该落在B区间。</li>
+<li>如果生成的随机数为$9$，$9 &gt; 3 + 5$，所以不可能落在A区间或B区间，而$9 - 3 - 5 &#x3D; 1 \le 1$（后面的$1$为C的权重），落在C区间。</li>
+</ul>
+<p>示意图如下，假设下面的数组下标从$1$开始：</p>
+<p><img src="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F/fig28.png"></p>
+<p>当然我们不可能真的像这张图里面再去维护一个数组，那样就变成第一种方法了。所以每次一个随机数过来后，我们会先去判断它是否小于A的权重：</p>
+<ul>
+<li>如果小于，那么说明该随机数落在A这一区间，将请求发到A。</li>
+<li>如果不小于，将随机数减去A的权重，然后在下一次循环中再和B的权重比，就这样循环往复，直到找到对应的区间为止。</li>
+</ul>
+<p>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WeightRandom</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Servers</span> <span class="variable">servers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Servers</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Random</span> <span class="variable">random</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getServer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">allWeight</span> <span class="operator">=</span> servers.map.values().stream().mapToInt(a -&gt; a).sum();</span><br><span class="line">        <span class="type">var</span> <span class="variable">number</span> <span class="operator">=</span> random.nextInt(allWeight);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> item : servers.map.entrySet()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (item.getValue() &gt;= number) &#123;</span><br><span class="line">                <span class="keyword">return</span> item.getKey();</span><br><span class="line">            &#125;</span><br><span class="line">            number -= item.getValue();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种实现方式相较于第一种是没有内存浪费的，但是如果服务器数量过多的话，速度可能会比第一种方式慢一些。</p>
+<h2 id="8-2-轮询"><a href="#8-2-轮询" class="headerlink" title="8.2 轮询"></a>8.2 轮询</h2><p>轮询又分为三种：完全轮询、加权轮询以及平滑加权轮询。</p>
+<h3 id="8-2-1-完全轮询"><a href="#8-2-1-完全轮询" class="headerlink" title="8.2.1 完全轮询"></a>8.2.1 完全轮询</h3><p>完全轮询的思想十分简单，其实就是轮着来，这次请求打到A上，下次就到B了，再下次就是C了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FullRound</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Servers</span> <span class="variable">servers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Servers</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> index;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getServer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (index == servers.list.size()) &#123;</span><br><span class="line">            index = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> servers.list.get(index++);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完全轮询的缺点与完全随机基本类似，所以就有了加权轮询。</p>
+<h3 id="8-2-2-加权轮询"><a href="#8-2-2-加权轮询" class="headerlink" title="8.2.2 加权轮询"></a>8.2.2 加权轮询</h3><p>类似于加权随机，加权轮询的实现方式同样有两种，这里演示较好的一种。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WeightRound</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Servers</span> <span class="variable">servers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Servers</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getServer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 这里可以提前算好，而不是每次都要重新算一次</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">allWeight</span> <span class="operator">=</span> servers.map.values().stream().mapToInt(a -&gt; a).sum();</span><br><span class="line">        <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> (index++) % allWeight;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> item : servers.map.entrySet()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (item.getValue() &gt; number) &#123;</span><br><span class="line">                <span class="keyword">return</span> item.getKey();</span><br><span class="line">            &#125;</span><br><span class="line">            number -= item.getValue();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jojop/p/13997273.html">【负载均衡】常见的负载均衡算法的实现与应用 </a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903793012768781#heading-7">浅谈负载均衡算法与实现</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"># 分布式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/07/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/Redis/" rel="prev" title="Redis">
+      <i class="fa fa-chevron-left"></i> Redis
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/07/20/Java%E5%AD%A6%E4%B9%A0/Future%E8%AF%A6%E8%A7%A3/" rel="next" title="Future详解">
+      Future详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID"><span class="nav-text">1 全局唯一ID</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95"><span class="nav-text">1.1 雪花算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E8%96%84%E9%9B%BE%E7%AE%97%E6%B3%95"><span class="nav-text">1.2 薄雾算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95%E6%97%B6%E9%92%9F%E5%9B%9E%E6%8B%A8%E9%97%AE%E9%A2%98"><span class="nav-text">1.3 雪花算法时钟回拨问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-text">2 布隆过滤器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-JWT"><span class="nav-text">3 JWT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E4%BB%8B%E7%BB%8D"><span class="nav-text">3.1 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-JWT%E7%BB%84%E6%88%90"><span class="nav-text">3.2 JWT组成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1-Header"><span class="nav-text">3.2.1 Header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-2-Payload"><span class="nav-text">3.2.2 Payload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-3-Signature"><span class="nav-text">3.2.3 Signature</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-4-Base64URL"><span class="nav-text">3.2.4 Base64URL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-JWT%E4%BD%BF%E7%94%A8"><span class="nav-text">3.3 JWT使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-JWT%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-text">3.4 JWT的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-OAuth2-0"><span class="nav-text">4 OAuth2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-%E4%BB%8B%E7%BB%8D"><span class="nav-text">4.1 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-OAuth2-0%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89"><span class="nav-text">4.2 OAuth2.0名词定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-OAuth2-0%E6%8E%88%E6%9D%83%E6%B5%81%E7%A8%8B"><span class="nav-text">4.3 OAuth2.0授权流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-OAuth2-0%E7%9A%84%E6%8E%88%E6%9D%83%E6%A8%A1%E5%BC%8F"><span class="nav-text">4.4 OAuth2.0的授权模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-1-%E6%8E%88%E6%9D%83%E7%A0%81%E6%A8%A1%E5%BC%8F"><span class="nav-text">4.4.1 授权码模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-2-%E7%AE%80%E5%8C%96%E6%A8%A1%E5%BC%8F"><span class="nav-text">4.4.2 简化模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-3-%E5%AF%86%E7%A0%81%E6%A8%A1%E5%BC%8F"><span class="nav-text">4.4.3 密码模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-4-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%A8%A1%E5%BC%8F"><span class="nav-text">4.4.4 客户端模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-OAuth2-0%E6%9B%B4%E6%96%B0%E4%BB%A4%E7%89%8C"><span class="nav-text">4.5 OAuth2.0更新令牌</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Raft%E7%AE%97%E6%B3%95"><span class="nav-text">5 Raft算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-%E7%8A%B6%E6%80%81%E6%9C%BA%E5%A4%8D%E5%88%B6"><span class="nav-text">5.1 状态机复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-Raft%E4%BB%8B%E7%BB%8D"><span class="nav-text">5.2 Raft介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-Raft%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">5.3 Raft基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-1-state%EF%BC%88%E7%8A%B6%E6%80%81%EF%BC%89"><span class="nav-text">5.3.1 state（状态）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-2-term%EF%BC%88%E4%BB%BB%E6%9C%9F%EF%BC%89"><span class="nav-text">5.3.2 term（任期）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-3-RPC"><span class="nav-text">5.3.3 RPC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-Leader-election"><span class="nav-text">5.4 Leader election</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5-Log-replication"><span class="nav-text">5.5 Log replication</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-6-Safety"><span class="nav-text">5.6 Safety</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-Gossip%E5%8D%8F%E8%AE%AE"><span class="nav-text">6 Gossip协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95"><span class="nav-text">7 限流算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-%E5%9B%BA%E5%AE%9A%E7%AA%97%E5%8F%A3%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95"><span class="nav-text">7.1 固定窗口限流算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95"><span class="nav-text">7.2 滑动窗口限流算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3-%E6%BC%8F%E6%A1%B6%E7%AE%97%E6%B3%95"><span class="nav-text">7.3 漏桶算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4-%E4%BB%A4%E7%89%8C%E6%A1%B6%E7%AE%97%E6%B3%95"><span class="nav-text">7.4 令牌桶算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-5-%E6%80%BB%E7%BB%93"><span class="nav-text">7.5 总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95"><span class="nav-text">8 负载均衡算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1-%E9%9A%8F%E6%9C%BA"><span class="nav-text">8.1 随机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-1-%E5%AE%8C%E5%85%A8%E9%9A%8F%E6%9C%BA"><span class="nav-text">8.1.1 完全随机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-2-%E5%8A%A0%E6%9D%83%E9%9A%8F%E6%9C%BA"><span class="nav-text">8.1.2 加权随机</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2-%E8%BD%AE%E8%AF%A2"><span class="nav-text">8.2 轮询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-1-%E5%AE%8C%E5%85%A8%E8%BD%AE%E8%AF%A2"><span class="nav-text">8.2.1 完全轮询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-2-%E5%8A%A0%E6%9D%83%E8%BD%AE%E8%AF%A2"><span class="nav-text">8.2.2 加权轮询</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李澳"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">李澳</p>
+  <div class="site-description" itemprop="description">自娱自乐</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李澳</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">199k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">11:02</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

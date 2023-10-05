@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="网络上关于PCA的介绍可以说是各式各样，但是很多都是从直觉上入手，并没有一个比较严谨的数学推导。有数学推导的又太过于简练，对我来说看起来太过吃力。于是就想写了这篇博客。这篇博客是我在此视频 的基础上，参考了一些其他的资料写出来的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCA介绍与推导">
+<meta property="og:url" content="http://example.com/2020/03/07/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/PCA%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%8E%A8%E5%AF%BC/index.html">
+<meta property="og:site_name" content="移动城堡">
+<meta property="og:description" content="网络上关于PCA的介绍可以说是各式各样，但是很多都是从直觉上入手，并没有一个比较严谨的数学推导。有数学推导的又太过于简练，对我来说看起来太过吃力。于是就想写了这篇博客。这篇博客是我在此视频 的基础上，参考了一些其他的资料写出来的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/03/07/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/PCA%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%8E%A8%E5%AF%BC/%E5%9B%BE1.png">
+<meta property="article:published_time" content="2020-03-07T00:56:03.000Z">
+<meta property="article:modified_time" content="2023-07-17T01:59:12.796Z">
+<meta property="article:author" content="李澳">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="PCA">
+<meta property="article:tag" content="公式推导">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/03/07/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/PCA%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%8E%A8%E5%AF%BC/%E5%9B%BE1.png">
+
+<link rel="canonical" href="http://example.com/2020/03/07/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/PCA%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%8E%A8%E5%AF%BC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>PCA介绍与推导 | 移动城堡</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">移动城堡</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎来到我的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/03/07/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/PCA%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%8E%A8%E5%AF%BC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="李澳">
+      <meta itemprop="description" content="自娱自乐">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="移动城堡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PCA介绍与推导
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-07 08:56:03" itemprop="dateCreated datePublished" datetime="2020-03-07T08:56:03+08:00">2020-03-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-07-17 09:59:12" itemprop="dateModified" datetime="2023-07-17T09:59:12+08:00">2023-07-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>网络上关于PCA的介绍可以说是各式各样，但是很多都是从直觉上入手，并没有一个比较严谨的数学推导。有数学推导的又太过于简练，对我来说看起来太过吃力。于是就想写了这篇博客。这篇博客是我在<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av32709936">此视频</a> 的基础上，参考了一些其他的资料写出来的。</p>
+<span id="more"></span>
+
+<h1 id="一、背景介绍"><a href="#一、背景介绍" class="headerlink" title="一、背景介绍"></a>一、背景介绍</h1><p>我们知道，当我们的模型特征过多，而训练数据过少时，会产生过拟合问题，而解决办法可以是<strong>增大训练数据集</strong>，<strong>正则化</strong>或者<strong>降维</strong>。而降维的一个比较常用的方法就是<strong>PCA（Principal component analysis，主成分分析）</strong>。</p>
+<p>此外，维度过高还会引起<strong>维度灾难（curse of dimension）</strong>，关于维度灾难的具体介绍，可以参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/27488363">https://zhuanlan.zhihu.com/p/27488363</a> 。而解决维度灾难的一个比较好的方法也是降维。</p>
+<h1 id="二、样本均值与方差的矩阵表示"><a href="#二、样本均值与方差的矩阵表示" class="headerlink" title="二、样本均值与方差的矩阵表示"></a>二、样本均值与方差的矩阵表示</h1><h2 id="2-1-预备知识"><a href="#2-1-预备知识" class="headerlink" title="2.1 预备知识"></a>2.1 预备知识</h2><p>$\begin{aligned} &amp;X &#x3D; \left[ \begin{matrix} x_1 &amp; x_2 &amp; \cdots &amp; x_N \end{matrix} \right]^{T} &#x3D; \left[ \begin{matrix} x_{1}^{T}\ x_{2}^{T} \ \vdots \ x_{N}^{T} \end{matrix} \right] &#x3D; \left[ \begin{matrix} x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1p} \ x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2p} \ \vdots &amp; \vdots &amp; \cdots &amp; \vdots \ x_{N1} &amp; x_{N2} &amp; \cdots &amp; x_{Np} \end{matrix} \right]<em>{N\times{p}} \ &amp;x</em>{i}\in{\mathbb{R}^{p}}, \quad i &#x3D; 1,2,\cdots,N \end{aligned}$</p>
+<p>其中：</p>
+<ul>
+<li>$X$为样本数据，是$N\times{p}$的矩阵</li>
+<li>$x_i$为单个样本，是$p$维的列向量</li>
+<li>共有$N$个样本，每个样本有$p$个特征</li>
+</ul>
+<h2 id="2-2均值与协方差矩阵"><a href="#2-2均值与协方差矩阵" class="headerlink" title="2.2均值与协方差矩阵"></a>2.2均值与协方差矩阵</h2><p>先放结论。</p>
+<p><strong>样本均值</strong>：$\bar{X}<em>{p\times{1}} &#x3D; \frac{1}{N} \sum\limits</em>{i&#x3D;1}^{N} x_i &#x3D; \frac{1}{N}X^{T}1_{N}$</p>
+<p><strong>样本协方差</strong>：$S_{p\times{p}} &#x3D; \frac{1}{N} \sum\limits_{i&#x3D;1}^{N} (x_i - \bar{x}_i)(x_i - \bar{x}_i)^T &#x3D; \frac{1}{N}X^{T}HX$</p>
+<p>其中：$1_N &#x3D; \begin{bmatrix} 1 \ 1\ \vdots \1 \end{bmatrix}<em>{N\times{1}} \qquad H &#x3D; I_N - \frac{1}{N}1</em>{N}1_{N}^{T} \qquad \qquad \qquad I_{N}即为E_{N},N阶单位矩阵$</p>
+<p>$H$为中心矩阵（centering  matrix），中心矩阵将X每一维都减去均值，实现中心化。如果X为经过中心化处理的数据，那么协方差矩阵可以写为$\frac{1}{N}X^{T}X$的形式。</p>
+<p>此外，中心矩阵还有一些比较好的性质，下面列举一会要用到的两个性质：</p>
+<ul>
+<li>$H^{T} &#x3D; H$</li>
+<li>$H^{n} &#x3D; H$</li>
+</ul>
+<p>这两个性质的证明比较简单，这里就不再给出证明了。</p>
+<p>样本均值推导：<br>$$\bar{x} &#x3D; \frac{1}{N} \sum\limits_{i&#x3D;1}^{N}x_i &#x3D; \frac{1}{N} \begin{bmatrix} x_1 &amp; x_2 &amp; \cdots &amp; x_N \end{bmatrix} \begin{bmatrix} 1 \ 1\ \vdots \1 \end{bmatrix}<em>{N\times{1}} &#x3D; \frac{1}{N}X^{T}1</em>{N}$$</p>
+<p>样本协方差推导：<br>$$\begin{aligned}<br>S &amp;&#x3D; \frac{1}{N} \sum\limits_{i&#x3D;1}^{N}(x_i - \bar{x})(x_i - \bar{x})^T \<br>&amp;&#x3D; \frac{1}{N} \begin{bmatrix} x_{1}-\bar{x} &amp; x_{2}-\bar{x} &amp; \cdots &amp; x_{N}-\bar{x} \end{bmatrix} \begin{bmatrix} (x_{1}-\bar{x})^{T} \ (x_{2}-\bar{x})^{T} \ \vdots \ (x_{N}-\bar{x})^{T} \end{bmatrix}<br>\end{aligned}$$</p>
+<p>其中：<br>$$\begin{aligned}<br>&amp;\begin{bmatrix} x_{1}-\bar{x} &amp; x_{2}-\bar{x} &amp; \cdots &amp; x_{N}-\bar{x} \end{bmatrix} \<br>&amp;&#x3D; \begin{bmatrix} x_{1} &amp; x_{2} &amp; \cdots &amp; x_{N} \end{bmatrix} - \begin{bmatrix} \bar{x} &amp; \bar{x} &amp; \cdots &amp; \bar{x} \end{bmatrix} \<br>&amp;&#x3D; X^{T} - \bar{x}\begin{bmatrix} 1 &amp; 1 &amp; \cdots &amp; 1 \end{bmatrix} \<br>&amp;&#x3D; X^{T} - \bar{x}1_{N}^{T} \qquad \qquad \qquad 代入\bar{x}\<br>&amp;&#x3D; X^{T} - \frac{1}{N}X^{T}1_{N}1_{N}^{T} \<br>&amp;&#x3D; X^{T} (I_{N} - \frac{1}{N}1_{N}1_{N}^{T}) \<br>&amp;&#x3D; X^{T}H<br>\end{aligned}$$</p>
+<p>$$\begin{aligned}<br>&amp;\begin{bmatrix} (x_{1}-\bar{x})^{T} \ (x_{2}-\bar{x})^{T} \ \vdots \ (x_{N}-\bar{x})^{T} \end{bmatrix} \<br>&amp;&#x3D; \begin{bmatrix} x_{1}-\bar{x} &amp; x_{2}-\bar{x} &amp; \cdots &amp; x_{N}-\bar{x} \end{bmatrix}^{T} \<br>&amp;&#x3D; H^{T}X<br>\end{aligned}$$</p>
+<p>所以：<br>$$\begin{aligned}<br>S &amp;&#x3D; \frac{1}{N}X^{T}HH^{T}X \qquad \qquad \qquad 利用H的性质 \<br>&amp;&#x3D; \frac{1}{N}X^{T}HX<br>\end{aligned}$$</p>
+<p>至此，推导完毕。</p>
+<h1 id="三、PCA——最大投影方差角度"><a href="#三、PCA——最大投影方差角度" class="headerlink" title="三、PCA——最大投影方差角度"></a>三、PCA——最大投影方差角度</h1><h2 id="3-1-预备知识"><a href="#3-1-预备知识" class="headerlink" title="3.1 预备知识"></a>3.1 预备知识</h2><p><strong>PCA</strong>核心的一个思想就是将一组可能<strong>线性相关</strong>的变量，通过<strong>正交变换</strong>变换成一组<strong>线性无关</strong>的变量。<br>关于PCA，可以简单的概括为一个中心，两个基本点。<br>一个中心：原始特征空间的重构（线性相关–&gt;线性无关）<br>两个基本点：</p>
+<ul>
+<li>最大投影方差：样本点投影到某方向上分布尽量分散（投影方差最大），该方向就是主成分。</li>
+<li>最小重构距离：样本点投影后重构回去所花的代价要最小。投影分布越分散（投影方差最大），则重构所需的代价越小。所以，这两个方法其实是等价的，只不过是从不同的角度来看待问题。</li>
+</ul>
+<p>本节我们从最大投影方差角度来推导PCA。</p>
+<p>在进行推导之前，先介绍一下向量投影与向量内积的关系。<br>为了简单起见，我们用二维向量来讲解。假设有向量$\boldsymbol{a} &#x3D; \begin{bmatrix} x_1 \ y_1 \end{bmatrix}$，$\boldsymbol{b} &#x3D; \begin{bmatrix} x_2 \ y_2 \end{bmatrix}$。</p>
+<p>$\boldsymbol{a}$在$\boldsymbol{b}$上的投影为：<br>$projection &#x3D; |\boldsymbol{a}|cos&lt;\boldsymbol{a},\boldsymbol{b}&gt;$<br>需要注意的是，向量的投影长度可正可负。两向量夹角为锐角时为投影长度为正，为钝角时投影长度为负。</p>
+<p>$\boldsymbol{a}$与$\boldsymbol{b}$的内积：<br>$\boldsymbol{a}^{T}\boldsymbol{b} &#x3D; x_{1}x_{2} + y_{1}y_{2} &#x3D; |\boldsymbol{a}||\boldsymbol{b}|cos&lt;\boldsymbol{a},\boldsymbol{b}&gt; &#x3D; |\boldsymbol{b}|projection$</p>
+<p>可以看到，向量内积是一个向量在另一个向量上的投影长度乘以另一个向量的长度。比如本例中，$\boldsymbol{a}^{T}\boldsymbol{b}$即为$\boldsymbol{a}$在$\boldsymbol{b}$上的投影长度乘上$|\boldsymbol{b}|$。<br><strong>当$|\boldsymbol{b}|$为1时，$\boldsymbol{a}^{T}\boldsymbol{b}$即为$\boldsymbol{a}$在$\boldsymbol{b}$上的投影长度</strong>。<br>更详细的投影以及基变换的介绍，可以看看<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA5ODUxOTA5Mg==&mid=2652551576&idx=1&sn=17a125bb29001b3d8d5e3964dcc599a3&chksm=8b7e48c3bc09c1d55dbab168011cba2a853af5623a24a499a2ae110a4facb07c2a4bd033da36&mpshare=1&scene=2&srcid=0123V8FT7YEhcDXZco9gT4Vf&from=timeline&key=e4aa053ffd46a2720096fdf7de2840d48e8716d03c5dd165e9247c7dcd05d35f32c5a56481c26829d4d3e5dbef395c4877e96528fe3a518bd34d91906f6403e0d63776163f6d172ca17cfb6ba5ea8ad2&ascene=2&uin=MTgwOTU2NjU0MQ==&devicetype=android-24&version=26050430&nettype=WIFI&abtest_cookie=AQABAAgAAQBChh4AAAA=&pass_ticket=sNCtedDpTEPBC88xUKXM3tzXl/606nFOdOXtXdJOeRZjV7St1JAOwsumIcivZwOd&wx_header=1">这篇文章</a>。</p>
+<p>下面正式开始PCA的推导。</p>
+<h2 id="3-2-最大投影方差角度"><a href="#3-2-最大投影方差角度" class="headerlink" title="3.2 最大投影方差角度"></a>3.2 最大投影方差角度</h2><p>中心化：$x_{i} - \bar{x}$<br>假设所取方向为$u_1$，$u_1$为**$p$维列向量<strong>，并且$||u_{1}|| &#x3D; 1$。<br>则$x_{i} - \bar{x}$在$u_1$方向上的投影为$(x_i - \bar{x})^{T}u_1$，其实该投影就是$x_{i} - \bar{x}$在$u_1$轴上的坐标，为</strong>标量**。</p>
+<p>由于投影前的数据均值为0，所以该投影的均值也为0。<br>由此我们可以得到$N$个点在$u_1$方向上的投影方差为：<br>$$\begin{aligned}<br>J &amp;&#x3D; \frac{1}{N}\sum\limits_{i&#x3D;1}^{N}((x_i - \bar{x})^{T}u_{1})^{2} \qquad \qquad \qquad s.t. \ u_{1}^{T}u_{1} &#x3D; 1  \<br>&amp;&#x3D; \frac{1}{N}\sum\limits_{i&#x3D;1}^{N}u_{1}^{T}(x_i - \bar{x})(x_i - \bar{x})^{T}u_1 \<br>&amp;&#x3D; u_{1}^{T}(\frac{1}{N}\sum\limits_{i&#x3D;1}^{N}(x_i - \bar{x})(x_i - \bar{x})^{T})u_1 \<br>&amp;&#x3D; u_{1}^{T}Su_1<br>\end{aligned}$$</p>
+<p>上式中的$S$为协方差矩阵。</p>
+<p>至此，我们得到了投影方差的表达式。而最大化投影方差就变成了如下的最优化问题：<br>$最大化投影方差J \iff \begin{cases}<br>\hat{u}<em>{1} &#x3D; argmax \ u</em>{1}^{T}Su_1 \<br>s.t. \ u_{1}^{T}u_1  &#x3D; 1<br>\end{cases}$</p>
+<p>这不就是带约束的函数最值问题吗？可以用拉格朗日乘数法解决。</p>
+<p>构造拉格朗日函数：<br>$\mathcal{L}(u_1,\lambda) &#x3D; u_{1}^{T}Su_{1} + \lambda(1 - u_{1}^{T}u_{1})$</p>
+<p> 对$u_1$求导：<br>$\frac{\partial \mathcal{L}}{\partial u_1} &#x3D; 2Su_1 - 2\lambda u_1$</p>
+<p>令导数为0：<br>$2Su_1 - 2\lambda u_1 &#x3D; 0 \Rightarrow Su_1 &#x3D; \lambda u_1$</p>
+<p>此时$u_1$、$\lambda$分别为协方差矩阵$S$的特征向量、特征值。</p>
+<p>代入原式中得：<br>$\hat{u}<em>{1} &#x3D; argmax \ u</em>{1}^{T}Su_1 &#x3D; argmax \ u_{1}^{T}\lambda u_{1} &#x3D; argmax \ \lambda$</p>
+<p>所以要求解$u_1$，就是要最大化$\lambda$。即$u_1$为S的最大特征值所对应的单位特征向量。<br>后续求解$u_2,u_3,\cdots,u_{k}$的步骤跟上面的步骤差不多，只不过对于$u_{k}$来说，还要满足与前$k - 1$个主成分正交的条件。</p>
+<p>最后可以得出结论，<strong>投影正交基$\begin{bmatrix} u_1,u_2,\cdots,u_k \end{bmatrix}$为协方差矩阵S的前$k$个最大特征值对应的单位特征向量</strong>。</p>
+<p>求解此最优化问题时，也可以构造瑞利熵，利用瑞利熵的性质求解。</p>
+<h2 id="3-3-协方差矩阵与PCA"><a href="#3-3-协方差矩阵与PCA" class="headerlink" title="3.3 协方差矩阵与PCA"></a>3.3 协方差矩阵与PCA</h2><p>关于协方差矩阵公式的推导，可以看这篇博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhengjihao/article/details/78030918">协方差矩阵的向量表示推导</a>。</p>
+<p>我一直不太理解协方差矩阵，以及协方差矩阵是怎么跟PCA联系到一块去的。后来看到下面这张图，我才明白了。<br><img src="/2020/03/07/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/PCA%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%8E%A8%E5%AF%BC/%E5%9B%BE1.png"><br>样本数据矩阵$X$的<strong>每一列都是一个特征，也可以看成是一个维度</strong>。而协方差矩阵中的每个元素都代表了<strong>两个特征（维度）之间的协方差</strong>。其对角线上是特征的<strong>方差</strong>，因为两个相同特征的协方差就是其方差。</p>
+<p>我们来看一个计算协方差矩阵的例子：<br>我们有如下的样本数据矩阵，其中共有2个样本，每个样本都有$a,b,c$这3个特征。并且已经减去了均值，完成了中心化。<br>$$X &#x3D; \begin{bmatrix} a_1 &amp; b_1 &amp; c_1 \<br>a_2 &amp; b_2 &amp; c_2<br>\end{bmatrix}$$</p>
+<p>则协方差矩阵$S$为：<br>$$\begin{aligned}<br>S &amp;&#x3D; \frac{1}{2}X^{T}X \<br>&amp;&#x3D; \frac{1}{2}\begin{bmatrix} a_{1}^{2} + a_{2}^{2} &amp; a_1b_1 + a_2b_2 &amp; a_1c_1 + a_2c_2 \<br>a_{1}b_{1} + a_{2}b_{2} &amp; b_{1}^{2} + b_{2}^{2} &amp; b_{1}c_{1} + b_{2}c_{2} \<br>a_{1}c_{1} + a_{2}c_{2} &amp; b_{1}c_{1} + b_{2}c_{2} &amp; c_{1}^{2} + c_{2}^{2}<br>\end{bmatrix}<br>\end{aligned}$$</p>
+<p>可以看到协方差矩阵的对角线为方差，非对角线为两个不同维度之间的协方差。</p>
+<p>下面我们来看一下经过正交变换后数据的协方差矩阵。<br>设投影正交基为$U$，$U$为$p\times{p}$的矩阵，即只对原数据做正交变换，而不进行降维：<br>$$U_{p\times{p}} &#x3D; \begin{bmatrix} u_1 &amp; u_2 &amp; \cdots &amp; u_p \end{bmatrix}$$</p>
+<p>$u_1$为原始数据协方差矩阵S的最大特征值对应的单位特征向量，$u_2$为第二大特征值对应的单位特征向量，以此类推。</p>
+<p>则$x_i$在该正交基上的投影为$U^{T}(x_i - \bar{x})$，$X$在该正交基上的投影为$HXU$。$HX$是对$X$做中心化。<br>设变换后的数据为$Y$，即$Y &#x3D; HXU$，$\Lambda$为Y的协方差矩阵。<br>$$\begin{aligned}<br>\Lambda &amp;&#x3D; \frac{1}{N}Y^{T}HY \<br>&amp;&#x3D; \frac{1}{N}(HXU)^{T}(HXU) \<br>&amp;&#x3D; U^{T}(\frac{1}{N}X^{T}HX)U \<br>&amp; &#x3D; U^{T}SU<br>\end{aligned}$$</p>
+<p>$U^{T}SU$的形式是不是很熟悉呢？这不就是实对称矩阵对角化嘛。而$\Lambda$即为对角矩阵，并且对角线上的元素是由大到小排列的矩阵S的特征值。</p>
+<p>不要忘了，$\Lambda$是$Y$的协方差矩阵。$\Lambda$中除对角线外，其余元素都为0，说明$Y$中两个不同维度之间的协方差为0，即不同维度之间不相关。而对角线上元素由大到小排列，说明投影方差尽可能的大。</p>
+<p>反过来看：<br>$$\begin{aligned}<br>S &amp;&#x3D; U\Lambda U^{T} \<br>&amp;&#x3D; \begin{bmatrix} u_1 &amp; u_2 &amp; \cdots &amp; u_p \end{bmatrix} \begin{bmatrix} \lambda_1 &amp; &amp; &amp; \ &amp; \lambda_2 &amp; &amp; \ &amp; &amp; &amp; \ddots &amp; \ &amp; &amp; &amp; &amp; \lambda_p \end{bmatrix} \begin{bmatrix} u_{1}^{T} \ u_{2}^{T} \ \vdots \ u_{p}^{T} \end{bmatrix} \<br>&amp;&#x3D; \begin{bmatrix} \lambda_{1}u_{1} &amp; \lambda_{2}u_{2} &amp; \cdots &amp; \lambda_{p}u_{p} \end{bmatrix} \begin{bmatrix} u_{1}^{T} \ u_{2}^{T} \ \vdots \ u_{p}^{T} \end{bmatrix} \<br>&amp;&#x3D; \sum\limits_{i &#x3D; 1}^{p}\lambda_{i}u_{i}u_{i}^{T}<br>\end{aligned}$$</p>
+<p>由上面的式子可以看出，$\lambda_i$的值越大，对原数据的协方差矩阵影响越大，从而对原数据的影响越大；$\lambda_i$的值越小，对原数据的协方差矩阵影响越大，从而对原数据的影响越大。当$\lambda_i$的值非常小时，其对原数据的影响甚至可以忽略不计。</p>
+<p>由此，我们可以取前$ k(k &lt; p)$大的特征值及其对应的特征向量来实现降维，并且只会损失很少的一部分数据。</p>
+<p>关于主成分数量$k$的选取可以看看<a target="_blank" rel="noopener" href="https://www.cnblogs.com/cloud-ken/p/9614840.html">这篇文章</a>。需要注意的一点是，这篇文章中的原始数据是默认经过中心化处理的。</p>
+<h1 id="四、奇异值分解（SVD）"><a href="#四、奇异值分解（SVD）" class="headerlink" title="四、奇异值分解（SVD）"></a>四、奇异值分解（SVD）</h1><p>关于特征值分解与特征值分解，可以看<a target="_blank" rel="noopener" href="https://www.cnblogs.com/endlesscoding/p/10033527.html">这篇博客</a>，可以说是写的很详尽了。</p>
+<p>另外，我在这里对上面博客的内容有一些补充。<br>奇异值分解中的$\Sigma$更具体的表示如下：<br>$$\Sigma &#x3D; \begin{bmatrix} \Lambda_{p} &amp; \boldsymbol{0} \ \boldsymbol{0} &amp; \boldsymbol{0} \end{bmatrix}$$</p>
+<p>其中：<br>$$\Lambda_{p} &#x3D; diag(\sigma_1,\sigma_2,\cdots,\sigma_p) \qquad \qquad \qquad 其中\sigma_1&gt;\sigma_2&gt;\cdots&gt;\sigma_p \ p &#x3D; min{m,n}$$</p>
+<p>此外：</p>
+<ul>
+<li>$AA^{T}$与$A^{T}A$的非0特征值均为奇异值的平方</li>
+<li>对于实对称矩阵，特征值分解与奇异值分解得到的结果相同</li>
+</ul>
+<p>在PCA中，一般是使用奇异值分解，而不是特征值分解。</p>
+<h1 id="五、PCA算法过程"><a href="#五、PCA算法过程" class="headerlink" title="五、PCA算法过程"></a>五、PCA算法过程</h1><p>PCA算法大致过程如下：</p>
+<ol>
+<li>对$X$进行中心化，即对每个$x_i$,使$x_i &#x3D; x_i - \bar{x}_i$。如果不同特征之间的数据范围相差太大的话，还可以进行特征缩放（feature scaling）。</li>
+<li>计算$X$的协方差矩阵$S$。</li>
+<li>对$S$进行奇异值分解，$U$（实际上对实对称矩阵进行SVD时，$U$和$V$相同）即为投影正交基，$\Sigma$为特征值矩阵（已从小到大排序）。</li>
+<li>取$U$中的前$k(k &lt; p) $个列向量，令其为$U_{reduce}$。</li>
+<li>令$Z &#x3D; XU_{reduce}$，则$Z$即为降维后的数据。</li>
+</ol>
+<p>参考资料：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/QQ2627866800/article/details/86656237?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task">详细推导PCA算法（包括算法推导必备的知识）</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA5ODUxOTA5Mg==&mid=2652551576&idx=1&sn=17a125bb29001b3d8d5e3964dcc599a3&chksm=8b7e48c3bc09c1d55dbab168011cba2a853af5623a24a499a2ae110a4facb07c2a4bd033da36&mpshare=1&scene=2&srcid=0123V8FT7YEhcDXZco9gT4Vf&from=timeline&key=e4aa053ffd46a2720096fdf7de2840d48e8716d03c5dd165e9247c7dcd05d35f32c5a56481c26829d4d3e5dbef395c4877e96528fe3a518bd34d91906f6403e0d63776163f6d172ca17cfb6ba5ea8ad2&ascene=2&uin=MTgwOTU2NjU0MQ==&devicetype=android-24&version=26050430&nettype=WIFI&abtest_cookie=AQABAAgAAQBChh4AAAA=&pass_ticket=sNCtedDpTEPBC88xUKXM3tzXl/606nFOdOXtXdJOeRZjV7St1JAOwsumIcivZwOd&wx_header=1">PCA的数学原理</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/47858230">深入了解PCA</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ybdesire/article/details/6270328">详解协方差与协方差矩阵</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhengjihao/article/details/78030918">协方差矩阵的向量表示推导</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/PCA/" rel="tag"># PCA</a>
+              <a href="/tags/%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC/" rel="tag"># 公式推导</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/23/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%90%B4%E6%81%A9%E8%BE%BE%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="prev" title="吴恩达机器学习笔记">
+      <i class="fa fa-chevron-left"></i> 吴恩达机器学习笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/LDA/" rel="next" title="LDA">
+      LDA <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="nav-text">一、背景介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B7%E6%9C%AC%E5%9D%87%E5%80%BC%E4%B8%8E%E6%96%B9%E5%B7%AE%E7%9A%84%E7%9F%A9%E9%98%B5%E8%A1%A8%E7%A4%BA"><span class="nav-text">二、样本均值与方差的矩阵表示</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-text">2.1 预备知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2%E5%9D%87%E5%80%BC%E4%B8%8E%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5"><span class="nav-text">2.2均值与协方差矩阵</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81PCA%E2%80%94%E2%80%94%E6%9C%80%E5%A4%A7%E6%8A%95%E5%BD%B1%E6%96%B9%E5%B7%AE%E8%A7%92%E5%BA%A6"><span class="nav-text">三、PCA——最大投影方差角度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-text">3.1 预备知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E6%9C%80%E5%A4%A7%E6%8A%95%E5%BD%B1%E6%96%B9%E5%B7%AE%E8%A7%92%E5%BA%A6"><span class="nav-text">3.2 最大投影方差角度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5%E4%B8%8EPCA"><span class="nav-text">3.3 协方差矩阵与PCA</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3%EF%BC%88SVD%EF%BC%89"><span class="nav-text">四、奇异值分解（SVD）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81PCA%E7%AE%97%E6%B3%95%E8%BF%87%E7%A8%8B"><span class="nav-text">五、PCA算法过程</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李澳"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">李澳</p>
+  <div class="site-description" itemprop="description">自娱自乐</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李澳</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">199k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">11:02</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
